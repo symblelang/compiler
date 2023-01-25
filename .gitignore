@@ -1,5 +1,15 @@
 */bin/*
 
+#Emacs
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.dir-locals.el
+/eshell/history
+/eshell/lastdir
 
 # Prerequisites
 *.d
