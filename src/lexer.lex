@@ -35,18 +35,19 @@ id                  {id_char}({id_char}|{digit})*
 /* Operators */
 plus_opchar         "+"|"-"|"±"|"⊕"|"⊖"|"⊞"|"⊟"|"∪"|"∨"|"⊔"
 mult_opchar         "*"|"/"|"%"|"∙"|"∘"|"×"|"★"|"⊗"|"⊘"|"⊙"|"⊛"|"⊠"|"⊡"|"∩"|"∧"|"⊓"
-opchar              {plus_opchar}|{mult_opchar}
-plus_op             {plus_opchar}opchar*
-mult_op             {mult_opchar}opchar*
-and_op              "&"opchar*
-or_op               "|"opchar*
-not_op              "!"opchar*
+opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"
+plus_op             {plus_opchar}{opchar}*
+mult_op             {mult_opchar}{opchar}*
+and_op              "&"{opchar}*
+or_op               "|"{opchar}*
+not_op              "!"{opchar}*
+assign_op           {opchar}*"="
 
 /* Right-associative Operators */
-rplus_op            "^"{plus_opchar}opchar*
-rmult_op            "^"{mult_opchar}opchar*
-rand_op             "^&"opchar*
-ror_op              "^|"opchar*
+rplus_op            "^"{plus_opchar}{opchar}*
+rmult_op            "^"{mult_opchar}{opchar}*
+rand_op             "^&"{opchar}*
+ror_op              "^|"{opchar}*
 xor_op              "^"+
 
 /* Semicolons */
@@ -68,6 +69,7 @@ semicolon           ";"
 {and_op}            return AND_OP;
 {or_op}             return OR_OP;
 {not_op}            return NOT_OP;
+{assign_op}         return ASSIGN_OP;
 
 /* Right-associative Operators */
 {rmult_op}          return RMULT_OP;
@@ -99,10 +101,11 @@ semicolon           ";"
 "case"/{non_id}     return CASE;
 "type"/{non_id}     return TYPE;
 
-{integer}           return INT;
-
 /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;
+
+/* Numers (TODO add floats, hex, octal, etc.) */
+{integer}           return INT;
 
 /* String */
 \"([^\\\"]|\\.)*\"  {
