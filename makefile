@@ -1,16 +1,14 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror -pedantic-errors
 
-SRC=src
-
-PARSER=$(src)/parser
+PARSER=parser
 PARSER_SRC=$(PARSER).y
 PARSER_C=$(PARSER).c
 PARSER_HEADER=$(PARSER).h
 BISON=bison
 BISON_FLAGS=
 
-LEXER=$(src)/lexer
+LEXER=lexer
 LEXER_SRC=$(LEXER).lex
 LEXER_C=$(LEXER).c
 FLEX=flex
@@ -19,7 +17,7 @@ FLEX_FLAGS=--never-interactive --batch
 PROGRAM=$(PARSER)
 
 $(PARSER): $(LEXER_C) $(PARSER_C)
-	$(CC) $(PARSER_C) $(SCANNER_C) -o $(PARSER) $(CFLAGS) -DYYERROR_VERBOSE -ly -ll
+	$(CC) $(PARSER_C) $(SCANNER_C) -o $(PARSER) $(CFLAGS) -ly -ll
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
 	$(BISON) $(BISON_FLAGS) --defines=$(PARSER_HEADER) --output=$(PARSER_C) $(PARSER_SRC)
@@ -31,4 +29,4 @@ run: $(PROGRAM)
 	./$(PROGRAM)
 
 clean:
-	@rm -f $(LEXER_C) $(PARSER_C) $(PARSER)
+	@rm -f $(LEXER_C) $(PARSER_C) $(PARSER) 
