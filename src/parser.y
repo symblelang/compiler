@@ -18,7 +18,7 @@ int yyerror(const char * s);
 }
 
 /* Token definitions */
-%token LBRACE RBRACE LPAREN RPAREN SEMICOLON
+%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON
 %token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
 %token AND NOT OR XOR
 %token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE
@@ -70,7 +70,7 @@ expr_statement:
 /* Precedence/conflicts within sub-expressionss should (if I did it right) be handled by the token precedences above */
 expr:
     assign_expr
-    | expr, assign_expr
+    | expr assign_expr
     ;
 
 assign_expr:
@@ -104,7 +104,7 @@ unary_expr:
 primary_expr:
     ID
     | constant
-    | (expr)
+    | LPAREN expr RPAREN
     ;
 
 /* TODO Add more constant types */

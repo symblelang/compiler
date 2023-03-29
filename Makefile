@@ -3,14 +3,14 @@ CFLAGS=-Wall -Wextra -Werror -pedantic-errors
 
 SRC=src
 
-PARSER=$(src)/parser
+PARSER=$(SRC)/parser
 PARSER_SRC=$(PARSER).y
 PARSER_C=$(PARSER).c
 PARSER_HEADER=$(PARSER).h
 BISON=bison
 BISON_FLAGS=
 
-LEXER=$(src)/lexer
+LEXER=$(SRC)/lexer
 LEXER_SRC=$(LEXER).lex
 LEXER_C=$(LEXER).c
 FLEX=flex

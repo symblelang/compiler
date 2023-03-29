@@ -50,9 +50,6 @@ rand_op             "^&"{opchar}*
 ror_op              "^|"{opchar}*
 xor_op              "^"+
 
-/* Semicolons */
-semicolon           ";"
-
 %x comment
 
 %%
@@ -84,6 +81,8 @@ semicolon           ";"
 "]"                 return RSQB;
 "{"                 return LBRACE;
 "}"                 return RBRACE;
+","                 return COMMA;
+";"         return SEMICOLON;
 
 /* Keywords */
 "and"/{non_id}      return AND;
@@ -107,13 +106,13 @@ semicolon           ";"
 /* Numers (TODO add floats, hex, octal, etc.) */
 {integer}           return INT;
 
+
 /* String */
 \"([^\\\"]|\\.)*\"  {
                     format_string(yytext);
                     return STR;
                     }
 
-{semicolon}         return SEMICOLON;
 
 /* Comment */
 "/*"                yy_push_state(comment);
