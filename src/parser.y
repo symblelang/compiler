@@ -11,6 +11,7 @@ extern char * yytext;
 extern int yylval;
 extern int line_num;
 extern int yylex();
+extern FILE *  yyin;
 %}
 
 %code provides {
@@ -81,7 +82,7 @@ statement:
     ;
 
 expr_statement:
-    expr SEMICOLON
+    expr SEMICOLON       {printf("statement!\n");}
     ;
 
 /* Precedence/conflicts within sub-expressionss should (if I did it right) be handled by the token precedences above */
@@ -144,7 +145,8 @@ unary_expr:
     ;
 
 member_expr:
-    primary_expr DOT primary_expr
+    primary_expr
+    | member_expr DOT primary_expr
     ;
 
 primary_expr:
@@ -174,5 +176,5 @@ if_statement:
 %%
 
 void yyerror(const char * s) {
-  fprintf (stderr, "%s\n", s);
+  fprintf (stderr, "yyerror: %s\n", s);
 }

@@ -107,8 +107,8 @@ xor_op              "^"+
  /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;
 
- /* Numers (TODO add floats, hex, octal, etc.) */
-{integer}           return INT;
+ /* Numbers (TODO add floats, hex, octal, etc.) */
+{integer}           {printf("%d ", *yylval); return INT;}
 
 
  /* String */
