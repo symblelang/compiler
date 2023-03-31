@@ -1,7 +1,8 @@
-CC=gcc
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors
+CC=clang
+CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function
 
 SRC=src
+BIN=bin
 
 PARSER=$(SRC)/parser
 PARSER_SRC=$(PARSER).y
@@ -13,22 +14,29 @@ BISON_FLAGS=
 LEXER=$(SRC)/lexer
 LEXER_SRC=$(LEXER).lex
 LEXER_C=$(LEXER).c
+LEXER_HEADER=$(LEXER).h
 FLEX=flex
 FLEX_FLAGS=--never-interactive --batch
 
-PROGRAM=$(PARSER)
+PROGRAM=$(BIN)/symble
+MAIN_SRC=$(SRC)/main.c
 
-$(PARSER): $(LEXER_C) $(PARSER_C)
-	$(CC) $(PARSER_C) $(SCANNER_C) -o $(PARSER) $(CFLAGS) -DYYERROR_VERBOSE -ly -ll
+all: $(PROGRAM)
+
+$(PROGRAM): $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER)
+	$(CC) $(CFLAGS) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) -D YYERROR_VERBOSE -ly -ll
+
+$(PARSER): $(LEXER_C) $(PARSER_C) $(PARSER_HEADER)
+	$(CC) $(CFLAGS) $(PARSER_C) $(SCANNER_C) -o $(PARSER) -DYYERROR_VERBOSE -ly -ll
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
 	$(BISON) $(BISON_FLAGS) --defines=$(PARSER_HEADER) --output=$(PARSER_C) $(PARSER_SRC)
 
-$(LEXER_C): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so we have the generated header
-	$(FLEX) -o $(LEXER) $(LEXER_SRC)
+$(LEXER_C) $(LEXER_HEADER): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so we have the generated header
+	$(FLEX) -o $(LEXER_C) --header-file=$(LEXER_HEADER) $(LEXER_SRC)
 
-run: $(PROGRAM)
-	./$(PROGRAM)
+test: all
+	./$(PROGRAM) tests/expr_test.sy
 
 clean:
-	@rm -f $(LEXER_C) $(PARSER_C) $(PARSER)
+	@rm -f $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER) $(PROGRAM)

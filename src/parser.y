@@ -1,47 +1,60 @@
 
 %language "C"
+%define parse.error detailed
 
 %{
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "parser.h"
-
 extern char * yytext;
 extern int yylval;
-extern int yylex();
 extern int line_num;
+extern int yylex();
 %}
+
 %code provides {
-int yyerror(const char * s);
+void yyerror(const char * s);
 }
 
-/* Token definitions */
-%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON
+/* TODO: Change bitwise operator names to someting sensible like BIT_NOT etc. Also have to change lexer */
+
+/* TOKENS */
+
+/* Various brackets, commas, dots, semicolons */
+%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT
+/* Arithmetic and bitwise operators */
 %token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
+/* Logical operators */
 %token AND NOT OR XOR
+/* Assignment and comparison operators */
+%token ASSIGN_OP COMPARE_OP
+/* Keywords */
 %token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE
+/* Literals */
 %token INT STR ID
+
+
+/* PRECEDENCE */
 
 /* if-elif-else parsing, lowest precedence */
 %right THEN ELIF ELSE
-
+/* dots */
+%left DOT
 /* Assignment operators */
 %right ASSIGN_OP
-
 /* Logical operators */
 %right NOT
 %left AND
 %left OR XOR
-
-/* binary operators */
+/* Comparison operators */
+%right COMPARE_OP
+/* Binary operators */
 %right NOT_OP
 %left AND_OP
 %left OR_OP XOR_OP
 %right RAND_OP
 %right ROR_OP RXOR_OP
-
 /* Arithmetic operators */
 %left PLUS_OP
 %right RPLUS_OP
@@ -51,6 +64,10 @@ int yyerror(const char * s);
 %left UNARY
 
 %%
+
+program:
+    statement_list
+    ;
 
 statement_list:
     statement
@@ -75,19 +92,44 @@ expr:
 
 assign_expr:
     logical_expr
-    | unary_expr ASSIGN_OP assign_expr
+    | ID ASSIGN_OP assign_expr
     ;
 
+/* Note that the logical not precedence is still very low */
 logical_expr:
-    bitwise_expr
-    | logical_expr OR logical_expr
+    compare_expr
+    | NOT logical_expr
     | logical_expr AND logical_expr
+    | logical_expr OR logical_expr
+    | logical_expr XOR logical_expr
     ;
 
-/* I think these all need to be terminals for precedence to work, but feel free to correct it if not */
+compare_expr:
+    bitwise_expr
+    | bitwise_expr COMPARE_OP bitwise_expr
+    ;
+
+bitwise_expr:
+    arithmetic_expr
+    | bitwise_expr AND_OP bitwise_expr
+    | bitwise_expr RAND_OP bitwise_expr
+    | bitwise_expr OR_OP bitwise_expr
+    | bitwise_expr ROR_OP bitwise_expr
+    | bitwise_expr XOR_OP bitwise_expr
+    | bitwise_expr RXOR_OP bitwise_expr
+    ;
+
+arithmetic_expr:
+    unary_expr
+    | arithmetic_expr MULT_OP arithmetic_expr
+    | arithmetic_expr RMULT_OP arithmetic_expr
+    | arithmetic_expr PLUS_OP arithmetic_expr
+    | arithmetic_expr RPLUS_OP arithmetic_expr
+    ;
+
+/* NOTE I think these all need to be terminals for precedence to work, but feel free to simplify it if not */
 unary_expr:
-    primary_expr
-    | NOT logical_expr %prec UNARY
+    member_expr
     | PLUS_OP logical_expr %prec UNARY
     | MULT_OP logical_expr %prec UNARY
     | AND_OP logical_expr %prec UNARY
@@ -99,6 +141,10 @@ unary_expr:
     | RAND_OP logical_expr %prec UNARY
     | ROR_OP logical_expr %prec UNARY
     | RXOR_OP logical_expr %prec UNARY
+    ;
+
+member_expr:
+    primary_expr DOT primary_expr
     ;
 
 primary_expr:
@@ -122,3 +168,11 @@ if_statement:
     | if_elif ELSE LBRACE statement_list RBRACE
     ;
 
+
+
+
+%%
+
+void yyerror(const char * s) {
+  fprintf (stderr, "%s\n", s);
+}

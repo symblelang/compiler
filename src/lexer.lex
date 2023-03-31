@@ -1,29 +1,30 @@
-/*
- * Author: Caden Parajuli - caden.parajuli@bc.edu
- */
+ /*
+  * Author: Caden Parajuli - caden.parajuli@bc.edu
+  */
 
 
-/* Remove unnecessary flex functions
- * Note that with these we don't need to include the flex library */
+ /* Remove unnecessary flex functions
+  * Note that with these we don't need to include the flex library */
 %option noinput
 %option nounput
 %option noyywrap
 
-/* Options for speed and functionality */
+ /* Options for speed and functionality */
 %option bison-bridge
 %option stack
 %option 8bit
 %option yylineno
 %option ecs
-/* %option align */
-/* %option full */
+ /* %option align */
+ /* %option full */
 
-/* include the bison-generated parser library */
+ /* include the bison-generated parser header, and forward declarations */
 %{
 #include "parser.h"
+void string_format(char * str);
 %}
 
-/* Whitespace, IDs, and Integers */
+ /* Whitespace, IDs, and Integers */
 ws_chars            [ \t\n]
 ws                  {ws_chars}+
 digit               [0-9]
@@ -32,7 +33,9 @@ non_id              [^{id_char}]
 id_char             (?ix: [a-z_])
 id                  {id_char}({id_char}|{digit})*
 
-/* Operators */
+ /* Operators (not sure what direction we should go with user-defined assign/compare operators) */
+assign_op           ("*"|"/"|"%"|"+"|"-")?"="
+compare_op          (("=="|"<"|">")"="?)|"!="
 plus_opchar         "+"|"-"|"±"|"⊕"|"⊖"|"⊞"|"⊟"|"∪"|"∨"|"⊔"
 mult_opchar         "*"|"/"|"%"|"∙"|"∘"|"×"|"★"|"⊗"|"⊘"|"⊙"|"⊛"|"⊠"|"⊡"|"∩"|"∧"|"⊓"
 opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"
@@ -41,9 +44,8 @@ mult_op             {mult_opchar}{opchar}*
 and_op              "&"{opchar}*
 or_op               "|"{opchar}*
 not_op              "!"{opchar}*
-assign_op           {opchar}*"="
 
-/* Right-associative Operators */
+ /* Right-associative Operators */
 rplus_op            "^"{plus_opchar}{opchar}*
 rmult_op            "^"{mult_opchar}{opchar}*
 rand_op             "^&"{opchar}*
@@ -54,21 +56,22 @@ xor_op              "^"+
 
 %%
 
-/* Single-line comment */
+ /* Single-line comment */
 "//".*
 
-/* Ignore whitespace */
+ /* Ignore whitespace */
 {ws}
 
-/* Operators */
+ /* Operators */
 {mult_op}           return MULT_OP;
 {plus_op}           return PLUS_OP;
 {and_op}            return AND_OP;
 {or_op}             return OR_OP;
 {not_op}            return NOT_OP;
 {assign_op}         return ASSIGN_OP;
+{compare_op}        return COMPARE_OP;
 
-/* Right-associative Operators */
+ /* Right-associative Operators */
 {rmult_op}          return RMULT_OP;
 {rplus_op}          return RPLUS_OP;
 {rand_op}           return RAND_OP;
@@ -82,9 +85,10 @@ xor_op              "^"+
 "{"                 return LBRACE;
 "}"                 return RBRACE;
 ","                 return COMMA;
-";"         return SEMICOLON;
+";"                 return SEMICOLON;
+"."                 return DOT;
 
-/* Keywords */
+ /* Keywords */
 "and"/{non_id}      return AND;
 "not"/{non_id}      return NOT;
 "or"/{non_id}       return OR;
@@ -100,21 +104,21 @@ xor_op              "^"+
 "case"/{non_id}     return CASE;
 "type"/{non_id}     return TYPE;
 
-/* We want id to be returned only if a keyword isn't matched */
+ /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;
 
-/* Numers (TODO add floats, hex, octal, etc.) */
+ /* Numers (TODO add floats, hex, octal, etc.) */
 {integer}           return INT;
 
 
-/* String */
+ /* String */
 \"([^\\\"]|\\.)*\"  {
-                    format_string(yytext);
+                    string_format(yytext);
                     return STR;
                     }
 
 
-/* Comment */
+ /* Comment */
 "/*"                yy_push_state(comment);
 <comment>{
 [^*\n]*
@@ -125,8 +129,8 @@ xor_op              "^"+
 
 %%
 
-/* Used to edit yytext for escape sequences */
-void format_string(char * str) {
+ /* Used to edit yytext for escape sequences */
+void string_format(char * str) {
     char * curr_pos = str;
     char * to_replace = str;
     while(curr_pos) {
@@ -174,5 +178,5 @@ void format_string(char * str) {
             to_replace++;
         }
     }
-    *to_replace='\0'
+    *to_replace='\0';
 }
