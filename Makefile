@@ -24,15 +24,20 @@ FLEX_FLAGS=--never-interactive --batch
 PROGRAM=$(BIN)/symble
 MAIN_SRC=$(SRC)/main.c
 
+.PHONY: all test clean
+
 all: $(PROGRAM)
 
 $(PROGRAM): $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) -DYYERROR_VERBOSE -DYYDEBUG=1 -ly -ll
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
+	@mkdir -p $(@D)
 	$(BISON) $(BISON_FLAGS) --defines=$(PARSER_HEADER) --output=$(PARSER_C) $(PARSER_SRC)
 
 $(LEXER_C) $(LEXER_HEADER): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so we have the generated header
+	@mkdir -p $(@D)
 	$(FLEX) -o $(LEXER_C) --header-file=$(LEXER_HEADER) $(LEXER_SRC)
 
 test: all
@@ -40,4 +45,4 @@ test: all
 	$(PROGRAM) tests/function_test.sy
 
 clean:
-	@rm -f $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
+	@rm -f $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
