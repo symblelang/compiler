@@ -22,8 +22,8 @@ void yyerror(const char * s);
 
 /* TOKENS */
 
-/* Various brackets, commas, dots, semicolons */
-%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT
+/* Various brackets and other simple tokens */
+%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT BACKSLASH BACKTICK ARROW
 /* Arithmetic and bitwise operators */
 %token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
 /* Logical operators */
@@ -33,7 +33,7 @@ void yyerror(const char * s);
 /* Keywords */
 %token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE
 /* Literals */
-%token INT STR ID
+%token INT_LIT STR_LIT ID
 
 
 /* PRECEDENCE */
@@ -85,7 +85,7 @@ expr_statement:
     expr SEMICOLON       {printf("statement!\n");}
     ;
 
-/* Precedence/conflicts within sub-expressionss should (if I did it right) be handled by the token precedences above */
+/* Precedence/conflicts within sub-expressions should (if I did it right) be handled by the token precedences above */
 expr:
     assign_expr
     | expr assign_expr
@@ -147,17 +147,40 @@ unary_expr:
 member_expr:
     primary_expr
     | member_expr DOT primary_expr
+    | member_expr LSQB expr RSQB
     ;
 
 primary_expr:
     ID
     | constant
     | LPAREN expr RPAREN
+    | function_call
     ;
+
+function_call:
+    member_expr LPAREN argument_list RPAREN
+    ;
+
+argument_list:
+    expr
+    | argument_list COMMA expr
+    ;
+
+function_def:
+    FUN ID LPAREN argument_specifier RPAREN ARROW type_specifier LBRACE statement_list RBRACE
+    | FUN ID LSQB generic_parameters RSQB LPAREN argument_specifier RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE
+    ;
+
+argument_list_specifier:
+    type_specifier ID
+    | argument_list_specifier COMMA type_specifier ID
+    ;
+
 
 /* TODO Add more constant types */
 constant:
-    INT
+    INT_LIT
+    | STR_LIT
     ;
 
 if_elif:

@@ -87,6 +87,9 @@ xor_op              "^"+
 ","                 return COMMA;
 ";"                 return SEMICOLON;
 "."                 return DOT;
+"\\"                return BACKSLASH;
+"`"                 return BACKTICK;
+"->"                return ARROW;
 
  /* Keywords */
 "and"/{non_id}      return AND;
@@ -108,13 +111,13 @@ xor_op              "^"+
 {id}                return ID;
 
  /* Numbers (TODO add floats, hex, octal, etc.) */
-{integer}           {printf("%d ", *yylval); return INT;}
+{integer}           {printf("%d ", *yylval); return INT_LIT;}
 
 
  /* String */
 \"([^\\\"]|\\.)*\"  {
-                    string_format(yytext);
-                    return STR;
+                    /* string_format(yytext); */
+                    return STR_LIT;
                     }
 
 

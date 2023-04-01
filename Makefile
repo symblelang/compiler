@@ -3,18 +3,20 @@ CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-
 
 SRC=src
 BIN=bin
+FLEX_OUT=bison_flex_out
+BISON_OUT=bison_flex_out
 
-PARSER=$(SRC)/parser
-PARSER_SRC=$(PARSER).y
-PARSER_C=$(PARSER).c
-PARSER_HEADER=$(PARSER).h
+PARSER_NAME=parser
+PARSER_SRC=$(SRC)/$(PARSER_NAME).y
+PARSER_C=$(BISON_OUT)/$(PARSER_NAME).c
+PARSER_HEADER=$(BISON_OUT)/$(PARSER_NAME).h
 BISON=bison
 BISON_FLAGS=
 
-LEXER=$(SRC)/lexer
-LEXER_SRC=$(LEXER).lex
-LEXER_C=$(LEXER).c
-LEXER_HEADER=$(LEXER).h
+LEXER_NAME=lexer
+LEXER_SRC=$(SRC)/$(LEXER_NAME).lex
+LEXER_C=$(FLEX_OUT)/$(LEXER_NAME).c
+LEXER_HEADER=$(FLEX_OUT)/$(LEXER_NAME).h
 FLEX=flex
 FLEX_FLAGS=--never-interactive --batch
 
@@ -26,9 +28,6 @@ all: $(PROGRAM)
 $(PROGRAM): $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
 	$(CC) $(CFLAGS) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) -DYYERROR_VERBOSE -DYYDEBUG=1 -ly -ll
 
-$(PARSER): $(LEXER_C) $(PARSER_C) $(PARSER_HEADER)
-	$(CC) $(CFLAGS) $(PARSER_C) $(SCANNER_C) -o $(PARSER) -DYYERROR_VERBOSE -ly -ll
-
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
 	$(BISON) $(BISON_FLAGS) --defines=$(PARSER_HEADER) --output=$(PARSER_C) $(PARSER_SRC)
 
@@ -39,4 +38,4 @@ test: all
 	./$(PROGRAM) tests/expr_test.sy
 
 clean:
-	@rm -f $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER) $(PROGRAM)
+	@rm -f $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
