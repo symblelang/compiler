@@ -25,7 +25,8 @@ void yyerror(const char * s);
 /* Various brackets and other simple tokens */
 %token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT BACKSLASH BACKTICK ARROW
 /* Arithmetic and bitwise operators */
-%token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
+%token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP
+%token RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
 /* Logical operators */
 %token AND NOT OR XOR
 /* Assignment and comparison operators */
@@ -44,23 +45,24 @@ void yyerror(const char * s);
 %left DOT
 /* Assignment operators */
 %right ASSIGN_OP
+/* Comparison operators */
+%right COMPARE_OP
 /* Logical operators */
 %right NOT
 %left AND
 %left OR XOR
-/* Comparison operators */
-%right COMPARE_OP
+/* Arithmetic operators */
+%left PLUS_OP
+%right RPLUS_OP
+%left MULT_OP
+%right RMULT_OP
+%right POW_OP
 /* Binary operators */
 %right NOT_OP
 %left AND_OP
 %left OR_OP XOR_OP
 %right RAND_OP
 %right ROR_OP RXOR_OP
-/* Arithmetic operators */
-%left PLUS_OP
-%right RPLUS_OP
-%left MULT_OP
-%right RMULT_OP
 
 %left UNARY
 
@@ -124,6 +126,7 @@ bitwise_expr:
 
 arithmetic_expr:
     unary_expr
+    | arithmetic_expr POW_OP arithmetic_expr
     | arithmetic_expr MULT_OP arithmetic_expr
     | arithmetic_expr RMULT_OP arithmetic_expr
     | arithmetic_expr PLUS_OP arithmetic_expr

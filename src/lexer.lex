@@ -34,23 +34,26 @@ id_char             (?ix: [a-z_])
 id                  {id_char}({id_char}|{digit})*
 
  /* Operators (not sure what direction we should go with user-defined assign/compare operators) */
-assign_op           ("*"|"/"|"%"|"+"|"-")?"="
-compare_op          (("=="|"<"|">")"="?)|"!="
 plus_opchar         "+"|"-"|"±"|"⊕"|"⊖"|"⊞"|"⊟"|"∪"|"∨"|"⊔"
 mult_opchar         "*"|"/"|"%"|"∙"|"∘"|"×"|"★"|"⊗"|"⊘"|"⊙"|"⊛"|"⊠"|"⊡"|"∩"|"∧"|"⊓"
-opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"
+opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"|"^"
 plus_op             {plus_opchar}{opchar}*
 mult_op             {mult_opchar}{opchar}*
 and_op              "&"{opchar}*
 or_op               "|"{opchar}*
 not_op              "!"{opchar}*
+xor_op              "~"{opchar}*
+assign_op           ("*"|"/"|"%"|"+"|"-")?"="
+compare_op          (("=="|"<"|">")"="?)|"!="
 
  /* Right-associative Operators */
 rplus_op            "^"{plus_opchar}{opchar}*
 rmult_op            "^"{mult_opchar}{opchar}*
 rand_op             "^&"{opchar}*
 ror_op              "^|"{opchar}*
-xor_op              "^"+
+rxor_op             "^~"{opchar}*
+pow_op              "^"|("^^"{opchar}*)
+ /* Note some possible operators are not caught by this */
 
 %x comment
 
@@ -67,6 +70,7 @@ xor_op              "^"+
 {plus_op}           return PLUS_OP;
 {and_op}            return AND_OP;
 {or_op}             return OR_OP;
+{xor_op}            return XOR_OP;
 {not_op}            return NOT_OP;
 {assign_op}         return ASSIGN_OP;
 {compare_op}        return COMPARE_OP;
@@ -76,7 +80,8 @@ xor_op              "^"+
 {rplus_op}          return RPLUS_OP;
 {rand_op}           return RAND_OP;
 {ror_op}            return ROR_OP;
-{xor_op}            return XOR_OP;
+{rxor_op}           return RXOR_OP;
+{pow_op}            return POW_OP;
 
 "("                 return LPAREN;
 ")"                 return RPAREN;
