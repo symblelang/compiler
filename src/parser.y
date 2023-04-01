@@ -164,7 +164,7 @@ member_expr:
 
 primary_expr:
     ID
-    | constant
+    | literal
     | LPAREN expr RPAREN
     | function_call
     ;
@@ -195,7 +195,7 @@ argument_specifier:
     ;
 
 /* TODO: add pointer supprt, perhaps with `ptr` keyword, and add tuples.
- * It would be easy, but I don't want to do it yet before the type system is in place. */
+ * It would be easy, but I don't want to do it yet before the type system is ironed out. */
 type:
     ID
     | ID LSQB INT_LIT RSQB
@@ -211,8 +211,8 @@ type_list:
     | type_list COMMA type
     ;
 
-/* TODO Add more constant types */
-constant:
+/* TODO Add more literal types */
+literal:
     INT_LIT
     | STR_LIT
     ;

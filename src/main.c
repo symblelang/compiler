@@ -17,19 +17,46 @@ FILE * open_if_exists(char * to_open) {
     }
 }
 
+int parse_file(char * filename) {
+    int ret;
+    yyin = open_if_exists(filename);
+    ret = yyparse();
+    fclose(yyin);
+    putchar('\n');
+    return ret;
+}
+
 int main(int argc, char * argv[]) {
-    yydebug = 1;
-    if (argc > 1) {
-        char * filename =  argv[1];
-        int ret;
-        yyin = open_if_exists(filename);
-        printf("Opened file %s\n", filename);
-        ret = yyparse();
-        fclose(yyin);
-        return ret;
+    /* Parse command line arguments */
+    int filename_index = 0;
+    int output_filename_index = 0;
+    for (int arg_index = 1; arg_index < argc; ++arg_index) {
+        if (argv[arg_index][0] == '-') {
+            /* Option parsing */
+            switch(argv[arg_index][1]) {
+                case 'o':
+                    /* Set the output filename index and skip it in the loop */
+                    output_filename_index = arg_index + 1;
+                    arg_index++;
+                    break;
+                case 'v':
+                    yydebug = 1;
+                    break;
+                case '-':
+                    /* Parse long options */
+                    break;
+                default:
+                    fprintf(stderr, "erro: malformed option \"%s\"\n", argv[arg_index]);
+            }
+        }
+        else {
+            filename_index = arg_index;
+        } 
     }
-    else {
-        fprintf(stderr, "error: no input file!\n");
-        return EXIT_FAILURE;
+    if (output_filename_index) {
+        /* File output isn't supported yet */
+    }
+    if (filename_index) {
+        return parse_file(argv[filename_index]);
     }
 }

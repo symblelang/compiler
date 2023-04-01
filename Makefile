@@ -41,8 +41,8 @@ $(LEXER_C) $(LEXER_HEADER): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so w
 	$(FLEX) -o $(LEXER_C) --header-file=$(LEXER_HEADER) $(LEXER_SRC)
 
 test: all
-	$(PROGRAM) tests/expr_test.sy
-	$(PROGRAM) tests/function_test.sy
+	$(PROGRAM) -v tests/expr_test.sy
+	$(PROGRAM) -v tests/function_test.sy
 
 clean:
 	@rm -f $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
