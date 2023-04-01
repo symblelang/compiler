@@ -31,7 +31,7 @@ void yyerror(const char * s);
 /* Assignment and comparison operators */
 %token ASSIGN_OP COMPARE_OP
 /* Keywords */
-%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE
+%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN
 /* Literals */
 %token INT_LIT STR_LIT ID
 
@@ -79,6 +79,8 @@ statement_list:
 statement:
     expr_statement
     | if_statement
+    | function_def
+    | control_statement
     ;
 
 expr_statement:
@@ -167,15 +169,25 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_specifier RPAREN ARROW type_specifier LBRACE statement_list RBRACE
-    | FUN ID LSQB generic_parameters RSQB LPAREN argument_specifier RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
+    /* Function definition with generic parameters, have to define more grammar rules first */
+    /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
     ;
 
 argument_list_specifier:
-    type_specifier ID
-    | argument_list_specifier COMMA type_specifier ID
+    argument_specifier
+    | argument_list_specifier COMMA argument_specifier
     ;
 
+argument_specifier:
+    type ID
+    ;
+
+/* TODO: add pointer supprt, perhaps with `ptr` keyword */
+type:
+    ID
+    | ID LSQB INT_LIT RSQB
+    ;
 
 /* TODO Add more constant types */
 constant:
@@ -193,7 +205,9 @@ if_statement:
     | if_elif ELSE LBRACE statement_list RBRACE
     ;
 
-
+control_statement:
+    RETURN expr SEMICOLON
+    ;
 
 
 %%

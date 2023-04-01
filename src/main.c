@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "parser.h"
-#include "lexer.h"
+#include "../bison_out/parser.h"
+#include "../flex_out/lexer.h"
 
 extern FILE * yyin;
 extern int yydebug;

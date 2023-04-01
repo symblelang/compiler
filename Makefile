@@ -1,10 +1,11 @@
 CC=clang
 CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function
 
+# Note that if you change FLEX_OUT or BISON_OUT the sources need to change to include correctly
 SRC=src
 BIN=bin
-FLEX_OUT=bison_flex_out
-BISON_OUT=bison_flex_out
+FLEX_OUT=flex_out
+BISON_OUT=bison_out
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
@@ -35,7 +36,8 @@ $(LEXER_C) $(LEXER_HEADER): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so w
 	$(FLEX) -o $(LEXER_C) --header-file=$(LEXER_HEADER) $(LEXER_SRC)
 
 test: all
-	./$(PROGRAM) tests/expr_test.sy
+	$(PROGRAM) tests/expr_test.sy
+	$(PROGRAM) tests/function_test.sy
 
 clean:
 	@rm -f $(BISON_OUT)/* $(BIN)/* $(PROGRAM)

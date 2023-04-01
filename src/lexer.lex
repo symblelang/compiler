@@ -20,7 +20,7 @@
 
  /* include the bison-generated parser header, and forward declarations */
 %{
-#include "parser.h"
+#include "../bison_out/parser.h"
 void string_format(char * str);
 %}
 
@@ -106,6 +106,7 @@ xor_op              "^"+
 "switch"/{non_id}   return SWITCH;
 "case"/{non_id}     return CASE;
 "type"/{non_id}     return TYPE;
+"return"/{non_id}   return RETURN;
 
  /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;
