@@ -112,6 +112,8 @@ pow_op              "^"|("^^"{opchar}*)
 "case"/{non_id}     return CASE;
 "type"/{non_id}     return TYPE;
 "return"/{non_id}   return RETURN;
+"break"/{non_id}    return BREAK;
+"continue"/{non_id} return CONTINUE;
 
  /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;

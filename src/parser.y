@@ -32,7 +32,7 @@ void yyerror(const char * s);
 /* Assignment and comparison operators */
 %token ASSIGN_OP COMPARE_OP
 /* Keywords */
-%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN
+%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
 /* Literals */
 %token INT_LIT STR_LIT ID
 
@@ -86,7 +86,7 @@ statement:
     ;
 
 expr_statement:
-    expr SEMICOLON       {printf("statement!\n");}
+    expr SEMICOLON
     ;
 
 /* Precedence/conflicts within sub-expressions should (if I did it right) be handled by the token precedences above */
@@ -100,7 +100,7 @@ assign_expr:
     | ID ASSIGN_OP assign_expr
     ;
 
-/* Note that the logical not precedence is still very low */
+/* Note that the logical not precedence is still fairly low */
 logical_expr:
     compare_expr
     | NOT logical_expr
@@ -173,6 +173,7 @@ argument_list:
 
 function_def:
     FUN ID LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
+    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
     /* Function definition with generic parameters, have to define more grammar rules first */
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
     ;
@@ -198,6 +199,12 @@ constant:
     | STR_LIT
     ;
 
+user_operator:
+    PLUS_OP | MULT_OP | AND_OP | OR_OP | NOT_OP | XOR_OP
+    | RPLUS_OP | RMULT_OP | RAND_OP | ROR_OP | RXOR_OP
+    | ASSIGN_OP | COMPARE_OP
+    ;
+
 if_elif:
     IF LPAREN expr RPAREN LBRACE statement_list RBRACE %prec THEN
     | if_elif ELIF LPAREN expr RPAREN LBRACE statement_list RBRACE
@@ -210,6 +217,8 @@ if_statement:
 
 control_statement:
     RETURN expr SEMICOLON
+    | BREAK expr SEMICOLON
+    | CONTINUE expr SEMICOLON
     ;
 
 
