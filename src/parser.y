@@ -41,7 +41,9 @@ void yyerror(const char * s);
 
 /* if-elif-else parsing, lowest precedence */
 %right THEN ELIF ELSE
-/* dots */
+/* Arrow */
+%right ARROW
+/* Dot */
 %left DOT
 /* Assignment operators */
 %right ASSIGN_OP
@@ -83,6 +85,11 @@ statement:
     | if_statement
     | function_def
     | control_statement
+    | varible_declaration
+    ;
+
+varible_declaration:
+    type
     ;
 
 expr_statement:
@@ -187,10 +194,21 @@ argument_specifier:
     type ID
     ;
 
-/* TODO: add pointer supprt, perhaps with `ptr` keyword */
+/* TODO: add pointer supprt, perhaps with `ptr` keyword, and add tuples.
+ * It would be easy, but I don't want to do it yet before the type system is in place. */
 type:
     ID
     | ID LSQB INT_LIT RSQB
+    | function_type
+    ;
+
+function_type:
+    LPAREN type_list RPAREN ARROW type
+    ;
+
+type_list:
+    type
+    | type_list COMMA type
     ;
 
 /* TODO Add more constant types */
