@@ -1,3 +1,11 @@
+ /*
+  * Authors:
+  *   Andrew Clark     - andrew.clark.6@bc.edu
+  *   Alex Liu         - alex.liu@bc.edu
+  *   Caden Parajuli   - caden.parajuli@bc.edu
+  *   Micheal Lebreck  - michael.lebreck@bc.edu
+  *   William Morrison - william.morrison.2@bc.edu
+  */
 
 %language "C"
 %define parse.error detailed
@@ -101,7 +109,6 @@ expr_statement:
     expr SEMICOLON
     ;
 
-/* Precedence/conflicts within sub-expressions should (if I did it right) be handled by the token precedences above */
 expr:
     assign_expr
     | expr assign_expr
@@ -199,11 +206,10 @@ argument_specifier:
     type ID
     ;
 
-/* TODO: add pointer supprt, perhaps with `ptr` keyword, and add tuples.
- * It would be easy, but I don't want to do it yet before the type system is ironed out. */
+/* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
 type:
     ID
-    | ID LSQB INT_LIT RSQB
+    | ID LSQB INT_LIT RSQB      /* Arrays */
     | function_type
     ;
 
