@@ -1,6 +1,7 @@
 
 %language "C"
 %define parse.error detailed
+%define api.pure full
 
 %{
 #include <ctype.h>
@@ -18,15 +19,13 @@ extern FILE *  yyin;
 void yyerror(const char * s);
 }
 
-/* TODO: Change bitwise operator names to someting sensible like BIT_NOT etc. Also have to change lexer */
-
 /* TOKENS */
 
 /* Various brackets and other simple tokens */
 %token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT BACKSLASH BACKTICK ARROW
 /* Arithmetic and bitwise operators */
-%token PLUS_OP MULT_OP AND_OP OR_OP NOT_OP XOR_OP
-%token RPLUS_OP RMULT_OP RAND_OP ROR_OP RXOR_OP
+%token PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP
+%token RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP
 /* Logical operators */
 %token AND NOT OR XOR
 /* Assignment and comparison operators */
@@ -60,13 +59,13 @@ void yyerror(const char * s);
 %right RMULT_OP
 %right POW_OP
 /* Binary operators */
-%right NOT_OP
-%left AND_OP
-%left OR_OP XOR_OP
-%right RAND_OP
-%right ROR_OP RXOR_OP
-
-%left UNARY
+%right BIT_NOT_OP
+%left BIT_AND_OP
+%left BIT_OR_OP BIT_XOR_OP
+%right RBIT_AND_OP
+%right RBIT_OR_OP RBIT_XOR_OP
+/* Unary operator precedence */
+%right UNARY
 
 %%
 
@@ -123,12 +122,12 @@ compare_expr:
 
 bitwise_expr:
     arithmetic_expr
-    | bitwise_expr AND_OP bitwise_expr
-    | bitwise_expr RAND_OP bitwise_expr
-    | bitwise_expr OR_OP bitwise_expr
-    | bitwise_expr ROR_OP bitwise_expr
-    | bitwise_expr XOR_OP bitwise_expr
-    | bitwise_expr RXOR_OP bitwise_expr
+    | bitwise_expr BIT_AND_OP bitwise_expr
+    | bitwise_expr RBIT_AND_OP bitwise_expr
+    | bitwise_expr BIT_OR_OP bitwise_expr
+    | bitwise_expr RBIT_OR_OP bitwise_expr
+    | bitwise_expr BIT_XOR_OP bitwise_expr
+    | bitwise_expr RBIT_XOR_OP bitwise_expr
     ;
 
 arithmetic_expr:
@@ -145,15 +144,15 @@ unary_expr:
     member_expr
     | PLUS_OP logical_expr %prec UNARY
     | MULT_OP logical_expr %prec UNARY
-    | AND_OP logical_expr %prec UNARY
-    | OR_OP logical_expr %prec UNARY
-    | NOT_OP logical_expr %prec UNARY
-    | XOR_OP logical_expr %prec UNARY
+    | BIT_AND_OP logical_expr %prec UNARY
+    | BIT_OR_OP logical_expr %prec UNARY
+    | BIT_NOT_OP logical_expr %prec UNARY
+    | BIT_XOR_OP logical_expr %prec UNARY
     | RPLUS_OP logical_expr %prec UNARY
     | RMULT_OP logical_expr %prec UNARY
-    | RAND_OP logical_expr %prec UNARY
-    | ROR_OP logical_expr %prec UNARY
-    | RXOR_OP logical_expr %prec UNARY
+    | RBIT_AND_OP logical_expr %prec UNARY
+    | RBIT_OR_OP logical_expr %prec UNARY
+    | RBIT_XOR_OP logical_expr %prec UNARY
     ;
 
 member_expr:
@@ -218,8 +217,8 @@ literal:
     ;
 
 user_operator:
-    PLUS_OP | MULT_OP | AND_OP | OR_OP | NOT_OP | XOR_OP
-    | RPLUS_OP | RMULT_OP | RAND_OP | ROR_OP | RXOR_OP
+    PLUS_OP | MULT_OP | BIT_AND_OP | BIT_OR_OP | BIT_NOT_OP | BIT_XOR_OP
+    | RPLUS_OP | RMULT_OP | RBIT_AND_OP | RBIT_OR_OP | RBIT_XOR_OP
     | ASSIGN_OP | COMPARE_OP
     ;
 

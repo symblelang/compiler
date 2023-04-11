@@ -3,20 +3,27 @@
   */
 
 
- /* Remove unnecessary flex functions
-  * Note that with these we don't need to include the flex library */
+ /* Remove unnecessary flex functions for non-interactive scanner */
 %option noinput
 %option nounput
 %option noyywrap
 
- /* Options for speed and functionality */
+ /* bison-compatible reentrant mode */
 %option bison-bridge
-%option stack
-%option 8bit
+
+ /* Keep track of line numbers */
 %option yylineno
+
+ /* Enable start condition stack */
+%option stack
+
+ /* Use 8 bits per character (default for most modes) */
+%option 8bit
+
+ /* Speed */
 %option ecs
- /* %option align */
- /* %option full */
+%option batch
+%option full
 
  /* include the bison-generated parser header, and forward declarations */
 %{
@@ -63,24 +70,24 @@ pow_op              "^"|("^^"{opchar}*)
 "//".*
 
  /* Ignore whitespace */
-{ws}
+{ws}                {}
 
  /* Operators */
 {mult_op}           return MULT_OP;
 {plus_op}           return PLUS_OP;
-{and_op}            return AND_OP;
-{or_op}             return OR_OP;
-{xor_op}            return XOR_OP;
-{not_op}            return NOT_OP;
+{and_op}            return BIT_AND_OP;
+{or_op}             return BIT_OR_OP;
+{xor_op}            return BIT_XOR_OP;
+{not_op}            return BIT_NOT_OP;
 {assign_op}         return ASSIGN_OP;
 {compare_op}        return COMPARE_OP;
 
  /* Right-associative Operators */
 {rmult_op}          return RMULT_OP;
 {rplus_op}          return RPLUS_OP;
-{rand_op}           return RAND_OP;
-{ror_op}            return ROR_OP;
-{rxor_op}           return RXOR_OP;
+{rand_op}           return RBIT_AND_OP;
+{ror_op}            return RBIT_OR_OP;
+{rxor_op}           return RBIT_XOR_OP;
 {pow_op}            return POW_OP;
 
 "("                 return LPAREN;
@@ -129,18 +136,19 @@ pow_op              "^"|("^^"{opchar}*)
                     }
 
 
- /* Comment */
-"/*"                yy_push_state(comment);
+ /* Multiline comments */
+"/*"                  { yy_push_state(comment); }
 <comment>{
-[^*\n]*
-"*"+[^*/\n]*
-"\n"
-"*"+"/"             yy_pop_state();
+    [^*\n]*           {}
+    "*"+[^*/\n]*      {}
+    "\n"              {}
+    "*"+"/"           { yy_pop_state(); }
 }
+
 
 %%
 
- /* Used to edit yytext for escape sequences */
+ /* Used to edit a string for escape sequences */
 void string_format(char * str) {
     char * curr_pos = str;
     char * to_replace = str;
