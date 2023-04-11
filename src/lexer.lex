@@ -43,7 +43,7 @@ id                  {id_char}({id_char}|{digit})*
  /* Operators (not sure what direction we should go with user-defined assign/compare operators) */
 plus_opchar         "+"|"-"|"±"|"⊕"|"⊖"|"⊞"|"⊟"|"∪"|"∨"|"⊔"
 mult_opchar         "*"|"/"|"%"|"∙"|"∘"|"×"|"★"|"⊗"|"⊘"|"⊙"|"⊛"|"⊠"|"⊡"|"∩"|"∧"|"⊓"
-opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"|"^"
+opchar              {plus_opchar}|{mult_opchar}|"&"|"|"|"!"|"~"|"^"
 plus_op             {plus_opchar}{opchar}*
 mult_op             {mult_opchar}{opchar}*
 and_op              "&"{opchar}*
@@ -60,11 +60,14 @@ rand_op             "^&"{opchar}*
 ror_op              "^|"{opchar}*
 rxor_op             "^~"{opchar}*
 pow_op              "^"|("^^"{opchar}*)
- /* Note some possible operators are not caught by this */
+ /* Note some possible operators might not be caught */
 
 %x comment
+%x str
+
 
 %%
+
 
  /* Single-line comment */
 "//".*
@@ -126,76 +129,47 @@ pow_op              "^"|("^^"{opchar}*)
 {id}                return ID;
 
  /* Numbers (TODO add floats, hex, octal, etc.) */
-{integer}           {printf("%d ", *yylval); return INT_LIT;}
-
-
- /* String */
-\"([^\\\"]|\\.)*\"  {
-                    /* string_format(yytext); */
-                    return STR_LIT;
+{integer}           {
+                         yylval->integer = atoi(yytext);
+                         return INT_LIT;
                     }
 
 
+ /* String lexing */
+ /* TODO make this more efficient by keeping a variable for the length instead of strcat */
+
+ /* String with no escape sequences */
+\"[^"\\]*\"         {
+                        yylval->string = strndup(yytext + 1, yyleng - 2);
+                        return STR_LIT;
+                    }
+ /* Enter string state for other strings */
+\"[^"\\]*           {
+                        yylval->string = strndup(yytext + 1, yyleng - 1);
+                        yy_push_state(str);
+                        /* No return, so the lexer will continue in the str state */
+                    }
+<str>{
+    [^"\\]+         { strncat(yylval->string, yytext, yyleng); }
+    \\n             { strncat(yylval->string, "\n", 1); }
+    \\t             { strncat(yylval->string, "\t", 1); }
+    \\[\\"]         { strncat(yylval->string, yytext + 1, 1); }
+    \\\n            { /* A backslash at the end of the line. Do nothing */ }
+    \"              { yy_pop_state(); return STR_LIT; }
+}
+
+
+ /* Strings with escape sequences */
+
  /* Multiline comments */
-"/*"                  { yy_push_state(comment); }
+"/*"                { yy_push_state(comment); }
 <comment>{
-    [^*\n]*           {}
-    "*"+[^*/\n]*      {}
-    "\n"              {}
-    "*"+"/"           { yy_pop_state(); }
+    [^*\n]*         {}
+    "*"+[^*/\n]*    {}
+    "\n"            {}
+    "*"+"/"         { yy_pop_state(); }
 }
 
 
 %%
 
- /* Used to edit a string for escape sequences */
-void string_format(char * str) {
-    char * curr_pos = str;
-    char * to_replace = str;
-    while(curr_pos) {
-        if (*curr_pos == '\\') {
-            switch(*(curr_pos + 1)) {
-                case 'n':
-                    *to_replace = '\n';
-                    break;
-                case 'a':
-                    *to_replace = '\a';
-                    break;
-                case 'b':
-                    *to_replace = '\b';
-                    break;
-                case 'f':
-                    *to_replace = '\f';
-                    break;
-                case 'r':
-                    *to_replace = '\r';
-                    break;
-                case 't':
-                    *to_replace = '\t';
-                    break;
-                case 'v':
-                    *to_replace = '\v';
-                    break;
-                case '\\':
-                    *to_replace = '\\';
-                    break;
-                case '\"':
-                    *to_replace = '\"';
-                    break;
-                case '\'':
-                    *to_replace = '\'';
-                    break;
-                default:
-                    yyerror("Bad escape sequence");
-            }
-            curr_pos += 2;
-            to_replace += 1;
-            continue;
-        }
-        else {
-            curr_pos++;
-            to_replace++;
-        }
-    }
-    *to_replace='\0';
-}

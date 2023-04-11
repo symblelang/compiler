@@ -10,13 +10,19 @@
 
 extern char * yytext;
 extern int yylval;
-extern int line_num;
 extern int yylex();
 extern FILE *  yyin;
 %}
 
 %code provides {
-void yyerror(const char * s);
+int yyerror(const char * const msg);
+}
+
+/* yyunion */
+%union{
+    struct Node * node;
+    char * string;
+    int integer;
 }
 
 /* TOKENS */
@@ -241,6 +247,7 @@ control_statement:
 
 %%
 
-void yyerror(const char * s) {
-  fprintf (stderr, "yyerror: %s\n", s);
+int yyerror(const char * const msg) {
+    fprintf(stderr, "yyerror: %s\n", msg);
+    return EXIT_FAILURE;
 }

@@ -6,10 +6,10 @@
 extern FILE * yyin;
 extern int yydebug;
 
-FILE * open_if_exists(char * to_open) {
-    FILE * out_file = fopen(to_open, "r");
+FILE * fopen_checked(const char * const to_open, const char * mode) {
+    FILE * out_file = fopen(to_open, mode);
     if (out_file == NULL) {
-        fprintf(stderr, "Cannot open file %s for reading.\n", to_open);
+        perror("fopen failed");
         exit(EXIT_FAILURE);
     }
     else {
@@ -19,7 +19,7 @@ FILE * open_if_exists(char * to_open) {
 
 int parse_file(char * filename) {
     int ret;
-    yyin = open_if_exists(filename);
+    yyin = fopen_checked(filename, "r");
     ret = yyparse();
     fclose(yyin);
     putchar('\n');
@@ -46,17 +46,22 @@ int main(int argc, char * argv[]) {
                     /* Parse long options */
                     break;
                 default:
-                    fprintf(stderr, "erro: malformed option \"%s\"\n", argv[arg_index]);
+                    fprintf(stderr, "error: malformed option \"%s\"\n", argv[arg_index]);
             }
         }
         else {
             filename_index = arg_index;
         } 
     }
+    
     if (output_filename_index) {
-        /* File output isn't supported yet */
+        /* TODO File output isn't supported yet */
     }
+    
     if (filename_index) {
         return parse_file(argv[filename_index]);
+    }
+    else {
+        fprintf(stderr, "error: no input file given\n");
     }
 }
