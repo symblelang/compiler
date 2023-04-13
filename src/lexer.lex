@@ -77,6 +77,12 @@ pow_op              "^"|("^^"{opchar}*)
  /* Single-line comment */
 "//".*
 
+ /* Mult-line comment */
+"/*"          { BEGIN(comment); }
+<comment>"*/" { BEGIN(INITIAL); }
+<comment>\n   { }
+<comment>.    { }
+
  /* Ignore whitespace */
 {ws}                {}
 
@@ -165,15 +171,6 @@ pow_op              "^"|("^^"{opchar}*)
 
 
  /* Strings with escape sequences */
-
- /* Multiline comments */
-"/*"                { yy_push_state(comment); }
-<comment>{
-    [^*\n]*         {}
-    "*"+[^*/\n]*    {}
-    "\n"            {}
-    "*"+"/"         { yy_pop_state(); }
-}
 
 
 %%
