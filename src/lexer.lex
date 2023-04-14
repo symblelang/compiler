@@ -55,7 +55,8 @@ and_op              "&"{opchar}*
 or_op               "|"{opchar}*
 not_op              "!"{opchar}*
 xor_op              "~"{opchar}*
-assign_op           ("*"|"/"|"%"|"+"|"-")?"="
+equals_op           "="
+assign_op           ("*"|"/"|"%"|"+"|"-")"="
 compare_op          (("=="|"<"|">")"="?)|"!="
 
  /* Right-associative Operators */
@@ -94,6 +95,7 @@ pow_op              "^"|("^^"{opchar}*)
 {xor_op}            return BIT_XOR_OP;
 {not_op}            return BIT_NOT_OP;
 {assign_op}         return ASSIGN_OP;
+{equals_op}         return EQUALS_OP;
 {compare_op}        return COMPARE_OP;
 
  /* Right-associative Operators */

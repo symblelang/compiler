@@ -6,3 +6,4 @@ Here are a few changes to the grammar or language specification that have been m
 
 - Semicolons are now used to end statements
 - `^` is used for exponentiation, and `~` is used instead for bitwise xor.
+- Function *types* now also start with the keyword `fun`, such as `fun (int, int) -> int`. 
