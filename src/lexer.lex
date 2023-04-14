@@ -32,8 +32,7 @@
 
  /* include the bison-generated parser header, and forward declarations */
 %{
-#include "../bison_out/parser.h"
-void string_format(char * str);
+#include "parser.h"
 %}
 
  /* Whitespace, IDs, and Integers */

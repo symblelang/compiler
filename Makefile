@@ -1,7 +1,6 @@
 CC=clang
 CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function
 
-# Note that if you change FLEX_OUT or BISON_OUT the sources need to change to include correctly
 SRC=src
 BIN=bin
 FLEX_OUT=flex_out
@@ -30,7 +29,7 @@ all: $(PROGRAM)
 
 $(PROGRAM): $(LEXER_C) $(PARSER_C) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) -DYYERROR_VERBOSE -DYYDEBUG=1 -ly -ll
+	$(CC) $(CFLAGS) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) -iquote $(FLEX_OUT) -iquote $(BISON_OUT) -DYYERROR_VERBOSE -DYYDEBUG=1 -ly -ll 
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
 	@mkdir -p $(@D)
