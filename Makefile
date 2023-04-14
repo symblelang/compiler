@@ -4,7 +4,7 @@ FLEX_OUT=flex_out
 BISON_OUT=bison_out
 
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1 -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
@@ -31,7 +31,7 @@ all: $(PROGRAM)
 
 $(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
 	@mkdir -p $(@D)
-	$(CC) $(MAIN_SRC) $(PARSER_C) $(LEXER_C) -o $(PROGRAM) $(CFLAGS) -DYYERROR_VERBOSE -DYYDEBUG=1 -ly -ll 
+	$(CC) $(MAIN_SRC) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
 
 %.o : %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
