@@ -137,8 +137,8 @@ logical_expr:
     ;
 
 compare_expr:
-    bitwise_expr
-    | bitwise_expr COMPARE_OP bitwise_expr
+    bitwise_expr %prec BIT_AND_OP
+    | compare_expr COMPARE_OP compare_expr
     ;
 
 bitwise_expr:
@@ -149,31 +149,26 @@ bitwise_expr:
     | bitwise_expr RBIT_OR_OP bitwise_expr
     | bitwise_expr BIT_XOR_OP bitwise_expr
     | bitwise_expr RBIT_XOR_OP bitwise_expr
+    | BIT_NOT_OP bitwise_expr
+    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP
+    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP
+    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP
+    | RBIT_AND_OP bitwise_expr
+    | RBIT_OR_OP bitwise_expr
+    | RBIT_XOR_OP bitwise_expr
     ;
 
 arithmetic_expr:
-    unary_expr
+    member_expr
     | arithmetic_expr POW_OP arithmetic_expr
     | arithmetic_expr MULT_OP arithmetic_expr
     | arithmetic_expr RMULT_OP arithmetic_expr
     | arithmetic_expr PLUS_OP arithmetic_expr
     | arithmetic_expr RPLUS_OP arithmetic_expr
-    ;
-
-/* NOTE I think these all need to be terminals for precedence to work, but feel free to simplify it if not */
-unary_expr:
-    member_expr
-    /* | PLUS_OP logical_expr %prec UNARY */
-    /* | MULT_OP logical_expr %prec UNARY */
-    /* | BIT_AND_OP logical_expr %prec UNARY */
-    /* | BIT_OR_OP logical_expr %prec UNARY */
-    /* | BIT_NOT_OP logical_expr %prec UNARY */
-    /* | BIT_XOR_OP logical_expr %prec UNARY */
-    /* | RPLUS_OP logical_expr %prec UNARY */
-    /* | RMULT_OP logical_expr %prec UNARY */
-    /* | RBIT_AND_OP logical_expr %prec UNARY */
-    /* | RBIT_OR_OP logical_expr %prec UNARY */
-    /* | RBIT_XOR_OP logical_expr %prec UNARY */
+    | PLUS_OP arithmetic_expr %prec RPLUS_OP
+    | MULT_OP arithmetic_expr %prec RMULT_OP
+    | RPLUS_OP arithmetic_expr
+    | RMULT_OP arithmetic_expr
     ;
 
 member_expr:
