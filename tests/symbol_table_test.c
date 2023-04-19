@@ -5,10 +5,10 @@
 
 #include "symbol_table.h"
 
-#define INITIAL 1024
+#define INITIAL 128
 #define TEST_KEY_SIZE 20
 #define TEST_VAL_SIZE 20
-#define NUM_ELEMENTS 1200
+#define NUM_ELEMENTS 130
 
 static void rand_string(char * str, size_t size)
 {

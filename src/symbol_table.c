@@ -8,8 +8,6 @@
 
 #include "symbol_table.h"
 
-static size_t max_psl;
-
 static uint64_t fnv_hash_64(const char * key) {
     uint64_t hash = FNV_BASIS_64;
     for (const uint8_t * curr_loc = (const uint8_t *)key; *curr_loc; curr_loc++) {
@@ -73,14 +71,11 @@ void * get_symbol(SymbolTable * table, const char * key) {
     return NULL;
 }
 
-static int set_symbol_entry(TableEntry ** entries, TableEntry * entry, size_t index) {
+static int set_symbol_entry(TableEntry ** entries, TableEntry * entry, size_t capacity) {
     /* Returns -1 if value was already present, 0 if value was added, and 1 on error */
     /* Loop until there's an empty entry */
+    size_t index = entry->hash & (uint64_t)(capacity - 1);
     while (entries[index] != NULL) {
-        if (entry->psl > max_psl) {
-            /* Update max_psl */
-            max_psl = entry->psl;
-        }
         if (strcmp(entry->key, entries[index]->key) == 0) {
             /* Key found, update value and free the TableEntry we malloc'd */
             entries[index]->value = entry->value;
@@ -95,7 +90,7 @@ static int set_symbol_entry(TableEntry ** entries, TableEntry * entry, size_t in
         }
         /* Index is taken, probe */
         entry->psl++;
-        index++;
+        index = (index + 1) & (capacity - 1);;
     }    
     /* Set empty entry */
     entries[index] = entry;
@@ -117,10 +112,13 @@ int set_symbol(SymbolTable * table, const char * key, void * value) {
             return 1;
         }
     }
-    int ret = set_symbol_entry(table->entries, entry, entry->hash & (uint64_t)(table->capacity - 1));
+    int ret = set_symbol_entry(table->entries, entry, table->capacity);
     if (ret == 0) {
         /* Value added */
         table->length++;
+    }
+    else if (ret == 1) {
+        return 1;
     }
     return 0;
 }
@@ -133,7 +131,8 @@ int expand_table(SymbolTable * table) {
     }
     for (size_t index = 0; index < table->capacity; index++) {
         if (table->entries[index] != NULL) {
-            if (set_symbol_entry(new_entries, table->entries[index], table->entries[index]->hash & (uint64_t)(2 * table->capacity - 1)) == 1) {
+            table->entries[index]->psl = 0;
+            if (set_symbol_entry(new_entries, table->entries[index], 2 * table->capacity) == 1) {
                 return 1;
             }
         }
