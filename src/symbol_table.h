@@ -8,7 +8,8 @@
 
 #define FNV_PRIME_64 0x100000001B3
 #define FNV_BASIS_64 0xCBF29CE484222325
-#define INITIAL_CAPACITY 128
+#define INITIAL_CAPACITY 1024
+#define MAX_FILL 0.7
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -21,7 +22,7 @@ typedef struct TableEntry {
 } TableEntry;
 
 typedef struct SymbolTable {
-    TableEntry * entries;
+    TableEntry ** entries;
     size_t capacity;
     size_t length;
 } SymbolTable;
