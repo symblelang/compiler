@@ -106,6 +106,8 @@ statement:
     | control_statement
     | variable_declaration
     | while_loop
+    | for_loop
+    | do
     | typedef
     ;
 
@@ -258,8 +260,17 @@ if_statement:
 
 control_statement:
     RETURN expr SEMICOLON
-    | BREAK expr SEMICOLON
-    | CONTINUE expr SEMICOLON
+    | BREAK SEMICOLON
+    | CONTINUE SEMICOLON
+    ;
+
+for_loop:
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block
+    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block
+    ;
+
+do:
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON
     ;
 
 while_loop:
