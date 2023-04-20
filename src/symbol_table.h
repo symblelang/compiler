@@ -32,5 +32,6 @@ void free_table(SymbolTable * table);
 void * get_symbol(SymbolTable * table, const char * key);
 int set_symbol(SymbolTable * table, const char * key, void * value);
 int expand_table(SymbolTable * table);
+int unset_symbol(SymbolTable * table, const char * key);
 
 #endif

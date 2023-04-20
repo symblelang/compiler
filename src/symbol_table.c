@@ -2,6 +2,11 @@
  * Author: Caden Parajuli - caden.parajuli@bc.edu
  */
 
+/*
+ * The symbol table is implemented as a dynamically-sized hashtable with size a power of 2
+ * using Robin Hood linear probing, backward shift deletion, and a FNV1-a hash.
+ */
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,17 +81,17 @@ static int set_symbol_entry(TableEntry ** entries, TableEntry * entry, size_t ca
     /* Loop until there's an empty entry */
     size_t index = entry->hash & (uint64_t)(capacity - 1);
     while (entries[index] != NULL) {
-        if (strcmp(entry->key, entries[index]->key) == 0) {
-            /* Key found, update value and free the TableEntry we malloc'd */
-            entries[index]->value = entry->value;
-            free(entry);
-            return -1;
-        }
         if (entry->psl > entries[index]->psl) {
             /* Robin Hood swap */
             TableEntry * temp_entry = entries[index];
             entries[index] = entry;
             entry = temp_entry;
+        }
+        else if (strcmp(entry->key, entries[index]->key) == 0) {
+            /* Key found, update value and free the TableEntry we malloc'd */
+            entries[index]->value = entry->value;
+            free(entry);
+            return -1;
         }
         /* Index is taken, probe */
         entry->psl++;
@@ -137,7 +142,43 @@ int expand_table(SymbolTable * table) {
             }
         }
     }
+    free(table->entries);
     table->entries = new_entries;
     table->capacity *= 2;
+    return 0;
+}
+
+int unset_symbol(SymbolTable * table, const char * key) {
+    /* Returns nonzero if entry is not present in table */
+    size_t index = fnv_hash_64(key) & (table->capacity - 1);
+
+    /* Probe for entry */
+    size_t psl = 0;
+    while (table->entries[index] != NULL) {
+        if (table->entries[index]->psl < psl) {
+            return 1;
+        }
+        else if (strcmp(key, table->entries[index]->key) == 0) {
+            break;
+        }
+        /* Wrong key, probe */
+        psl++;
+        index = (index + 1) & (table->capacity - 1);
+    }
+    if (table->entries[index] == NULL) {
+        return 1;
+    }
+    
+    /* Delete the entry */
+    free((void *)table->entries[index]->key);
+    free(table->entries[index]);
+    index = (index + 1) & (table->capacity - 1);
+    /* Backward shift */
+    while (table->entries[index] != NULL && table->entries[index]->psl != 0) {
+        table->entries[index]->psl -= 1;
+        table->entries[index ? (index - 1) : (table->capacity - 1)] = table->entries[index];
+        index = (index + 1) & (table->capacity - 1);
+    }
+    table->entries[index ? (index - 1) : (table->capacity - 1)] = NULL;
     return 0;
 }

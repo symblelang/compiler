@@ -51,10 +51,13 @@ test: all $(TEST)/expr_test.sy $(TEST)/function_test.sy
 	$(PROGRAM) -v $(TEST)/expr_test.sy
 	$(PROGRAM) -v $(TEST)/function_test.sy
 
-table_test: $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c
+test_table: $(TEST_BIN)/symbol_table_test
+	$(TEST_BIN)/symbol_table_test # valgrind -s --tool=memcheck --leak-check=full --track-origins=yes $(TEST_BIN)/symbol_table_test
+
+$(TEST_BIN)/symbol_table_test: $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c
 	@mkdir -p $(TEST_BIN)
-	$(CC) $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c -o $(TEST_BIN)/symbol_table_test $(CFLAGS)
-	$(TEST_BIN)/symbol_table_test
+	$(CC) -g3 -gdwarf-4 $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c -o $(TEST_BIN)/symbol_table_test $(CFLAGS)
+
 
 clean:
 	@rm -Rf $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
