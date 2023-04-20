@@ -8,8 +8,8 @@
 #define INITIAL 128
 #define TEST_KEY_SIZE 20
 #define TEST_VAL_SIZE 20
-#define NUM_ELEMENTS 130
-#define NUM_TO_UNSET 20
+#define NUM_ELEMENTS 1000000
+#define NUM_TO_UNSET 200000
 
 static void rand_string(char * str, size_t size)
 {
@@ -28,8 +28,9 @@ int main() {
     SymbolTable * table = new_table(INITIAL);
     char test_key[TEST_KEY_SIZE];
     char test_val[TEST_VAL_SIZE];
-    char * key_array[NUM_ELEMENTS];
-    char * val_array[NUM_ELEMENTS];
+    char ** key_array = calloc(NUM_ELEMENTS, sizeof(char *));
+    char ** val_array = calloc(NUM_ELEMENTS, sizeof(char *));
+    clock_t timer = clock();
     srand(time(0));
 
     printf("Setting...\n");
@@ -79,5 +80,10 @@ int main() {
     }
     /* Cleanup */
     free_table(table);
-    printf("Done!\n");
+    free(key_array);
+    free(val_array);
+    /* Done! */
+    timer = clock() - timer;
+    printf("Done!\nSet %d symbols, unset %d symbols, checked table, and freed all memory in %f seconds\n",
+           NUM_ELEMENTS, NUM_TO_UNSET, ((double)timer)/CLOCKS_PER_SEC);
 }
