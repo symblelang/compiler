@@ -18,7 +18,7 @@ extern LabelNo * true_label_no_stack;
 extern LabelNo * false_label_no_stack;
 
 int yywrap() {
-    return 1;
+  return 1;
 }
 %}
 
