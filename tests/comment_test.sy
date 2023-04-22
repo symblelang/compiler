@@ -1,5 +1,0 @@
-fun test_func(int x, int y) -> int {
-    return 2;
-    /* return 1; */
-    // return 0;
-}

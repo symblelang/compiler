@@ -4,9 +4,8 @@ FLEX_OUT=flex_out
 BISON_OUT=bison_out
 
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1 -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
-
-PARSER_NAME=parser
+CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1 -iquote $(FLEX_OUT) -iquote $(BISON_OUT) -I$(SRC)
+PARSER_NAME=symble
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
 PARSER_C=$(BISON_OUT)/$(PARSER_NAME).c
 PARSER_HEADER=$(BISON_OUT)/$(PARSER_NAME).h
@@ -14,8 +13,8 @@ PARSER_O=$(BISON_OUT)/$(PARSER_NAME).o
 BISON=bison
 BISON_FLAGS=-Wcounterexamples
 
-LEXER_NAME=lexer
-LEXER_SRC=$(SRC)/$(LEXER_NAME).lex
+LEXER_NAME=symble
+LEXER_SRC=$(SRC)/$(LEXER_NAME).l
 LEXER_C=$(FLEX_OUT)/$(LEXER_NAME).c
 LEXER_HEADER=$(FLEX_OUT)/$(LEXER_NAME).h
 LEXER_O=$(FLEX_OUT)/$(LEXER_NAME).o
