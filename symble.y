@@ -1,249 +1,286 @@
+ /*
+  * Authors:
+  *   Andrew Clark     - andrew.clark.6@bc.edu
+  *   Alex Liu         - alex.liu@bc.edu
+  *   Caden Parajuli   - caden.parajuli@bc.edu
+  *   Micheal Lebreck  - michael.lebreck@bc.edu
+  *   William Morrison - william.morrison.2@bc.edu
+  */
+
+%language "C"
+%define parse.error detailed
+%define api.pure full
+
 %{
-#define _GNU_SOURCE
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "hash_table.h"
-#include "symble_handlers.h"
-#include "symbol_table.h"
-#include "symble.tab.h"
-
-int yylex();
-int yyerror(const char * msg);
-
-extern FILE * yyin;
-extern SymbolTable * symbol_table;
-extern int line_no;
-int label_no;
-LabelNo * true_label_no_stack;
-LabelNo * false_label_no_stack;
-
+extern char * yytext;
+extern int yylval;
+extern int yylex();
+extern FILE *  yyin;
 %}
 
-%union {
-    Info info;
-    char string[LEXEME_SIZE];
-    int type_id;
-}
-
 %code provides {
-    int yylex();
-    int yyerror(const char * msg);
+int yyerror(const char * const msg);
 }
 
-%token PROCEDURE FUNCTION RUN IF ELSE WHILE FOR FROM TO BY RETURN
-%token PERIOD COLON LPAREN RPAREN LBRACE RBRACE LARROW RARROW COMMA DEREFERENCE
-%token PLUS TIMES DIV MOD EQ NE LT LE GE GT AND OR NOT
-%token <type_id> BOOLEAN_TYPE INT1_TYPE UINT1_TYPE INT2_TYPE UINT2_TYPE
-%token <type_id> INT4_TYPE UINT4_TYPE INT8_TYPE UINT8_TYPE ADDRESS_TYPE
-%token <info> IDENTIFIER NUMBER MINUS
-%type <type_id> type_expression
-%type <info> expression arithmetic_expression relational_expression logical_expression
-%type <info> function_call_expression dereference_expression procedure_id function_id 
-%type <info> variable_declaration param arg
+/* yyunion */
+%union{
+    struct Node * node;
+    char * string;
+    int integer;
+}
 
-%left OR
+/* TOKENS */
+
+/* Various brackets and other simple tokens */
+%token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT BACKSLASH BACKTICK ARROW
+/* Arithmetic and bitwise operators */
+%token PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP
+%token RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP
+/* Logical operators */
+%token AND NOT OR XOR
+/* Assignment and comparison operators */
+%token EQUALS_OP ASSIGN_OP COMPARE_OP
+/* Keywords */
+%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
+/* Literals */
+%token INT_LIT STR_LIT ID
+
+
+/* PRECEDENCE */
+
+/* if-elif-else parsing, lowest precedence. Note that THEN is not an actual token */
+%right THEN ELIF ELSE
+/* Assignment operators */
+%right EQUALS_OP ASSIGN_OP
+/* Comparison operators */
+%right COMPARE_OP
+/* Logical operators */
+%left OR XOR
 %left AND
-%left EQ NE
-%left LT LE GT GE
-%left PLUS MINUS
-%left TIMES DIV MOD
-%right DEREFERENCE UMINUS NOT
-%%
+%right NOT
+/* Arithmetic operators (except POW) */
+%left PLUS_OP
+%right RPLUS_OP
+%left MULT_OP
+%right RMULT_OP
+%right ARITH_UNARY
+%right POW_OP
+/* Binary operators */
+%right BIT_NOT_OP
+%left BIT_AND_OP
+%left BIT_OR_OP BIT_XOR_OP
+%right RBIT_AND_OP
+%right RBIT_OR_OP RBIT_XOR_OP
+%right BIT_UNARY
+/* General Unary operator precedence */
+%right UNARY
+/* Bracket-like precedence is highest */
+%left LPAREN LSQB LBRACE
+/* Arrow */
+%left ARROW
+/* Dot */
+%left DOT
 
-program : unit_definitions { puts("Done."); }
-
-unit_definitions : unit_definitions unit_definition
-                 | unit_definition
-                 ;
-
-unit_definition : procedure_definition { printf("ret\n\n"); }
-       | function_definition { putchar('\n'); }
-       ;
-
-procedure_definition : procedure_head block
-                     ;
-
-function_definition : function_head block
-                    ;
-
-procedure_head : procedure_id params_list
-               ;
-
-function_head : function_id params_list RARROW type_expression
-              ;
-
-procedure_id : PROCEDURE IDENTIFIER { handle_unit_id(&$2); }
-             ;
-
-function_id : FUNCTION IDENTIFIER { handle_unit_id(&$2); }
-            ;
-
-params_list : LPAREN params RPAREN
-            ;
-
-block : block_start block_rest
-      ;
-
-block_start : LBRACE {
-    if (symbol_table->unit_started) {
-        symbol_table->unit_started = 0;
-    } else {
-        push_symbol_table();
-    }
-}
-            ;
-
-block_rest : statements RBRACE { pop_symbol_table(); }
-           ;
-
-
-
-params : params COMMA param
-       | param
-       |
-       ;
-
-param : variable_declaration { handle_param(&$$, &$1); }
-      ;
-
-
-type_expression : INT1_TYPE { $$ = $1; }
-                | UINT1_TYPE { $$ = $1; }
-                | INT2_TYPE { $$ = $1; }
-                | UINT2_TYPE { $$ = $1; }
-                | INT4_TYPE { $$ = $1; }
-                | UINT4_TYPE { $$ = $1; }
-                | INT8_TYPE { $$ = $1; }
-                | UINT8_TYPE { $$ = $1; }
-                | ADDRESS_TYPE LPAREN type_expression RPAREN { $$ = $1; }
-                ;
-
-statements : statements statement
-           | statement
-           ;
-
-statement : initialized_variable_declaration_statement
-          | variable_declaration_statement
-          | assignment_statement
-          | procedure_call_statement
-          | conditional_statement
-          | iteration_statement
-          | return_statement
-          | block
-          ;
-
-initialized_variable_declaration_statement : variable_declaration LARROW expression PERIOD
-    { handle_initialization(&$1, &$3); }
-                                           ;
-
-variable_declaration_statement : variable_declaration PERIOD
-                     ;
-                               ;
-assignment_statement : IDENTIFIER LARROW expression PERIOD { handle_assignment(NULL, &$3, &$1); }
-                     | expression RARROW IDENTIFIER PERIOD { handle_assignment(NULL, &$1, &$3); }
-                     ;
-
-procedure_call_statement : RUN IDENTIFIER LPAREN args RPAREN PERIOD
-                         ;
-
-conditional_statement : condition_head block ELSE block { handle_condition(1); }
-                      | condition_head block { handle_condition(0); }
-                      ;
-
-condition_head : IF LPAREN expression RPAREN { handle_condition_head(&$3); }
-               ;
-
-iteration_statement : WHILE LPAREN expression RPAREN LBRACE expression RBRACE
-                    | FOR LPAREN variable_declaration FROM expression TO expression BY expression 
-                       LBRACE statements RBRACE
-                    ;
-
-return_statement : RETURN expression PERIOD { printf("mov %s, $ret\n", $2.string); printf("ret\n"); }
-
-variable_declaration : IDENTIFIER COLON type_expression { handle_variable_declaration( &$$, &$1, $3); }
-                     ;
-
-expression : arithmetic_expression
-           | relational_expression
-           | logical_expression
-           | function_call_expression
-           | dereference_expression
-           | MINUS expression %prec UMINUS { handle_unary_minus_expression(&$$, &$2); }
-           | NUMBER { handle_number(&$$, &$1); }
-           | IDENTIFIER { handle_identifier(&$$, &$1); }
-           | LPAREN expression RPAREN { $$ = $2; }
-           ;
-
-arithmetic_expression : expression PLUS expression { handle_arithmetic_expression(&$$, PLUS, &$1, &$3); }
-        | expression MINUS expression { handle_arithmetic_expression(&$$, MINUS, &$1, &$3); }
-        | expression TIMES expression { handle_arithmetic_expression(&$$, TIMES, &$1, &$3); }
-        | expression DIV expression { handle_arithmetic_expression(&$$, DIV, &$1, &$3); }
-        | expression MOD expression { handle_arithmetic_expression(&$$, MOD, &$1, &$3); }
-        ;
-
-relational_expression : expression EQ expression { handle_relational_expression(&$$, EQ, &$1, &$3); }
-        | expression NE expression { handle_relational_expression(&$$, NE, &$1, &$3); }
-        | expression LT expression { handle_relational_expression(&$$, LT, &$1, &$3); }
-        | expression LE expression { handle_relational_expression(&$$, LE, &$1, &$3); }
-        | expression GE expression { handle_relational_expression(&$$, GE, &$1, &$3); }
-        | expression GT expression { handle_relational_expression(&$$, GT, &$1, &$3); }
-        ;
-
-logical_expression : expression AND expression { handle_logical_expression(&$$, AND, &$1, &$3); }
-        | expression OR expression { handle_logical_expression(&$$, OR, &$1, &$3); }
-        | NOT expression { handle_logical_expression(&$$, NOT, &$2, NULL); }
-        ;
-
-function_call_expression : IDENTIFIER LPAREN args RPAREN {
-    strcpy($$.string, "$ret");
-    printf("call _%s\n", $1.string);
-}
-                         ;
-
-dereference_expression : DEREFERENCE IDENTIFIER {
-    get_new_register($$.string);
-    printf("%s = address %s\n", $$.string, $2.string);
-}
-                       | DEREFERENCE LPAREN expression RPAREN
-                           { get_new_register($$.string); printf("%s = address %s\n", $$.string, $3.string); }
-                       ;
-
-
-args : args COMMA expression
-     | arg
-     ;
-
-arg : expression { handle_arg(&$$, &$1); }
-     ;
 
 %%
 
-int yyerror(const char * msg) {
-    fprintf(stderr, "%s\n", msg);
-    exit(EXIT_FAILURE);
-}
 
-FILE * fopen_checked(const char * const file_name, const char * const mode) {
-    FILE * fp = fopen(file_name, mode);
-    if (!fp) {
-        perror("Could not open file");
-        exit(EXIT_FAILURE);
-    }
-    return fp;
-}
+program:
+    statement_list
+    ;
 
-int main(int argc, char ** argv) {
-    if (argc > 1) {
-        yyin = fopen_checked(argv[1], "r");
-    }
-    push_symbol_table();
-    yyparse();
-    if (argc > 1) {
-        fclose(yyin);
-    }
-    pop_symbol_table();
-    return EXIT_SUCCESS;
-}
+statement_list:
+    statement
+    | statement_list statement
+    ;
 
+/* TODO add more statement types */
+statement:
+    expr_statement
+    | if_statement
+    | function_def
+    | control_statement
+    | variable_declaration
+    | while_loop
+    | for_loop
+    | do
+    | typedef
+    ;
+
+statement_block:
+    LBRACE statement_list RBRACE
+    ;
+
+
+expr_statement:
+    expr SEMICOLON
+    ;
+
+expr:
+    assign_expr
+    ;
+
+assign_expr:
+    logical_expr
+    | ID ASSIGN_OP assign_expr
+    | ID EQUALS_OP assign_expr
+    ;
+
+logical_expr:
+    compare_expr
+    | NOT logical_expr
+    | logical_expr AND logical_expr
+    | logical_expr OR logical_expr
+    | logical_expr XOR logical_expr
+    ;
+
+compare_expr:
+    bitwise_expr %prec BIT_AND_OP
+    | compare_expr COMPARE_OP compare_expr
+    ;
+
+bitwise_expr:
+    arithmetic_expr
+    | bitwise_expr BIT_AND_OP bitwise_expr
+    | bitwise_expr RBIT_AND_OP bitwise_expr
+    | bitwise_expr BIT_OR_OP bitwise_expr
+    | bitwise_expr RBIT_OR_OP bitwise_expr
+    | bitwise_expr BIT_XOR_OP bitwise_expr
+    | bitwise_expr RBIT_XOR_OP bitwise_expr
+    | BIT_NOT_OP bitwise_expr
+    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP
+    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP
+    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP
+    | RBIT_AND_OP bitwise_expr
+    | RBIT_OR_OP bitwise_expr
+    | RBIT_XOR_OP bitwise_expr
+    ;
+
+arithmetic_expr:
+    member_expr
+    | arithmetic_expr POW_OP arithmetic_expr
+    | arithmetic_expr MULT_OP arithmetic_expr
+    | arithmetic_expr RMULT_OP arithmetic_expr
+    | arithmetic_expr PLUS_OP arithmetic_expr
+    | arithmetic_expr RPLUS_OP arithmetic_expr
+    | PLUS_OP arithmetic_expr %prec RPLUS_OP
+    | MULT_OP arithmetic_expr %prec RMULT_OP
+    | RPLUS_OP arithmetic_expr
+    | RMULT_OP arithmetic_expr
+    ;
+
+member_expr:
+    primary_expr
+    | member_expr DOT member_expr
+    | member_expr LSQB expr RSQB
+    ;
+
+primary_expr:
+    ID
+    | literal
+    | LPAREN expr RPAREN
+    | function_call
+    ;
+
+function_call:
+    member_expr LPAREN argument_list RPAREN
+    ;
+
+argument_list:
+    expr
+    | argument_list COMMA expr
+    ;
+
+function_def:
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
+    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
+    /* Function definition with generic parameters, have to define more grammar rules first */
+    /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
+    ;
+
+argument_list_specifier:
+    variable_specifier
+    | argument_list_specifier COMMA variable_specifier
+    ;
+
+variable_specifier:
+    type ID
+    | type ID LSQB INT_LIT RSQB
+    ;
+
+/* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
+type:
+    ID
+    | function_type
+    ;
+
+typedef:
+    TYPE type EQUALS_OP type SEMICOLON
+    ;
+
+function_type:
+    FUN LPAREN type_list RPAREN ARROW type
+    ;
+
+type_list:
+    type
+    | type_list COMMA type
+    ;
+
+variable_declaration:
+    type ID SEMICOLON
+    | type ID EQUALS_OP expr SEMICOLON
+    ;
+
+/* TODO Add more literal types */
+literal:
+    INT_LIT
+    | STR_LIT
+    ;
+
+user_operator:
+    PLUS_OP | MULT_OP | BIT_AND_OP | BIT_OR_OP | BIT_NOT_OP | BIT_XOR_OP
+    | RPLUS_OP | RMULT_OP | RBIT_AND_OP | RBIT_OR_OP | RBIT_XOR_OP
+    | ASSIGN_OP | COMPARE_OP | EQUALS_OP
+    ;
+
+if_elif:
+    IF LPAREN expr RPAREN statement_block %prec THEN
+    | if_elif ELIF LPAREN expr RPAREN statement_block
+    ;
+
+if_statement:
+    if_elif
+    | if_elif ELSE statement_block
+    ;
+
+control_statement:
+    RETURN expr SEMICOLON
+    | BREAK SEMICOLON
+    | CONTINUE SEMICOLON
+    ;
+
+for_loop:
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block
+    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block
+    ;
+
+do:
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON
+    ;
+
+while_loop:
+    WHILE LPAREN expr RPAREN statement_block
+    | WHILE LPAREN expr RPAREN SEMICOLON
+    ;
+
+%%
+
+int yyerror(const char * const msg) {
+    fprintf(stderr, "yyerror: %s\n", msg);
+    return EXIT_FAILURE;
+}
