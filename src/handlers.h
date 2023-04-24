@@ -13,12 +13,15 @@
 
 #include "symbol_table.h"
 #include "syntax_tree.h"
+#include "types.h"
 #include "parser.h"
 
 extern SymbolTable * symbol_table;
 
-Node * handle_variable_declaration(Type type, char * id, Node * init, int line_num);
+Node * handle_variable_declaration(Type * type, char * id, Node * init, int line_num);
 Node * handle_binary_expr(char * operator, Node * left, Node * right);
 Node * handle_unary_expr(char * operator, Node * child);
+Type * handle_base_type(BaseType base);
+Type * handle_custom_type(char * type_name);
 
 #endif

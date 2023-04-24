@@ -27,35 +27,34 @@ struct Node {
     
     union {
         struct {
-            Type type;
+            Type * type;
             char * name;
             Node * init;
         } varDec;
         
         struct {
-            Type type;
+            Type * type;
             char * name;
         } typeDef;
 
         struct {
-            Type type;
+            Type * type;
             char * op;
             Node * left;
             Node * right;
         } binaryExpr;
-        
+
         struct {
-            Type type;
+            Type * type;
             char * op;
             Node * child;
         } unaryExpr;
-
     } op;
 };
 
-Node * add_var_dec_node(char * name, Type type, Node * init);
-Node * add_type_def_node(char * name, Type type);
-Node * add_binary_expr_node(char * op, Node * left, Node * right, Type type);
-Node * add_unary_expr_node(char * op, Node * child, Type type);
+Node * add_var_dec_node(char * name, Type * type, Node * init);
+Node * add_type_def_node(char * name, Type * type);
+Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type);
+Node * add_unary_expr_node(char * op, Node * child, Type * type);
 
 #endif

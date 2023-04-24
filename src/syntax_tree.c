@@ -12,7 +12,7 @@
 #include "syntax_tree.h"
 #include "symbol_table.h"
 
-Node * add_var_dec_node(char * name, Type type, Node * init) {
+Node * add_var_dec_node(char * name, Type * type, Node * init) {
     Node * new = malloc(sizeof(Node));
     new->tag = var_dec_node;
     new->op.varDec.name = name;
@@ -21,7 +21,7 @@ Node * add_var_dec_node(char * name, Type type, Node * init) {
     return new;
 }
 
-Node * add_type_def_node(char * name, Type type) {
+Node * add_type_def_node(char * name, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = type_def_node;
     new->op.typeDef.name = name;
@@ -29,7 +29,7 @@ Node * add_type_def_node(char * name, Type type) {
     return new;
 }
 
-Node * add_binary_expr_node(char * op, Node * left, Node * right, Type type) {
+Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = binary_expr_node;
     new->op.binaryExpr.op = op;
@@ -39,7 +39,7 @@ Node * add_binary_expr_node(char * op, Node * left, Node * right, Type type) {
     return new;
 }
 
-Node * add_unary_expr_node(char * op, Node * child, Type type) {
+Node * add_unary_expr_node(char * op, Node * child, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = unary_expr_node;
     new->op.unaryExpr.op = op;

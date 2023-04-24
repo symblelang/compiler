@@ -21,6 +21,7 @@
 #include "handlers.h"
 #include "symbol_table.h"
 #include "syntax_tree.h"
+#include "types.h"
 }
 
 %code {
@@ -42,7 +43,7 @@ SymbolTable * symbol_table;
 /* yyunion */
 %union{
     struct Node * node;
-    Type type;
+    Type * type;
     char * string;
     int integer;
 }
@@ -232,7 +233,10 @@ variable_specifier:
 
 /* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
 type:
-    ID { $$ = (Type)$1; }
+    ID { $$ = handle_custom_type($1); }
+    | INT_TYPE { $$ = handle_base_type(int_type); }
+    | FLOAT_TYPE { $$ = handle_base_type(float_type); }
+    | STR_TYPE { $$ = handle_base_type(str_type); }
     | function_type
     ;
 
