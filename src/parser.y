@@ -23,13 +23,13 @@
 #include "syntax_tree.h"
 }
 
-%{
+%code {
 extern char * yytext;
 extern int yylval;
 extern int yylineno;
 extern int yylex();
 extern FILE *  yyin;
-%}
+}
 
 %code provides {
 int yyerror(const char * const msg);
