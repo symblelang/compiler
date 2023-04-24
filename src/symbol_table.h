@@ -3,35 +3,58 @@
  */
 
 /* Header guards */
-#ifndef FNV_HASH_H
-#define FNV_HASH_H
+#ifndef SYMBOL_TABLE_H
+#define SYMBOL_TABLE_H
 
-#define FNV_PRIME_64 0x100000001B3
-#define FNV_BASIS_64 0xCBF29CE484222325
-#define INITIAL_CAPACITY 1024
-#define MAX_FILL 0.7
-
-#include <stdint.h>
 #include <stdlib.h>
 
-typedef struct TableEntry {
-    const char * key;
-    void * value;
-    uint64_t hash;
-    size_t psl;
-} TableEntry;
+#include "hash_table.h"
 
-typedef struct SymbolTable {
-    TableEntry ** entries;
-    size_t capacity;
-    size_t length;
-} SymbolTable;
+typedef char * Type;
+typedef struct SymbolTable SymbolTable;
+typedef struct TableEntry TableEntry;
+typedef struct VarSymbol VarSymbol;
+typedef struct OpSymbol OpSymbol;
+typedef struct FunSymbol FunSymbol;
+typedef struct Argument Argument;
 
-SymbolTable * new_table();
+struct SymbolTable {
+    HashTable * hash_table;
+    SymbolTable * next;
+};
+
+struct VarSymbol {
+    char * name;
+    Type type;
+    int declared_at;
+};
+
+struct OpSymbol {
+    char * name;
+    SymbolTable * symbol_table;
+    Type return_type;
+    Argument * args;
+    int declared_at;
+};
+
+struct FunSymbol {
+    char * name;
+    SymbolTable * symbol_table;
+    Type return_type;
+    Argument * args;
+    int declared_at;
+};
+
+struct Argument {
+    /* Note that arg_name should be a key for the symbol table of the fun/op */
+    char * arg_name;
+    Argument * next;
+};
+
+SymbolTable * new_symbol_table(size_t size);
 void free_table(SymbolTable * table);
 void * get_symbol(SymbolTable * table, const char * key);
 int set_symbol(SymbolTable * table, const char * key, void * value);
-int expand_table(SymbolTable * table);
 int unset_symbol(SymbolTable * table, const char * key);
 
 #endif

@@ -32,6 +32,8 @@
 
  /* include the bison-generated parser header, and forward declarations */
 %{
+#include "symbol_table.h"
+#include "syntax_tree.h"
 #include "parser.h"
 %}
 
@@ -136,6 +138,10 @@ pow_op              "^"|("^^"{opchar}*)
 "return"/{non_id}   return RETURN;
 "break"/{non_id}    return BREAK;
 "continue"/{non_id} return CONTINUE;
+"int"/{non_id}      return INT_TYPE;
+"float"/{non_id}    return FLOAT_TYPE;
+"str"/{non_id}      return STR_TYPE;
+
 
  /* We want id to be returned only if a keyword isn't matched */
 {id}                return ID;

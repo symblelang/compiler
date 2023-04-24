@@ -24,7 +24,7 @@ LEXER_O=$(FLEX_OUT)/$(LEXER_NAME).o
 FLEX=flex
 FLEX_FLAGS=--never-interactive
 
-MAIN_SRC=$(SRC)/main.c
+C_SRCS=$(wildcard $(SRC)/*.c)
 
 PROGRAM=$(BIN)/symble
 
@@ -32,9 +32,9 @@ PROGRAM=$(BIN)/symble
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
+$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_SRCS)
 	@mkdir -p $(@D)
-	$(CC) $(MAIN_SRC) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
+	$(CC) $(C_SRCS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
 
 %.o : %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
