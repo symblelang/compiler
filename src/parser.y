@@ -11,24 +11,39 @@
 %define parse.error detailed
 %define api.pure full
 
-%{
+%code top {
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+}
 
+%code requires {
+#include "handlers.h"
+#include "symbol_table.h"
+#include "syntax_tree.h"
+#include "types.h"
+}
+
+%code {
 extern char * yytext;
 extern int yylval;
+extern int yylineno;
 extern int yylex();
 extern FILE *  yyin;
-%}
+}
 
 %code provides {
-int yyerror(const char * const msg);
+int yyerror(const char * restrict fmt, ...);
+}
+
+%code {
+SymbolTable * symbol_table;
 }
 
 /* yyunion */
 %union{
     struct Node * node;
+    Type * type;
     char * string;
     int integer;
 }
@@ -46,6 +61,8 @@ int yyerror(const char * const msg);
 %token EQUALS_OP ASSIGN_OP COMPARE_OP
 /* Keywords */
 %token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
+/* Types */
+%token INT_TYPE STR_TYPE FLOAT_TYPE
 /* Literals */
 %token INT_LIT STR_LIT ID
 
@@ -85,6 +102,10 @@ int yyerror(const char * const msg);
 /* Dot */
 %left DOT
 
+%type<node> variable_declaration expr
+%type<type> type
+%type<string> ID STR_LIT
+%type<integer> INT_LIT
 
 %%
 
@@ -214,7 +235,10 @@ variable_specifier:
 
 /* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
 type:
-    ID
+    ID { $$ = handle_custom_type($1); }
+    | INT_TYPE { $$ = handle_base_type(int_type); }
+    | FLOAT_TYPE { $$ = handle_base_type(float_type); }
+    | STR_TYPE { $$ = handle_base_type(str_type); }
     | function_type
     ;
 
@@ -232,8 +256,9 @@ type_list:
     ;
 
 variable_declaration:
-    type ID SEMICOLON
-    | type ID EQUALS_OP expr SEMICOLON
+    type ID SEMICOLON { $$ = handle_variable_declaration($type, $ID, NULL, yylineno); }
+    | type ID EQUALS_OP expr SEMICOLON { $$ = handle_variable_declaration($type, $ID, $expr, yylineno); }
+    /* | type ID LSQB INT_LIT RSQB SEMICOLON */
     ;
 
 /* TODO Add more literal types */
@@ -280,7 +305,11 @@ while_loop:
 
 %%
 
-int yyerror(const char * const msg) {
-    fprintf(stderr, "yyerror: %s\n", msg);
-    return EXIT_FAILURE;
+/* based on musl libc printf implementation */
+int yyerror(const char * restrict fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+	return EXIT_FAILURE;
 }

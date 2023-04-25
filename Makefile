@@ -1,10 +1,12 @@
 SRC=src
 BIN=bin
+TEST=tests
+TEST_BIN=bin/tests
 FLEX_OUT=flex_out
 BISON_OUT=bison_out
 
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1 -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
@@ -22,16 +24,17 @@ LEXER_O=$(FLEX_OUT)/$(LEXER_NAME).o
 FLEX=flex
 FLEX_FLAGS=--never-interactive
 
+C_SRCS=$(wildcard $(SRC)/*.c)
+
 PROGRAM=$(BIN)/symble
-MAIN_SRC=$(SRC)/main.c
 
 .PHONY: all test clean
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(MAIN_SRC)
+$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_SRCS)
 	@mkdir -p $(@D)
-	$(CC) $(MAIN_SRC) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
+	$(CC) $(C_SRCS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
 
 %.o : %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
@@ -44,9 +47,17 @@ $(LEXER_C) $(LEXER_HEADER): $(LEXER_SRC) $(PARSER_HEADER) # Run bison first so w
 	@mkdir -p $(@D)
 	$(FLEX) -o $(LEXER_C) --header-file=$(LEXER_HEADER) $(LEXER_SRC)
 
-test: all
-	$(PROGRAM) -v tests/expr_test.sy
-	$(PROGRAM) -v tests/function_test.sy
+test: all $(TEST)/expr_test.sy $(TEST)/function_test.sy
+	$(PROGRAM) -v $(TEST)/expr_test.sy
+	$(PROGRAM) -v $(TEST)/function_test.sy
+
+test_table: $(TEST_BIN)/symbol_table_test
+	$(TEST_BIN)/symbol_table_test # valgrind -s --tool=memcheck --leak-check=full --track-origins=yes $(TEST_BIN)/symbol_table_test
+
+$(TEST_BIN)/symbol_table_test: $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c
+	@mkdir -p $(TEST_BIN)
+	$(CC) -g3 -gdwarf-4 $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c -o $(TEST_BIN)/symbol_table_test $(CFLAGS)
+
 
 clean:
-	@rm -f $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
+	@rm -Rf $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
