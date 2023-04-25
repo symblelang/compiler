@@ -13,6 +13,7 @@
 
 #include "symbol_table.h"
 
+typedef struct Type Type;
 typedef struct Args Args;
 
 /* TODO: add list/array  */

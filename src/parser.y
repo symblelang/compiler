@@ -33,7 +33,7 @@ extern FILE *  yyin;
 }
 
 %code provides {
-int yyerror(const char * const msg);
+int yyerror(const char * restrict fmt, ...);
 }
 
 %code {
@@ -294,16 +294,11 @@ while_loop:
 
 %%
 
-int yyerror(const char * const msg) {
-    fprintf(stderr, "yyerror: %s\n", msg);
-    return EXIT_FAILURE;
-}
-
 /* based on musl libc printf implementation */
-/* int yyerror(const char * restrict fmt, ...) { */
-/* 	va_list ap; */
-/* 	va_start(ap, fmt); */
-/* 	vfprintf(stderr, fmt, ap); */
-/* 	va_end(ap); */
-/* 	return EXIT_FAILURE; */
-/* } */
+int yyerror(const char * restrict fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+	return EXIT_FAILURE;
+}
