@@ -25,6 +25,7 @@ int check_types_equal(Type * type_1, Type * type_2) {
                 }
                 curr_arg = curr_arg->next;
             }
+            return type_1->op.fun.return_type == type_2->op.fun.return_type;
         default:
             return 0;
     }

@@ -31,13 +31,17 @@ typedef enum BaseType {
 } BaseType;
 
 struct Type {
-    enum {base_type, fun_type} tag;
+    enum {base_type, fun_type, array_type} tag;
     union {
         BaseType base;
         struct {
             Type * return_type;
             Args * args;
         } fun;
+        struct {
+            Type * base_type;
+            int size;
+        } array;
     } op;
 };
 

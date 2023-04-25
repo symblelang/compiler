@@ -8,11 +8,12 @@
 
 #include <stdlib.h>
 
-typedef struct Type Type;
-typedef struct Args Args;
-
 #include "types.h"
 #include "hash_table.h"
+
+/* Forward typedefs to resolve cyclic header inclusions */
+typedef struct Type Type;
+typedef struct Args Args;
 
 typedef struct SymbolTable SymbolTable;
 typedef struct TableEntry TableEntry;

@@ -26,38 +26,17 @@ Node * handle_variable_declaration(Type * type, char * id, Node * init, int line
     return add_var_dec_node(var->name, var->type, init);
 }
 
+
+/* Type checking should be done in a second pass over the syntax tree, since
+ * operators and functions may not be in the symbol table until the end of the first pass */
 Node * handle_binary_expr(char * operator, Node * left, Node * right) {
     /** Handles any kind of expression with a binary operator */
-    /* Get operator from symbol table. In future implement function to find one with correct type,
-     * and if not found check for a pre-defined one like + */
-    FunSymbol * op_sym = get_symbol_lexical_scope(symbol_table, operator);
-    if (op_sym == NULL) {
-        fprintf(stderr, "Operator `%s` not defined.", operator);
-    }
-    /* Check types. This implementation is very rudimentary. */
-    /* Note that the C standard allows us to access the type field using
-     * binaryExpr even if the node is a unaryExpr */
-    if (! ((left->op.binaryExpr.type == get_symbol_lexical_scope(op_sym->symbol_table, op_sym->args->name)) &&
-            right->op.binaryExpr.type == get_symbol_lexical_scope(op_sym->symbol_table, op_sym->args->next->name))) {
-        fprintf(stderr, "Type of operator `%s` does not match types of arguments.", operator);
-    }
-    return add_binary_expr_node(operator, left, right, op_sym->type->op.fun.return_type);
+    return add_binary_expr_node(operator, left, right, NULL);
 }
 
 Node * handle_unary_expr(char * operator, Node * child) {
     /** Handles any kind of expression with a unary operator */
-    /* Get operator from symbol table */
-    FunSymbol * op_sym = get_symbol_lexical_scope(symbol_table, operator);
-    if (op_sym == NULL) {
-        fprintf(stderr, "Operator `%s` not defined.", operator);
-    }
-    /* Check types. This implementation is very rudimentary. */
-    /* Note that the C standard allows us to access the type field using
-     * binaryExpr even if the node is a binaryExpr */
-    if ((op_sym->args->next != NULL) || ! (child->op.unaryExpr.type == get_symbol_lexical_scope(op_sym->symbol_table, op_sym->args->name))) {
-        fprintf(stderr, "Type of operator `%s` does not match types of arguments.", operator);
-    }
-    return add_unary_expr_node(operator, child, op_sym->type->op.fun.return_type);
+    return add_unary_expr_node(operator, child, NULL);
 }
 
 Type * handle_base_type(BaseType base) {
