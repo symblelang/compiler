@@ -10,20 +10,24 @@ Here are a few changes to the grammar or language specification that have been m
 
 ## To Do List
 
-### Syntax / Grammar (higher priority)
-- for loops (not sure what sort of syntax we want)
+### Semantic Analysis (focus)
+- Syntax tree generation (like in PA 2)
+  1. By tomorrow night (April 26th) - Have `handle_x` function definitions for all rules in our bison (`parser.y`) file
+  2. By this weekend (April 29th-ish) - Have bodies for `handle_x` functions completed and creating nodes with syntax_tree.c 
+  3. By the end of classes (May 4th) - Have syntax tree working and able to generate a complete representation of our program
+  4. By the end of study days (May 8th) - Have intermediate code generation to pseudo-code completed
+  5. Consult with Aviram regarding our work so far and what he wants in regards to additional functionality
+  6. From start of exams until May 15 - Work on Aviram's requirements, create testing script, add additional features, data structures, etc.
+  7. Done!
+
+### Things for Later / Optional
+
+#### Syntax / Grammar
 - More types, esp. tuples, lists, probably some sort of aggregate like a struct
 - Function declarations with generic types (this might be a little ambitious for type checking so maybe wait on this)
 - Probably various other things I'm forgetting about
 - Possibly add anonymous functions via "lambda" or similar keyword
 
-### Lexer
+#### Lexer
 - Add more literals such as float literals, specifying int literals by octal/hexadecimal, array literals, etc.
 - Improve string processing (current implementation is untested as far as I know)
-
-### Semantic Analysis
-- Symbol table creation
-  - I'm currently working on this and added a branch for it on GitHub, and it should be complete before the end of the week
-- Syntax tree generation (like in PA 2)
-  - The symbol table is almost functional enough to support this
-  - This will probably take a fair amount of work from multiple people
