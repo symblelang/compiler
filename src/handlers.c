@@ -14,6 +14,11 @@
 #include "types.h"
 #include "parser.h"
 
+typedef struct TypeInfo {
+    int num_args;
+    int type_ids[16];
+} TypeInfo;
+
 Node * handle_variable_declaration(Type * type, char * id, Node * init, int line_num) {
     VarSymbol * var = malloc(sizeof(VarSymbol));
     var->name = id;
@@ -37,6 +42,27 @@ Node * handle_binary_expr(Node * left, char * operator, Node * right) {
 Node * handle_unary_expr(char * operator, Node * child) {
     /** Handles any kind of expression with a unary operator */
     return add_unary_expr_node(operator, child, NULL);
+}
+
+Node * handle_member_expr(char * member_expr, char * child_member, Node * child) {
+   /** Accesses primary class to access index of array, or call function of a class*/ 
+}
+
+Node * handle_function_def(char * function_name, char ** args) {
+    /* Add function type info to symbol table */
+}
+
+Node * handle_function_call(char * function_name, char ** args) {
+    /* Check that provided arguments match function definition*/
+    /* Print "call " + <function_name> */
+}
+
+int check_param_types(char * function_name, char ** args) {
+    /* Query symbol table for correct types in original function definition */
+    /* Check if correct number of arguments was provided */
+    /* Check for type mismatch in provided arguments vs. defined arguments */
+    /* Return 0 if correct number of arguments and correct types provided */
+    /* Return 1 and or throw error if incorrect number of arguments or incorrect types provided */
 }
 
 Type * handle_base_type(BaseType base) {

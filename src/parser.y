@@ -213,7 +213,7 @@ primary_expr:
     ;
 
 function_call:
-    member_expr LPAREN argument_list RPAREN
+    member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3); }
     ;
 
 argument_list:
@@ -222,7 +222,7 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block {handle_function_def($1, $3); }
     | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block
     /* Function definition with generic parameters, have to define more grammar rules first */
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
