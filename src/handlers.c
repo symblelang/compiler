@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "symbol_table.h"
 #include "syntax_tree.h"
@@ -48,14 +49,56 @@ Node * handle_member_expr(char * member_expr, char * child_member, Node * child)
    /** Accesses primary class to access index of array, or call function of a class*/ 
 }
 
-Node * handle_function_def(char * function_name, char ** args) {
+Node * handle_function_def(char * function_name, char * function_return_type, char ** args, int line_num) {
     /* Add function type info to symbol table */
+    FunSymbol * fun = malloc(sizeof(FunSymbol));  
+    fun->name = function_name; 
+    fun->type = function_return_type; 
+    /* fun-symbol_table->??? */
+    fun->args = args;
+    fun->declared_at = line_num;
+    /* Add fun to symbol table with type info for params */
+
 }
 
-Node * handle_function_call(char * function_name, char ** args) {
+Node * handle_function_call(char * function_name, char ** args, int line_num) {
     /* Check that provided arguments match function definition*/
     /* Print "call " + <function_name> */
 }
+
+/* Needs implementation */
+
+Node * handle_if() {
+   /* Should handle if, if_elif, if_else */ 
+   /* Not sure how to add this to symbol table... */
+   /* Can do psuedo-code with test and jump statements */
+}
+
+Node * handle_while() {
+
+}
+
+Node * handle_for() {
+
+}
+
+/* Might be able to incorporate into handle_while */
+Node * handle_do() {
+
+}
+
+Node * handle_return() {
+    
+}
+
+Node * handle_create_array() {
+
+}
+
+Node * handle_typedef() {
+
+}
+
 
 int check_param_types(char * function_name, char ** args) {
     /* Query symbol table for correct types in original function definition */

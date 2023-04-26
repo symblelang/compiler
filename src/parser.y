@@ -213,7 +213,7 @@ primary_expr:
     ;
 
 function_call:
-    member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3); }
+    member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); }
     ;
 
 argument_list:
@@ -222,7 +222,7 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block {handle_function_def($1, $3); }
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block {handle_function_def($1, $7, $3, yylineno); }
     | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block
     /* Function definition with generic parameters, have to define more grammar rules first */
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
@@ -235,7 +235,7 @@ argument_list_specifier:
 
 variable_specifier:
     type ID
-    | type ID LSQB INT_LIT RSQB
+    | type ID LSQB INT_LIT RSQB { handle_create_array(); }
     ;
 
 /* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
@@ -248,7 +248,7 @@ type:
     ;
 
 typedef:
-    TYPE type EQUALS_OP type SEMICOLON
+    TYPE type EQUALS_OP type SEMICOLON { handle_typedef(); }
     ;
 
 fun_type:
@@ -289,23 +289,23 @@ if_statement:
     ;
 
 control_statement:
-    RETURN expr SEMICOLON
+    RETURN expr SEMICOLON { handle_return(); }
     | BREAK SEMICOLON
     | CONTINUE SEMICOLON
     ;
 
 for_loop:
-    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block
-    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block { handle_for(); }
+    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block { handle_for(); }
     ;
 
 do:
-    statement_block WHILE LPAREN expr RPAREN SEMICOLON
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON { handle_do(); }
     ;
 
 while_loop:
-    WHILE LPAREN expr RPAREN statement_block
-    | WHILE LPAREN expr RPAREN SEMICOLON
+    WHILE LPAREN expr RPAREN statement_block { handle_while(); }
+    | WHILE LPAREN expr RPAREN SEMICOLON { handle_while(); }
     ;
 
 %%

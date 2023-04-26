@@ -43,7 +43,7 @@ struct FunSymbol {
     char * name;
     Type * type;
     SymbolTable * symbol_table;
-    Args * args;
+    Args ** args;
     int declared_at;
 };
 
