@@ -11,16 +11,15 @@ Here are a few changes to the grammar or language specification that have been m
 ## To Do List
 
 ### Semantic Analysis (focus)
-- Syntax tree generation (like in PA 2)
-  1. By tomorrow night (April 26th) - Have `handle_x` function definitions for all rules in our bison (`parser.y`) file.
-  2. By this weekend (April 29th-ish) - Have bodies for `handle_x` functions completed and creating nodes with syntax_tree.c For each rule:
-     - If necessary, add a struct and tag to the `struct Node` in `syntax_tree.h`, and optionally add a helper function to `syntax_tree.c` for creating a node of this type. See examples in the files.
-     - Populate the handler function in `handlers.c` with code for creating the node.
-  3. By the end of classes (May 4th) - Have syntax tree working and able to generate a complete representation of our program
-  4. By the end of study days (May 8th) - Have intermediate code generation to pseudo-code completed
-  5. Consult with Aviram regarding our work so far and what he wants in regards to additional functionality
-  6. From start of exams until May 15 - Work on Aviram's requirements, create testing script, add additional features, data structures, etc.
-  7. Done!
+1. By tomorrow night (April 26th) - Have `handle_x` function definitions for all rules in our bison (`parser.y`) file.
+2. By this weekend (April 29th-ish) - Have bodies for `handle_x` functions completed and creating nodes with syntax_tree.c For each rule:
+   - If necessary, add a struct and tag to the `struct Node` in `syntax_tree.h`, and optionally add a helper function to `syntax_tree.c` for creating a node of this type. See examples in the files.
+   - Populate the handler function in `handlers.c` with code for creating the node.
+3. By the end of classes (May 4th) - Have syntax tree working and able to generate a complete representation of our program
+4. By the end of study days (May 8th) - Have intermediate code generation to pseudo-code completed
+5. Consult with Aviram regarding our work so far and what he wants in regards to additional functionality
+6. From start of exams until May 15 - Work on Aviram's requirements, create testing script, add additional features, data structures, etc.
+7. Done!
 
 ### Things for Later / Optional
 
