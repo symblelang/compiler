@@ -13,7 +13,7 @@ int check_types_equal(Type * type_1, Type * type_2) {
     if (! (type_1->tag == type_2->tag)) {
         return 0;
     }
-    Args * curr_arg;
+    ArgTypes * curr_arg;
     switch (type_1->tag) {
         case base_type:
             return type_1->op.base == type_2->op.base;

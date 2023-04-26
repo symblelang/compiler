@@ -44,6 +44,7 @@ SymbolTable * symbol_table;
 %union{
     struct Node * node;
     Type * type;
+    ArgTypes * arg_types;
     char * string;
     int integer;
 }
@@ -53,7 +54,7 @@ SymbolTable * symbol_table;
 /* Various brackets and other simple tokens */
 %token LBRACE RBRACE LPAREN RPAREN LSQB RSQB COMMA SEMICOLON DOT BACKSLASH BACKTICK ARROW
 /* Arithmetic and bitwise operators */
-%token PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP
+%token PLUS_OP MULT_OP POW_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP
 %token RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP
 /* Logical operators */
 %token AND NOT OR XOR
@@ -102,10 +103,12 @@ SymbolTable * symbol_table;
 /* Dot */
 %left DOT
 
-%type<node> variable_declaration expr
-%type<type> type
-%type<string> ID STR_LIT
+%type<node> variable_declaration expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr
+%type<type> type fun_type
+%type<arg_types> type_list
+%type<string> ID STR_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP
 %type<integer> INT_LIT
+
 
 %%
 
@@ -147,53 +150,55 @@ expr:
 
 assign_expr:
     logical_expr
-    | ID ASSIGN_OP assign_expr
-    | ID EQUALS_OP assign_expr
+    | member_expr ASSIGN_OP assign_expr { handle_binary_expr($1, $2, $3); }
+    | member_expr EQUALS_OP assign_expr { handle_binary_expr($1, $2, $3); }
     ;
 
 logical_expr:
     compare_expr
-    | NOT logical_expr
-    | logical_expr AND logical_expr
-    | logical_expr OR logical_expr
-    | logical_expr XOR logical_expr
+    | NOT logical_expr { handle_unary_expr($1, $2); }
+    | logical_expr AND logical_expr { handle_binary_expr($1, $2, $3); }
+    | logical_expr OR logical_expr { handle_binary_expr($1, $2, $3); }
+    | logical_expr XOR logical_expr { handle_binary_expr($1, $2, $3); }
     ;
 
 compare_expr:
     bitwise_expr %prec BIT_AND_OP
-    | compare_expr COMPARE_OP compare_expr
+    | compare_expr COMPARE_OP compare_expr { handle_binary_expr($1, $2, $3); }
     ;
 
 bitwise_expr:
     arithmetic_expr
-    | bitwise_expr BIT_AND_OP bitwise_expr
-    | bitwise_expr RBIT_AND_OP bitwise_expr
-    | bitwise_expr BIT_OR_OP bitwise_expr
-    | bitwise_expr RBIT_OR_OP bitwise_expr
-    | bitwise_expr BIT_XOR_OP bitwise_expr
-    | bitwise_expr RBIT_XOR_OP bitwise_expr
-    | BIT_NOT_OP bitwise_expr
-    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP
-    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP
-    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP
-    | RBIT_AND_OP bitwise_expr
-    | RBIT_OR_OP bitwise_expr
-    | RBIT_XOR_OP bitwise_expr
+    | bitwise_expr BIT_AND_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_AND_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | bitwise_expr BIT_OR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_OR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | bitwise_expr BIT_XOR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_XOR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
+    | BIT_NOT_OP bitwise_expr { handle_unary_expr($1, $2); }
+    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP { handle_unary_expr($1, $2); }
+    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP { handle_unary_expr($1, $2); }
+    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP { handle_unary_expr($1, $2); }
+    | RBIT_AND_OP bitwise_expr { handle_unary_expr($1, $2); }
+    | RBIT_OR_OP bitwise_expr { handle_unary_expr($1, $2); }
+    | RBIT_XOR_OP bitwise_expr { handle_unary_expr($1, $2); }
     ;
 
 arithmetic_expr:
     member_expr
-    | arithmetic_expr POW_OP arithmetic_expr
-    | arithmetic_expr MULT_OP arithmetic_expr
-    | arithmetic_expr RMULT_OP arithmetic_expr
-    | arithmetic_expr PLUS_OP arithmetic_expr
-    | arithmetic_expr RPLUS_OP arithmetic_expr
-    | PLUS_OP arithmetic_expr %prec RPLUS_OP
-    | MULT_OP arithmetic_expr %prec RMULT_OP
-    | RPLUS_OP arithmetic_expr
-    | RMULT_OP arithmetic_expr
+    | arithmetic_expr POW_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr MULT_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr RMULT_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr PLUS_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr RPLUS_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
+    | PLUS_OP arithmetic_expr %prec RPLUS_OP { handle_unary_expr($1, $2); }
+    | MULT_OP arithmetic_expr %prec RMULT_OP { handle_unary_expr($1, $2); }
+    | RPLUS_OP arithmetic_expr { handle_unary_expr($1, $2); }
+    | RMULT_OP arithmetic_expr { handle_unary_expr($1, $2); }
     ;
 
+/* This one should actually have some checking in it to make sure you
+ * don't write something dumb like 4[1] or 15."foo" */
 member_expr:
     primary_expr
     | member_expr DOT member_expr
@@ -217,8 +222,8 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
-    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type LBRACE statement_list RBRACE
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block
+    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block
     /* Function definition with generic parameters, have to define more grammar rules first */
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
     ;
@@ -235,24 +240,24 @@ variable_specifier:
 
 /* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
 type:
-    ID { $$ = handle_custom_type($1); }
+    ID { $$ = handle_custom_type($ID); }
     | INT_TYPE { $$ = handle_base_type(int_type); }
     | FLOAT_TYPE { $$ = handle_base_type(float_type); }
     | STR_TYPE { $$ = handle_base_type(str_type); }
-    | function_type
+    | fun_type
     ;
 
 typedef:
     TYPE type EQUALS_OP type SEMICOLON
     ;
 
-function_type:
-    FUN LPAREN type_list RPAREN ARROW type
+fun_type:
+    FUN LPAREN type_list RPAREN ARROW type { handle_fun_type($type_list, $type); }
     ;
 
 type_list:
-    type
-    | type_list COMMA type
+    type { $$ = create_type_list($type); }
+    | type_list COMMA type { $$ = add_to_type_list($1, $type); }
     ;
 
 variable_declaration:

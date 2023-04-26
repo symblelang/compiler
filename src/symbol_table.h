@@ -11,10 +11,10 @@
 #include "types.h"
 #include "hash_table.h"
 
-/* Forward typedefs to resolve cyclic header inclusions */
+/* Forward typedef to resolve cyclic header inclusions */
 typedef struct Type Type;
-typedef struct Args Args;
 
+typedef struct Args Args;
 typedef struct SymbolTable SymbolTable;
 typedef struct TableEntry TableEntry;
 typedef struct VarSymbol VarSymbol;
@@ -45,6 +45,12 @@ struct FunSymbol {
     SymbolTable * symbol_table;
     Args * args;
     int declared_at;
+};
+
+struct Args {
+    /* name should be a key for the symbol table of the fun/op */
+    char * name;
+    Args * next;
 };
 
 SymbolTable * new_symbol_table(size_t size);

@@ -14,14 +14,14 @@
 #include "symbol_table.h"
 
 typedef struct Type Type;
-typedef struct Args Args;
+typedef struct ArgTypes ArgTypes;
 
 /* TODO: add list/array  */
 
-struct Args {
+struct ArgTypes {
     /* name should be a key for the symbol table of the fun/op */
-    char * name;
-    Args * next;
+    Type * type;
+    ArgTypes * next;
 };
 
 typedef enum BaseType {
@@ -36,7 +36,7 @@ struct Type {
         BaseType base;
         struct {
             Type * return_type;
-            Args * args;
+            ArgTypes * args;
         } fun;
         struct {
             Type * base_type;
@@ -46,6 +46,5 @@ struct Type {
 };
 
 int check_types_equal(Type * type_1, Type * type_2);
-Type * match_base_type(char * str);
 
 #endif

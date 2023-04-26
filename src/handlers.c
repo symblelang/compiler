@@ -20,7 +20,7 @@ Node * handle_variable_declaration(Type * type, char * id, Node * init, int line
     var->type = type;
     var->declared_at = line_num;
     if (set_symbol(symbol_table, id, var)) {
-        fprintf(stderr, "Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
+        yyerror("Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
                 id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
     }
     return add_var_dec_node(var->name, var->type, init);
@@ -29,7 +29,7 @@ Node * handle_variable_declaration(Type * type, char * id, Node * init, int line
 
 /* Type checking should be done in a second pass over the syntax tree, since
  * operators and functions may not be in the symbol table until the end of the first pass */
-Node * handle_binary_expr(char * operator, Node * left, Node * right) {
+Node * handle_binary_expr(Node * left, char * operator, Node * right) {
     /** Handles any kind of expression with a binary operator */
     return add_binary_expr_node(operator, left, right, NULL);
 }
@@ -48,7 +48,33 @@ Type * handle_base_type(BaseType base) {
 Type * handle_custom_type(char * type_name) {
     TypeSymbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
     if (type_sym == NULL) {
-        fprintf(stderr, "Type \"%s\" has not been defined.", type_name);
+        yyerror("Type \"%s\" has not been defined.", type_name);
     }
     return type_sym->type;
+}
+
+ArgTypes * create_type_list(Type * type) {
+    ArgTypes * type_list = malloc(sizeof(ArgTypes));
+    type_list->type = type;
+    return type_list;
+}
+
+/* This implementation is hilariously inefficient, but nobody should be writing
+ * functions with hundreds of arguments */
+ArgTypes * add_to_type_list(ArgTypes * type_list, Type * type) {
+    ArgTypes * where_to_add = type_list;
+    while (where_to_add->next != NULL) {
+        where_to_add = where_to_add->next;
+    }
+    where_to_add->next = malloc(sizeof(ArgTypes));
+    where_to_add->next->type = type;
+    return type_list;
+}
+
+Type * handle_fun_type(ArgTypes * type_list, Type * return_type) {
+    Type * this_fun_type = malloc(sizeof(Type));
+    this_fun_type->tag = fun_type;
+    this_fun_type->op.fun.args = type_list;
+    this_fun_type->op.fun.return_type = return_type;
+    return this_fun_type;
 }
