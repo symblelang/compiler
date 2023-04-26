@@ -26,7 +26,10 @@ static uint64_t fnv_hash_64(const char * key) {
 HashTable * new_hash_table(size_t capacity) {
     /** Creates a new symbol table */
     /* Round capacity up to power of 2 */
-    capacity = (size_t)(1ULL << (63 - __builtin_clzll((uint64_t)capacity)));
+    size_t new_cap = (size_t)(1ULL << (63 - __builtin_clzll((uint64_t)capacity)));
+    if (new_cap != capacity) {
+        capacity = new_cap << 1;
+    }
     /* Allocate table space */
     HashTable * table = malloc(sizeof(HashTable));
     if (table == NULL) {
