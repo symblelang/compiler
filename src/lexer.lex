@@ -148,7 +148,8 @@ pow_op              "^"|("^^"{opchar}*)
 
  /* Numbers (TODO add floats, hex, octal, etc.) */
 {integer}           {
-                         yylval->integer = atoi(yytext);
+                         /* yylval->integer = atoi(yytext); */
+                         yylval->string = strndup(yytext, yyleng);
                          return INT_LIT;
                     }
 

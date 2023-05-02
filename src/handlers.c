@@ -32,7 +32,6 @@ Node * handle_variable_declaration(Type * type, char * id, Node * init, int line
     return add_var_dec_node(var->name, var->type, init);
 }
 
-
 /* Type checking should be done in a second pass over the syntax tree, since
  * operators and functions may not be in the symbol table until the end of the first pass */
 Node * handle_binary_expr(Node * left, char * operator, Node * right) {
@@ -45,23 +44,55 @@ Node * handle_unary_expr(char * operator, Node * child) {
     return add_unary_expr_node(operator, child, NULL);
 }
 
-Node * handle_member_expr(char * member_expr, char * child_member, Node * child) {
-   /** Accesses primary class to access index of array, or call function of a class*/ 
+Node * handle_member_expr(Node * base, Node * child, int is_dot) {
+    /** Member expressions require additional checking for validity.
+      * This will also need checking in the second pass to ensure indexes are of type int */
+    if (is_dot) {
+        if ((base->tag == literal_node) || (child->tag == literal_node)) {
+            yyerror("Invalid membership syntax: Dot expression contained a literal.");
+        }
+        return add_binary_expr_node(".", base, child, child->op.binaryExpr.type);
+    }
+    else {
+        if (base->tag == literal_node) {
+            yyerror("Invalid membership syntax: Index expression contained a literal for the base.");
+        }
+        return add_binary_expr_node("[]", base, child, child->op.binaryExpr.type);
+    }
 }
 
-Node * handle_function_def(char * function_name, char * function_return_type, char ** args, int line_num) {
+Node * handle_var(char * name) {
+    /** Adds var_node. Note that the variable must already be in the symbol table. */
+    VarSymbol * var_sym = get_symbol_lexical_scope(symbol_table, name);
+    if (var_sym == NULL) {
+        yyerror("Variable \"%s\" not declared!", name);
+    }
+    else {
+        add_var_node(name, var_sym->type);
+    }
+}
+
+Node * handle_literal(char * value, BaseType lit_type) {
+    Type * type = malloc(sizeof(Type));
+    type->tag = base_type;
+    type->op.base = lit_type;
+    return add_lit_node(value, type);
+}
+
+/* TODO finish and add name mangling, create and push symbol table, etc. */
+Node * handle_function_def(char * name, Args * arg_types, Type * return_type, Node * block, int line_num) {
     /* Add function type info to symbol table */
-    FunSymbol * fun = malloc(sizeof(FunSymbol));  
-    fun->name = function_name; 
-    fun->type = function_return_type; 
+    FunSymbol * fun = malloc(sizeof(FunSymbol));
+    fun->name = name;
+    fun->type = return_type;
     /* fun-symbol_table->??? */
-    fun->args = args;
+    fun->args = arg_types;
     fun->declared_at = line_num;
     /* Add fun to symbol table with type info for params */
 
 }
 
-Node * handle_function_call(char * function_name, char ** args, int line_num) {
+Node * handle_function_call(char * function_name, Node * args, int line_num) {
     /* Check that provided arguments match function definition*/
     /* Print "call " + <function_name> */
 }
@@ -82,7 +113,8 @@ Node * handle_for() {
 
 }
 
-/* Might be able to incorporate into handle_while */
+/* Might be able to incorporate into handle_while, or have separate productions for
+   do...while loops and while loops */
 Node * handle_do() {
 
 }
@@ -147,3 +179,4 @@ Type * handle_fun_type(ArgTypes * type_list, Type * return_type) {
     this_fun_type->op.fun.return_type = return_type;
     return this_fun_type;
 }
+

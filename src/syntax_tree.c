@@ -29,6 +29,15 @@ Node * add_type_def_node(char * name, Type * type) {
     return new;
 }
 
+Node * add_fun_def_node(char * name, Type * type, Node * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = fun_def_node;
+    new->op.funDef.name = name;
+    new->op.funDef.type = type;
+    new->op.funDef.block = block;
+    return new;
+}
+
 Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = binary_expr_node;
@@ -45,5 +54,21 @@ Node * add_unary_expr_node(char * op, Node * child, Type * type) {
     new->op.unaryExpr.op = op;
     new->op.unaryExpr.child = child;
     new->op.unaryExpr.type = type;
+    return new;
+}
+
+Node * add_lit_node(char * key, Type * type) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = literal_node;
+    new->op.literal.type = type;
+    new->op.literal.name = key;
+    return new;
+}
+
+Node * add_var_node(char * key, Type * type) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = var_node;
+    new->op.var.type = type;
+    new->op.var.name = key;
     return new;
 }

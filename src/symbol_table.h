@@ -33,6 +33,7 @@ struct VarSymbol {
 };
 
 struct TypeSymbol {
+    /** Might be able to use VarSymbol instead */
     char * name;
     Type * type;
     int declared_at;
@@ -43,7 +44,7 @@ struct FunSymbol {
     char * name;
     Type * type;
     SymbolTable * symbol_table;
-    Args ** args;
+    Args * args;
     int declared_at;
 };
 
@@ -55,7 +56,7 @@ struct Args {
 
 SymbolTable * new_symbol_table(size_t size);
 void free_table(SymbolTable * table);
-void * get_symbol_current_scope(SymbolTable * table, const char * key);
+void * get_symbol_current_table(SymbolTable * table, const char * key);
 void * get_symbol_lexical_scope(SymbolTable * table, const char * key);
 int set_symbol(SymbolTable * table, const char * key, void * value);
 int unset_symbol(SymbolTable * table, const char * key);

@@ -35,10 +35,12 @@ void pop_symbol_table() {
 }
 
 void * get_symbol_current_table(SymbolTable * table, const char * key) {
+    /** Get symbol in current table only. Returns NULL if key is not found */
     return get_entry(table->hash_table, key);
 }
 
 void * get_symbol_lexical_scope(SymbolTable * table, const char * key) {
+    /** Get symbol in any scope accessible using lexical scoping rules. Returns NULL if key is not found */
     SymbolTable * scope = table;
     while (scope) {
         void * potential = get_entry(scope->hash_table, key);

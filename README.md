@@ -8,6 +8,12 @@ Here are a few changes to the grammar or language specification that have been m
 - `^` is used for exponentiation, and `~` is used instead for bitwise xor.
 - Function *types* now also start with the keyword `fun`, such as `fun (int, int) -> int`. 
 
+## Notes
+
+Some helpful notes:
+
+- The array member operator (e.g. `array[2]`) is treated as "[]" in the symbol table. 
+
 ## To Do List
 
 ### Semantic Analysis (focus)

@@ -13,6 +13,7 @@
 
 %code top {
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 }
@@ -45,8 +46,9 @@ SymbolTable * symbol_table;
     struct Node * node;
     Type * type;
     ArgTypes * arg_types;
+    Args * args;
     char * string;
-    int integer;
+    /* int integer; */
 }
 
 /* TOKENS */
@@ -103,11 +105,12 @@ SymbolTable * symbol_table;
 /* Dot */
 %left DOT
 
-%type<node> variable_declaration expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr
+%type<node> variable_declaration expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_def function_call statement_block literal argument_list 
 %type<type> type fun_type
 %type<arg_types> type_list
-%type<string> ID STR_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP
-%type<integer> INT_LIT
+%type<args> argument_list_specifier
+%type<string> ID STR_LIT INT_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP user_operator
+/* %type<integer> INT_LIT */
 
 
 %%
@@ -150,70 +153,71 @@ expr:
 
 assign_expr:
     logical_expr
-    | member_expr ASSIGN_OP assign_expr { handle_binary_expr($1, $2, $3); }
-    | member_expr EQUALS_OP assign_expr { handle_binary_expr($1, $2, $3); }
+    | member_expr ASSIGN_OP assign_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | member_expr EQUALS_OP assign_expr { $$ = handle_binary_expr($1, $2, $3); }
     ;
 
 logical_expr:
     compare_expr
     | NOT logical_expr { handle_unary_expr($1, $2); }
-    | logical_expr AND logical_expr { handle_binary_expr($1, $2, $3); }
-    | logical_expr OR logical_expr { handle_binary_expr($1, $2, $3); }
-    | logical_expr XOR logical_expr { handle_binary_expr($1, $2, $3); }
+    | logical_expr AND logical_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | logical_expr OR logical_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | logical_expr XOR logical_expr { $$ = handle_binary_expr($1, $2, $3); }
     ;
 
 compare_expr:
     bitwise_expr %prec BIT_AND_OP
-    | compare_expr COMPARE_OP compare_expr { handle_binary_expr($1, $2, $3); }
+    | compare_expr COMPARE_OP compare_expr { $$ = handle_binary_expr($1, $2, $3); }
     ;
 
 bitwise_expr:
     arithmetic_expr
-    | bitwise_expr BIT_AND_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | bitwise_expr RBIT_AND_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | bitwise_expr BIT_OR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | bitwise_expr RBIT_OR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | bitwise_expr BIT_XOR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | bitwise_expr RBIT_XOR_OP bitwise_expr { handle_binary_expr($1, $2, $3); }
-    | BIT_NOT_OP bitwise_expr { handle_unary_expr($1, $2); }
-    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP { handle_unary_expr($1, $2); }
-    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP { handle_unary_expr($1, $2); }
-    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP { handle_unary_expr($1, $2); }
-    | RBIT_AND_OP bitwise_expr { handle_unary_expr($1, $2); }
-    | RBIT_OR_OP bitwise_expr { handle_unary_expr($1, $2); }
-    | RBIT_XOR_OP bitwise_expr { handle_unary_expr($1, $2); }
+    | bitwise_expr BIT_AND_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_AND_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | bitwise_expr BIT_OR_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_OR_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | bitwise_expr BIT_XOR_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | bitwise_expr RBIT_XOR_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | BIT_NOT_OP bitwise_expr { $$ = handle_unary_expr($1, $2); }
+    | BIT_AND_OP bitwise_expr %prec RBIT_AND_OP { $$ = handle_unary_expr($1, $2); }
+    | BIT_OR_OP bitwise_expr %prec RBIT_OR_OP { $$ = handle_unary_expr($1, $2); }
+    | BIT_XOR_OP bitwise_expr %prec RBIT_XOR_OP { $$ = handle_unary_expr($1, $2); }
+    | RBIT_AND_OP bitwise_expr { $$ = handle_unary_expr($1, $2); }
+    | RBIT_OR_OP bitwise_expr { $$ = handle_unary_expr($1, $2); }
+    | RBIT_XOR_OP bitwise_expr { $$ = handle_unary_expr($1, $2); }
     ;
 
 arithmetic_expr:
     member_expr
-    | arithmetic_expr POW_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
-    | arithmetic_expr MULT_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
-    | arithmetic_expr RMULT_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
-    | arithmetic_expr PLUS_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
-    | arithmetic_expr RPLUS_OP arithmetic_expr { handle_binary_expr($1, $2, $3); }
-    | PLUS_OP arithmetic_expr %prec RPLUS_OP { handle_unary_expr($1, $2); }
-    | MULT_OP arithmetic_expr %prec RMULT_OP { handle_unary_expr($1, $2); }
-    | RPLUS_OP arithmetic_expr { handle_unary_expr($1, $2); }
-    | RMULT_OP arithmetic_expr { handle_unary_expr($1, $2); }
+    | arithmetic_expr POW_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr MULT_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr RMULT_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr PLUS_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | arithmetic_expr RPLUS_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
+    | PLUS_OP arithmetic_expr %prec RPLUS_OP { $$ = handle_unary_expr($1, $2); }
+    | MULT_OP arithmetic_expr %prec RMULT_OP { $$ = handle_unary_expr($1, $2); }
+    | RPLUS_OP arithmetic_expr { $$ = handle_unary_expr($1, $2); }
+    | RMULT_OP arithmetic_expr { $$ = handle_unary_expr($1, $2); }
     ;
 
 /* This one should actually have some checking in it to make sure you
  * don't write something dumb like 4[1] or 15."foo" */
 member_expr:
     primary_expr
-    | member_expr DOT member_expr
-    | member_expr LSQB expr RSQB
+    | member_expr DOT member_expr { $$ = handle_member_expr($1, $3, 1); }
+    | member_expr LSQB expr RSQB { $$ = handle_member_expr($1, $3, 0); }
     ;
 
 primary_expr:
-    ID
+    ID { $$ = handle_var($1); }
     | literal
-    | LPAREN expr RPAREN
+    | LPAREN expr RPAREN { $$ = $2; }
     | function_call
     ;
 
 function_call:
-    member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); }
+    ID LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); }
+    /* member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); } */
     ;
 
 argument_list:
@@ -222,8 +226,8 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block {handle_function_def($1, $7, $3, yylineno); }
-    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block { handle_function_def($ID, $argument_list_specifier, $type, $statement_block, yylineno); }
+    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block { handle_function_def($user_operator, $argument_list_specifier, $type, $statement_block, yylineno); }
     /* Function definition with generic parameters, have to define more grammar rules first */
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
     ;
@@ -244,7 +248,7 @@ type:
     | INT_TYPE { $$ = handle_base_type(int_type); }
     | FLOAT_TYPE { $$ = handle_base_type(float_type); }
     | STR_TYPE { $$ = handle_base_type(str_type); }
-    | fun_type
+    | fun_type { $$ = $1; }
     ;
 
 typedef:
@@ -268,8 +272,8 @@ variable_declaration:
 
 /* TODO Add more literal types */
 literal:
-    INT_LIT
-    | STR_LIT
+    INT_LIT { $$ = handle_literal($1, int_type); }
+    | STR_LIT { $$ = handle_literal($1, str_type); }
     ;
 
 user_operator:

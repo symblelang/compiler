@@ -18,8 +18,11 @@ typedef struct Node Node;
 typedef enum {
         var_dec_node,
         type_def_node,
+        fun_def_node,
         binary_expr_node,
-        unary_expr_node
+        unary_expr_node,
+        literal_node,
+        var_node
 } NodeType;
 
 
@@ -30,9 +33,20 @@ struct Node {
         struct {
             Type * type;
             char * name;
+        } var;
+        
+        struct {
+            Type * type;
+            char * name;
             Node * init;
         } varDec;
-        
+
+        struct {
+            Type * type;
+            char * name;
+            Node * block;
+        } funDef;
+
         struct {
             Type * type;
             char * name;
@@ -50,6 +64,11 @@ struct Node {
             char * op;
             Node * child;
         } unaryExpr;
+        
+        struct {
+            Type * type;
+            char * name;
+        } literal;
     } op;
 };
 
@@ -57,5 +76,7 @@ Node * add_var_dec_node(char * name, Type * type, Node * init);
 Node * add_type_def_node(char * name, Type * type);
 Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type);
 Node * add_unary_expr_node(char * op, Node * child, Type * type);
+Node * add_lit_node(char * key, Type * type);
+Node * add_var_node(char * key, Type * type);
 
 #endif

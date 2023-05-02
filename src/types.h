@@ -11,6 +11,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <stdint.h>
+
 #include "symbol_table.h"
 
 typedef struct Type Type;
@@ -19,7 +21,6 @@ typedef struct ArgTypes ArgTypes;
 /* TODO: add list/array  */
 
 struct ArgTypes {
-    /* name should be a key for the symbol table of the fun/op */
     Type * type;
     ArgTypes * next;
 };
@@ -40,11 +41,14 @@ struct Type {
         } fun;
         struct {
             Type * base_type;
-            int size;
+            size_t size;
         } array;
     } op;
 };
 
 int check_types_equal(Type * type_1, Type * type_2);
+size_t mangle_type_len(const Type * const type);
+size_t mangle_args_len(const ArgTypes * const arg_types);
+char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types);
 
 #endif

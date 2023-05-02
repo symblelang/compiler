@@ -21,10 +21,25 @@ extern SymbolTable * symbol_table;
 Node * handle_variable_declaration(Type * type, char * id, Node * init, int line_num);
 Node * handle_binary_expr(Node * left, char * operator, Node * right);
 Node * handle_unary_expr(char * operator, Node * child);
+Node * handle_member_expr(Node * base, Node * child, int is_dot);
+Node * handle_var(char * name);
+Node * handle_literal(char * value, BaseType lit_type);
+Node * handle_function_def(char * name, Args * arg_types, Type * return_type, Node * block, int line_num);
 Type * handle_base_type(BaseType base);
 Type * handle_custom_type(char * type_name);
 ArgTypes * create_type_list(Type * type);
 ArgTypes * add_to_type_list(ArgTypes * type_list, Type * type);
 Type * handle_fun_type(ArgTypes * type_list, Type * return_type);
+Node * handle_member_expr(Node * base, Node * child, int is_dot);
+Node * handle_function_call(char * function_name, Node * args, int line_num);
+Node * handle_if();
+Node * handle_while();
+Node * handle_for();
+Node * handle_do();
+Node * handle_return();
+Node * handle_create_array();
+Node * handle_typedef();
+
+
 
 #endif
