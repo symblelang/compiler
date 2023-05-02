@@ -117,6 +117,7 @@ char * mangle_type(const Type * const type, char * pos) {
     }
 }
 
+/* TODO make it use Args instead of ArgTypes, using function symbol table */
 char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types) {
     /** Mangles the name of a function with given argument types. Note that the return
       * value is malloc'd, but after syntax tree gen, the original name is not needed.

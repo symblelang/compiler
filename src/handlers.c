@@ -80,7 +80,7 @@ Node * handle_literal(char * value, BaseType lit_type) {
 }
 
 /* TODO finish and add name mangling, create and push symbol table, etc. */
-Node * handle_function_def(char * name, Args * arg_types, Type * return_type, Node * block, int line_num) {
+Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
     /* Add function type info to symbol table */
     FunSymbol * fun = malloc(sizeof(FunSymbol));
     fun->name = name;

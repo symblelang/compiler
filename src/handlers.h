@@ -24,7 +24,7 @@ Node * handle_unary_expr(char * operator, Node * child);
 Node * handle_member_expr(Node * base, Node * child, int is_dot);
 Node * handle_var(char * name);
 Node * handle_literal(char * value, BaseType lit_type);
-Node * handle_function_def(char * name, Args * arg_types, Type * return_type, Node * block, int line_num);
+Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num);
 Type * handle_base_type(BaseType base);
 Type * handle_custom_type(char * type_name);
 ArgTypes * create_type_list(Type * type);
