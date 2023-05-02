@@ -22,7 +22,11 @@ typedef enum {
         binary_expr_node,
         unary_expr_node,
         literal_node,
-        var_node
+        var_node,
+        while_loop_node,
+        do_loop_node,
+        return_node,
+        if_node
 } NodeType;
 
 
@@ -69,6 +73,26 @@ struct Node {
             Type * type;
             char * name;
         } literal;
+        
+        struct {
+            Node * test;
+            Node * block;
+        } while_loop;
+
+        struct {
+            Node * test;
+            Node * block;
+        } do_loop;
+
+        struct {
+            Node * expr;
+        } ret;
+
+        struct {
+            Node * test;
+            Node * block;
+            Node * next;
+        } if_statement;
     } op;
 };
 
@@ -78,5 +102,9 @@ Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type);
 Node * add_unary_expr_node(char * op, Node * child, Type * type);
 Node * add_lit_node(char * key, Type * type);
 Node * add_var_node(char * key, Type * type);
+Node * add_while_loop_node(Node * test, Node * block);
+Node * add_do_loop_node(Node * test, Node * block);
+Node * add_return_node(Node * expr);
+Node * add_if_node(Node * test, Node * block, Node * next);
 
 #endif

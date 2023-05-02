@@ -308,11 +308,13 @@ do:
     ;
 
 while_loop:
-    WHILE LPAREN expr RPAREN statement_block { handle_while(); }
-    | WHILE LPAREN expr RPAREN SEMICOLON { handle_while(); }
+    WHILE LPAREN expr RPAREN statement_block { $$ = handle_while($3, $5); }
+    | WHILE LPAREN expr RPAREN SEMICOLON { $$ = handle_while($3, NULL); }
     ;
 
+
 %%
+
 
 /* based on musl libc printf implementation */
 int yyerror(const char * restrict fmt, ...) {

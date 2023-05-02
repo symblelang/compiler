@@ -72,3 +72,31 @@ Node * add_var_node(char * key, Type * type) {
     new->op.var.name = key;
     return new;
 }
+
+Node * add_while_loop_node(Node * test, Node * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = while_loop_node;
+    new->op.while_loop.test = test;
+    new->op.while_loop.block = block;
+    return new;
+}
+Node * add_do_loop_node(Node * test, Node * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = do_loop_node;
+    new->op.while_loop.test = test;
+    new->op.while_loop.block = block;
+    return new;
+}
+Node * add_return_node(Node * expr) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = return_node;
+    new->op.ret.expr = expr;
+    return new;
+}
+Node * add_if_node(Node * test, Node * block, Node * next) {
+    Node * new = malloc(sizeof(Node));
+    new->op.if_statement.test = test;
+    new->op.if_statement.block = block;
+    new->op.if_statement.next = next;
+    return new;
+}

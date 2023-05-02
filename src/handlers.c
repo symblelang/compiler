@@ -81,7 +81,7 @@ Node * handle_literal(char * value, BaseType lit_type) {
 
 /* TODO finish and add name mangling, create and push symbol table, etc. */
 Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
-    /* Add function type info to symbol table */
+    /** Adds function and type info to symbol table */
     FunSymbol * fun = malloc(sizeof(FunSymbol));
     fun->name = name;
     fun->type = return_type;
@@ -99,27 +99,20 @@ Node * handle_function_call(char * function_name, Node * args, int line_num) {
 
 /* Needs implementation */
 
-Node * handle_if() {
-   /* Should handle if, if_elif, if_else */ 
-   /* Not sure how to add this to symbol table... */
-   /* Can do psuedo-code with test and jump statements */
-}
-
-Node * handle_while() {
+Node * handle_if(Node * test, Node * block, Node * next) {
 
 }
 
-Node * handle_for() {
+Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
 
 }
 
-/* Might be able to incorporate into handle_while, or have separate productions for
-   do...while loops and while loops */
-Node * handle_do() {
+/* Might be able to incorporate into handle_while */
+Node * handle_do(Node * test, Node * block) {
 
 }
 
-Node * handle_return() {
+Node * handle_return(Node * expr) {
     
 }
 
@@ -127,7 +120,7 @@ Node * handle_create_array() {
 
 }
 
-Node * handle_typedef() {
+Node * handle_typedef(char * name, Type * type) {
 
 }
 

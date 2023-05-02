@@ -32,14 +32,12 @@ ArgTypes * add_to_type_list(ArgTypes * type_list, Type * type);
 Type * handle_fun_type(ArgTypes * type_list, Type * return_type);
 Node * handle_member_expr(Node * base, Node * child, int is_dot);
 Node * handle_function_call(char * function_name, Node * args, int line_num);
-Node * handle_if();
-Node * handle_while();
-Node * handle_for();
-Node * handle_do();
-Node * handle_return();
+Node * handle_if(Node * test, Node * block, Node * next);
+Node * handle_while(Node * test, Node * block);
+Node * handle_for(Node * init, Node * test, Node * inc, Node * block);
+Node * handle_do(Node * test, Node * block);
+Node * handle_return(Node * expr);
+Node * handle_typedef(char * name, Type * type);
 Node * handle_create_array();
-Node * handle_typedef();
-
-
 
 #endif
