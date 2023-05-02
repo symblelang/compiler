@@ -66,9 +66,10 @@ Node * handle_var(char * name) {
     VarSymbol * var_sym = get_symbol_lexical_scope(symbol_table, name);
     if (var_sym == NULL) {
         yyerror("Variable \"%s\" not declared!", name);
+        return NULL;
     }
     else {
-        add_var_node(name, var_sym->type);
+        return add_var_node(name, var_sym->type);
     }
 }
 
@@ -77,60 +78,6 @@ Node * handle_literal(char * value, BaseType lit_type) {
     type->tag = base_type;
     type->op.base = lit_type;
     return add_lit_node(value, type);
-}
-
-/* TODO finish and add name mangling, create and push symbol table, etc. */
-Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
-    /** Adds function and type info to symbol table */
-    FunSymbol * fun = malloc(sizeof(FunSymbol));
-    fun->name = name;
-    fun->type = return_type;
-    /* fun-symbol_table->??? */
-    fun->args = arg_types;
-    fun->declared_at = line_num;
-    /* Add fun to symbol table with type info for params */
-
-}
-
-Node * handle_function_call(char * function_name, Node * args, int line_num) {
-    /* Check that provided arguments match function definition*/
-    /* Print "call " + <function_name> */
-}
-
-/* Needs implementation */
-
-Node * handle_if(Node * test, Node * block, Node * next) {
-
-}
-
-Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
-
-}
-
-/* Might be able to incorporate into handle_while */
-Node * handle_do(Node * test, Node * block) {
-
-}
-
-Node * handle_return(Node * expr) {
-    
-}
-
-Node * handle_create_array() {
-
-}
-
-Node * handle_typedef(char * name, Type * type) {
-
-}
-
-
-int check_param_types(char * function_name, char ** args) {
-    /* Query symbol table for correct types in original function definition */
-    /* Check if correct number of arguments was provided */
-    /* Check for type mismatch in provided arguments vs. defined arguments */
-    /* Return 0 if correct number of arguments and correct types provided */
-    /* Return 1 and or throw error if incorrect number of arguments or incorrect types provided */
 }
 
 Type * handle_base_type(BaseType base) {
@@ -173,3 +120,60 @@ Type * handle_fun_type(ArgTypes * type_list, Type * return_type) {
     return this_fun_type;
 }
 
+
+
+
+/* TODO finish and add name mangling, create and push symbol table, etc. */
+Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
+    /** Adds function and type info to symbol table */
+    FunSymbol * fun = malloc(sizeof(FunSymbol));
+    fun->name = name;
+    fun->type = return_type;
+    /* fun-symbol_table->??? */
+    fun->args = arg_types;
+    fun->declared_at = line_num;
+    /* Add fun to symbol table with type info for params */
+
+}
+
+Node * handle_function_call(char * function_name, Node * args, int line_num) {
+    /* Check that provided arguments match function definition*/
+    /* Print "call " + <function_name> */
+}
+
+/* Needs implementation */
+
+Node * handle_if(Node * test, Node * block, Node * next) {
+
+}
+
+/* Needs a case for when init is a variable declaration */
+Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
+
+}
+
+/* Might be able to incorporate into handle_while */
+Node * handle_do(Node * test, Node * block) {
+    return add_do_loop_node(test, block);
+}
+
+Node * handle_return(Node * expr) {
+    
+}
+
+Node * handle_create_array() {
+
+}
+
+Node * handle_typedef(char * name, Type * type) {
+
+}
+
+
+int check_param_types(char * function_name, char ** args) {
+    /* Query symbol table for correct types in original function definition */
+    /* Check if correct number of arguments was provided */
+    /* Check for type mismatch in provided arguments vs. defined arguments */
+    /* Return 0 if correct number of arguments and correct types provided */
+    /* Return 1 and or throw error if incorrect number of arguments or incorrect types provided */
+}

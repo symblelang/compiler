@@ -105,7 +105,8 @@ SymbolTable * symbol_table;
 /* Dot */
 %left DOT
 
-%type<node> variable_declaration expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_def function_call statement_block literal argument_list 
+%type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr
+%type<node> variable_declaration function_def function_call statement_block literal argument_list while_loop do statement_list program typedef
 %type<type> type fun_type
 %type<arg_types> type_list
 %type<args> argument_list_specifier
@@ -139,7 +140,7 @@ statement:
     ;
 
 statement_block:
-    LBRACE statement_list RBRACE
+    LBRACE statement_list RBRACE { $$ = $2; }
     ;
 
 
@@ -252,7 +253,7 @@ type:
     ;
 
 typedef:
-    TYPE type EQUALS_OP type SEMICOLON { handle_typedef(); }
+    TYPE ID EQUALS_OP type SEMICOLON { $$ = handle_typedef($2, $4); }
     ;
 
 fun_type:
@@ -293,23 +294,23 @@ if_statement:
     ;
 
 control_statement:
-    RETURN expr SEMICOLON { handle_return(); }
+    RETURN expr SEMICOLON { handle_return($expr); }
     | BREAK SEMICOLON
     | CONTINUE SEMICOLON
     ;
 
 for_loop:
-    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block { handle_for(); }
-    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block { handle_for(); }
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block { handle_for($3, $5, $7, $9); }
+    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block { handle_for($3, $4, $6, $8); }
     ;
 
 do:
-    statement_block WHILE LPAREN expr RPAREN SEMICOLON { handle_do(); }
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON { handle_do($expr, $statement_block); }
     ;
 
 while_loop:
-    WHILE LPAREN expr RPAREN statement_block { $$ = handle_while($3, $5); }
-    | WHILE LPAREN expr RPAREN SEMICOLON { $$ = handle_while($3, NULL); }
+    WHILE LPAREN expr RPAREN statement_block { $$ = handle_while($expr, $statement_block); }
+    | WHILE LPAREN expr RPAREN SEMICOLON { $$ = handle_while($expr, NULL); }
     ;
 
 

@@ -47,8 +47,6 @@ struct Type {
 };
 
 int check_types_equal(Type * type_1, Type * type_2);
-size_t mangle_type_len(const Type * const type);
-size_t mangle_args_len(const ArgTypes * const arg_types);
 char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types);
 
 #endif
