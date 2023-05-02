@@ -10,9 +10,10 @@ Here are a few changes to the grammar or language specification that have been m
 
 ## Notes
 
-Some helpful notes:
+Some (hopefully) helpful notes:
 
 - The array member operator (e.g. `array[2]`) is treated as "[]" in the symbol table. 
+- `ArgTypes` is used for function types (e.g. when functions are passed as arguments), while `Args` is used for function calls and defs
 
 ## To Do List
 
