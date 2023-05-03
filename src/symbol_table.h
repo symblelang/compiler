@@ -50,7 +50,7 @@ struct FunSymbol {
 
 struct Args {
     /* name should be a key for the symbol table of the fun/op
-     * type and next fields MUST come before name to be able to cast to ArgTypes */
+     * If Args is used in the type specifier of a function, name should be NULL */
     Type * type;
     Args * next;
     char * name;

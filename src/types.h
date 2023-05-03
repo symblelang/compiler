@@ -18,13 +18,7 @@
 typedef struct Type Type;
 typedef struct Args Args;
 
-/* TODO: add list/array  */
-
-/* ArgTypes has been replaced by Args with value of NULL for name */
-/* struct ArgTypes { */
-/*     Type * type; */
-/*     ArgTypes * next; */
-/* }; */
+/* TODO: add list/array */
 
 typedef enum BaseType {
     int_type,
