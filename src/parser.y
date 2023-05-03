@@ -45,7 +45,6 @@ SymbolTable * symbol_table;
 %union{
     struct Node * node;
     Type * type;
-    ArgTypes * arg_types;
     Args * args;
     char * string;
     /* int integer; */
@@ -108,8 +107,7 @@ SymbolTable * symbol_table;
 %type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr
 %type<node> variable_declaration function_def function_call statement_block literal argument_list while_loop do statement_list program typedef
 %type<type> type fun_type
-%type<arg_types> type_list
-%type<args> argument_list_specifier
+%type<args> argument_list_specifier type_list
 %type<string> ID STR_LIT INT_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP user_operator
 /* %type<integer> INT_LIT */
 
@@ -257,12 +255,12 @@ typedef:
     ;
 
 fun_type:
-    FUN LPAREN type_list RPAREN ARROW type { handle_fun_type($type_list, $type); }
+    FUN LPAREN type_list RPAREN ARROW type { $$ = handle_fun_type($type_list, $type); }
     ;
 
 type_list:
-    type { $$ = create_type_list($type); }
-    | type_list COMMA type { $$ = add_to_type_list($1, $type); }
+    type { $$ = create_type_list($1); }
+    | type_list COMMA type { $$ = add_to_type_list($1, $3); }
     ;
 
 variable_declaration:

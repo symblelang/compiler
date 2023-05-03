@@ -16,14 +16,15 @@
 #include "symbol_table.h"
 
 typedef struct Type Type;
-typedef struct ArgTypes ArgTypes;
+typedef struct Args Args;
 
 /* TODO: add list/array  */
 
-struct ArgTypes {
-    Type * type;
-    ArgTypes * next;
-};
+/* ArgTypes has been replaced by Args with value of NULL for name */
+/* struct ArgTypes { */
+/*     Type * type; */
+/*     ArgTypes * next; */
+/* }; */
 
 typedef enum BaseType {
     int_type,
@@ -37,7 +38,7 @@ struct Type {
         BaseType base;
         struct {
             Type * return_type;
-            ArgTypes * args;
+            Args * args;
         } fun;
         struct {
             Type * base_type;
@@ -47,6 +48,6 @@ struct Type {
 };
 
 int check_types_equal(Type * type_1, Type * type_2);
-char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types);
+char * mangle_fun_name(char * fun_name, const Args * const arg_types);
 
 #endif

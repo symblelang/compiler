@@ -94,34 +94,35 @@ Type * handle_custom_type(char * type_name) {
     return type_sym->type;
 }
 
-ArgTypes * create_type_list(Type * type) {
-    ArgTypes * type_list = malloc(sizeof(ArgTypes));
+Args * create_type_list(Type * type) {
+    Args * type_list = malloc(sizeof(Args));
     type_list->type = type;
+    type_list->name = NULL;
     return type_list;
 }
 
 /* This implementation is hilariously inefficient, but nobody should be writing
- * functions with hundreds of arguments */
-ArgTypes * add_to_type_list(ArgTypes * type_list, Type * type) {
-    ArgTypes * where_to_add = type_list;
+ * functions with hundreds of arguments
+ * better would be to store a pointer to the first and last args. */
+Args * add_to_type_list(Args * type_list, Type * type) {
+    Args * where_to_add = type_list;
     while (where_to_add->next != NULL) {
         where_to_add = where_to_add->next;
     }
-    where_to_add->next = malloc(sizeof(ArgTypes));
-    where_to_add->next->type = type;
+    where_to_add = (where_to_add->next = malloc(sizeof(Args)));
+    where_to_add->type = type;
+    where_to_add->name = NULL;
+    where_to_add->next = NULL;
     return type_list;
 }
 
-Type * handle_fun_type(ArgTypes * type_list, Type * return_type) {
+Type * handle_fun_type(Args * type_list, Type * return_type) {
     Type * this_fun_type = malloc(sizeof(Type));
     this_fun_type->tag = fun_type;
     this_fun_type->op.fun.args = type_list;
     this_fun_type->op.fun.return_type = return_type;
     return this_fun_type;
 }
-
-
-
 
 /* TODO finish and add name mangling, create and push symbol table, etc. */
 Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
@@ -130,7 +131,7 @@ Node * handle_function_def(char * name, Args * args, Type * return_type, Node * 
     fun->name = name;
     fun->type = return_type;
     /* fun-symbol_table->??? */
-    fun->args = arg_types;
+    fun->args = args;
     fun->declared_at = line_num;
     /* Add fun to symbol table with type info for params */
 
@@ -147,14 +148,14 @@ Node * handle_if(Node * test, Node * block, Node * next) {
 
 }
 
-/* Needs a case for when init is a variable declaration */
-Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
-
-}
-
 /* Might be able to incorporate into handle_while */
 Node * handle_do(Node * test, Node * block) {
     return add_do_loop_node(test, block);
+}
+
+/* Needs a case for when init is a variable declaration to edit symbol table */
+Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
+    return add_for_loop_node(init, test, inc, block);
 }
 
 Node * handle_return(Node * expr) {

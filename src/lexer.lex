@@ -35,6 +35,8 @@
 #include "symbol_table.h"
 #include "syntax_tree.h"
 #include "parser.h"
+
+void set_string_val(YYSTYPE * val, char * text, int length);
 %}
 
  /* Whitespace, IDs, and Integers */
@@ -89,23 +91,23 @@ pow_op              "^"|("^^"{opchar}*)
 {ws}                {}
 
  /* Operators */
-{mult_op}           { yylval->string = strndup(yytext, yyleng); return MULT_OP; }
-{plus_op}           { yylval->string = strndup(yytext, yyleng); return PLUS_OP; }
-{and_op}            { yylval->string = strndup(yytext, yyleng); return BIT_AND_OP; }
-{or_op}             { yylval->string = strndup(yytext, yyleng); return BIT_OR_OP; }
-{xor_op}            { yylval->string = strndup(yytext, yyleng); return BIT_XOR_OP; }
-{not_op}            { yylval->string = strndup(yytext, yyleng); return BIT_NOT_OP; }
-{assign_op}         { yylval->string = strndup(yytext, yyleng); return ASSIGN_OP; }
-{equals_op}         { yylval->string = strndup(yytext, yyleng); return EQUALS_OP; }
-{compare_op}        { yylval->string = strndup(yytext, yyleng); return COMPARE_OP; }
+{mult_op}           { set_string_val(yylval, yytext, yyleng); return MULT_OP; }
+{plus_op}           { set_string_val(yylval, yytext, yyleng); return PLUS_OP; }
+{and_op}            { set_string_val(yylval, yytext, yyleng); return BIT_AND_OP; }
+{or_op}             { set_string_val(yylval, yytext, yyleng); return BIT_OR_OP; }
+{xor_op}            { set_string_val(yylval, yytext, yyleng); return BIT_XOR_OP; }
+{not_op}            { set_string_val(yylval, yytext, yyleng); return BIT_NOT_OP; }
+{assign_op}         { set_string_val(yylval, yytext, yyleng); return ASSIGN_OP; }
+{equals_op}         { set_string_val(yylval, yytext, yyleng); return EQUALS_OP; }
+{compare_op}        { set_string_val(yylval, yytext, yyleng); return COMPARE_OP; }
 
  /* Right-associative Operators */
-{rmult_op}          { yylval->string = strndup(yytext, yyleng); return RMULT_OP; }
-{rplus_op}          { yylval->string = strndup(yytext, yyleng); return RPLUS_OP; }
-{rand_op}           { yylval->string = strndup(yytext, yyleng); return RBIT_AND_OP; }
-{ror_op}            { yylval->string = strndup(yytext, yyleng); return RBIT_OR_OP; }
-{rxor_op}           { yylval->string = strndup(yytext, yyleng); return RBIT_XOR_OP; }
-{pow_op}            { yylval->string = strndup(yytext, yyleng); return POW_OP; }
+{rmult_op}          { set_string_val(yylval, yytext, yyleng); return RMULT_OP; }
+{rplus_op}          { set_string_val(yylval, yytext, yyleng); return RPLUS_OP; }
+{rand_op}           { set_string_val(yylval, yytext, yyleng); return RBIT_AND_OP; }
+{ror_op}            { set_string_val(yylval, yytext, yyleng); return RBIT_OR_OP; }
+{rxor_op}           { set_string_val(yylval, yytext, yyleng); return RBIT_XOR_OP; }
+{pow_op}            { set_string_val(yylval, yytext, yyleng); return POW_OP; }
 
 "("                 return LPAREN;
 ")"                 return RPAREN;
@@ -145,7 +147,7 @@ pow_op              "^"|("^^"{opchar}*)
 
  /* We want id to be returned only if a keyword isn't matched */
 {id}                {
-                         yylval->string = strndup(yytext, yyleng);
+                         set_string_val(yylval, yytext, yyleng);
                          return ID;
                     }
 
@@ -181,8 +183,9 @@ pow_op              "^"|("^^"{opchar}*)
 }
 
 
- /* Strings with escape sequences */
-
-
 %%
 
+/* In the future, this can be made more memory-efficient with a token hashtable */
+void set_string_val(YYSTYPE * val, char * text, int length) {
+    val->string = strndup(text, length);
+}

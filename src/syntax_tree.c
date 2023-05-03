@@ -73,13 +73,6 @@ Node * add_var_node(char * key, Type * type) {
     return new;
 }
 
-Node * add_while_loop_node(Node * test, Node * block) {
-    Node * new = malloc(sizeof(Node));
-    new->tag = while_loop_node;
-    new->op.while_loop.test = test;
-    new->op.while_loop.block = block;
-    return new;
-}
 Node * add_do_loop_node(Node * test, Node * block) {
     Node * new = malloc(sizeof(Node));
     new->tag = do_loop_node;
@@ -87,12 +80,32 @@ Node * add_do_loop_node(Node * test, Node * block) {
     new->op.while_loop.block = block;
     return new;
 }
+
+Node * add_while_loop_node(Node * test, Node * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = while_loop_node;
+    new->op.while_loop.test = test;
+    new->op.while_loop.block = block;
+    return new;
+}
+
+Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = for_loop_node;
+    new->op.for_loop.init = init;
+    new->op.for_loop.test = test;
+    new->op.for_loop.inc = inc;
+    new->op.for_loop.block = block;
+    return new;
+}
+
 Node * add_return_node(Node * expr) {
     Node * new = malloc(sizeof(Node));
     new->tag = return_node;
     new->op.ret.expr = expr;
     return new;
 }
+
 Node * add_if_node(Node * test, Node * block, Node * next) {
     Node * new = malloc(sizeof(Node));
     new->op.if_statement.test = test;

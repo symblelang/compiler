@@ -25,6 +25,7 @@ typedef enum {
         var_node,
         while_loop_node,
         do_loop_node,
+        for_loop_node,
         return_node,
         if_node
 } NodeType;
@@ -85,6 +86,13 @@ struct Node {
         } do_loop;
 
         struct {
+            Node * init;
+            Node * test;
+            Node * inc;
+            Node * block;
+        } for_loop;
+
+        struct {
             Node * expr;
         } ret;
 
@@ -104,6 +112,7 @@ Node * add_lit_node(char * key, Type * type);
 Node * add_var_node(char * key, Type * type);
 Node * add_while_loop_node(Node * test, Node * block);
 Node * add_do_loop_node(Node * test, Node * block);
+Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block);
 Node * add_return_node(Node * expr);
 Node * add_if_node(Node * test, Node * block, Node * next);
 

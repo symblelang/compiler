@@ -49,9 +49,11 @@ struct FunSymbol {
 };
 
 struct Args {
-    /* name should be a key for the symbol table of the fun/op */
-    char * name;
+    /* name should be a key for the symbol table of the fun/op
+     * type and next fields MUST come before name to be able to cast to ArgTypes */
+    Type * type;
     Args * next;
+    char * name;
 };
 
 SymbolTable * new_symbol_table(size_t size);

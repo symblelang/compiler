@@ -14,15 +14,15 @@
 
 /* Forward declarations for internal functions */
 size_t mangle_type_len(const Type * const type);
-size_t mangle_args_len(const ArgTypes * const arg_types);
+size_t mangle_args_len(const Args * const arg_types);
 char * mangle_type(const Type * const type, char * pos);
-char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types);
+char * mangle_fun_name(char * fun_name, const Args * const arg_types);
 
 int check_types_equal(Type * type_1, Type * type_2) {
     if (! (type_1->tag == type_2->tag)) {
         return 0;
     }
-    ArgTypes * curr_arg;
+    Args * curr_arg;
     switch (type_1->tag) {
         case base_type:
             return type_1->op.base == type_2->op.base;
@@ -62,9 +62,9 @@ size_t mangle_type_len(const Type * const type) {
     return len;
 }
 
-size_t mangle_args_len(const ArgTypes * const arg_types) {
+size_t mangle_args_len(const Args * const arg_types) {
     size_t len = 0;
-    const ArgTypes * curr_arg = (const ArgTypes *)arg_types;
+    const Args * curr_arg = (const Args *)arg_types;
     while (curr_arg) {
         len += mangle_type_len(curr_arg->type);
         curr_arg = curr_arg->next;
@@ -105,7 +105,7 @@ char * mangle_type(const Type * const type, char * pos) {
             return pos;
         case fun_type:
             *(pos++) = 'f';
-            ArgTypes * arg = type->op.fun.args;
+            Args * arg = type->op.fun.args;
             while (arg) {
                 pos = mangle_type(arg->type, pos);
                 arg = arg->next;
@@ -117,8 +117,7 @@ char * mangle_type(const Type * const type, char * pos) {
     }
 }
 
-/* TODO make it use Args instead of ArgTypes, using function symbol table */
-char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types) {
+char * mangle_fun_name(char * fun_name, const Args * const args) {
     /** Mangles the name of a function with given argument types. Note that the return
       * value is malloc'd, but after syntax tree gen, the original name is not needed.
       * Mangling example:
@@ -131,10 +130,10 @@ char * mangle_fun_name(char * fun_name, const ArgTypes * const arg_types) {
       *         and ordering bytes in big-endian order
       */
     size_t name_len = strlen(fun_name);
-    size_t mangled_len = name_len + 1 + mangle_args_len(arg_types);
+    size_t mangled_len = name_len + 1 + mangle_args_len(args);
     char * mangled_name = malloc(mangled_len + 1);
     char * pos = mangled_name + name_len;
-    ArgTypes * arg = (ArgTypes *)arg_types;
+    Args * arg = (Args *)args;
 
     memcpy(mangled_name, fun_name, name_len + 1);
     
