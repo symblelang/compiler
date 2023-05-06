@@ -15,7 +15,7 @@ fun main(int argc, ptr string argv) -> int {
 
 fun sieve(int upper) -> int {
     /* Takes the somewhat unconventional approach of using 1 to mean composite and 0 to mean prime */
-    int ptr prime_sieve = calloc(upper + 1, stdlib.int_size); /* Implementation may change */
+    ptr int prime_sieve = calloc(upper + 1, stdlib.int_size); /* Implementation may change */
     prime_sieve[0] = 1;
     prime_sieve[1] = 1;
     int curr_prime = 2;

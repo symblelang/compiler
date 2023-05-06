@@ -46,6 +46,7 @@ SymbolTable * symbol_table;
     struct Node * node;
     Type * type;
     Args * args;
+    CallArgs * call_args;
     char * string;
     /* int integer; */
 }
@@ -64,7 +65,7 @@ SymbolTable * symbol_table;
 /* Keywords */
 %token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
 /* Types */
-%token INT_TYPE STR_TYPE FLOAT_TYPE
+%token INT_TYPE STR_TYPE FLOAT_TYPE PTR_TYPE
 /* Literals */
 %token INT_LIT STR_LIT ID
 
@@ -105,9 +106,10 @@ SymbolTable * symbol_table;
 %left DOT
 
 %type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr
-%type<node> variable_declaration function_def function_call statement_block literal argument_list while_loop do statement_list program typedef
+%type<node> variable_declaration function_def function_call statement_block literal while_loop do statement_list program typedef
 %type<type> type fun_type
 %type<args> argument_list_specifier type_list
+%type<call_args> argument_list
 %type<string> ID STR_LIT INT_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP user_operator
 /* %type<integer> INT_LIT */
 
@@ -209,7 +211,7 @@ member_expr:
 
 primary_expr:
     ID { $$ = handle_var($1); }
-    | literal
+    | literal { $$ = $1; }
     | LPAREN expr RPAREN { $$ = $2; }
     | function_call
     ;
@@ -220,8 +222,8 @@ function_call:
     ;
 
 argument_list:
-    expr
-    | argument_list COMMA expr
+    expr { $$ = create_call_args($1); }
+    | argument_list COMMA expr { $$ = add_to_call_args($1, $3); }
     ;
 
 function_def:
@@ -238,20 +240,20 @@ argument_list_specifier:
 
 variable_specifier:
     type ID
-    | type ID LSQB INT_LIT RSQB { handle_create_array(); }
+    | type ID LSQB INT_LIT RSQB
     ;
 
-/* TODO: add pointer (or some sort of reference type) supprt, perhaps with `ptr` keyword, and add tuples. */
 type:
     ID { $$ = handle_custom_type($ID); }
     | INT_TYPE { $$ = handle_base_type(int_type); }
     | FLOAT_TYPE { $$ = handle_base_type(float_type); }
     | STR_TYPE { $$ = handle_base_type(str_type); }
     | fun_type { $$ = $1; }
+    | PTR_TYPE type;
     ;
 
 typedef:
-    TYPE ID EQUALS_OP type SEMICOLON { $$ = handle_typedef($2, $4); }
+    TYPE ID EQUALS_OP type SEMICOLON { $$ = handle_type_def($2, $4, yylineno); }
     ;
 
 fun_type:
@@ -264,9 +266,10 @@ type_list:
     ;
 
 variable_declaration:
-    type ID SEMICOLON { $$ = handle_variable_declaration($type, $ID, NULL, yylineno); }
-    | type ID EQUALS_OP expr SEMICOLON { $$ = handle_variable_declaration($type, $ID, $expr, yylineno); }
-    /* | type ID LSQB INT_LIT RSQB SEMICOLON */
+    type ID SEMICOLON { $$ = handle_var_declaration($type, $ID, NULL, yylineno); }
+    | type ID EQUALS_OP expr SEMICOLON { $$ = handle_var_declaration($type, $ID, $expr, yylineno); }
+    | type ID LSQB INT_LIT RSQB SEMICOLON { $$ = handle_array_declaration($type, $ID, size, NULL, yylineno); }
+    | type ID LSQB INT_LIT RSQB EQUALS_OP expr SEMICOLON { $$ = handle_array_declaration($type, $ID, size, $expr, yylineno); }
     ;
 
 /* TODO Add more literal types */

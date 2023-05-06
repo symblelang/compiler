@@ -20,8 +20,24 @@ typedef struct TypeInfo {
     int type_ids[16];
 } TypeInfo;
 
-Node * handle_variable_declaration(Type * type, char * id, Node * init, int line_num) {
+Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num) {
     VarSymbol * var = malloc(sizeof(VarSymbol));
+    var->name = id;
+    var->type = type;
+    var->declared_at = line_num;
+    if (set_symbol(symbol_table, id, var)) {
+        yyerror("Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
+                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+    }
+    return add_var_dec_node(var->name, var->type, init);
+}
+
+Node * handle_array_declaration(Type * elem_type, char * id, size_t size, Node * init, int line_num) {
+    VarSymbol * var = malloc(sizeof(VarSymbol));
+    Type * type = malloc(sizeof(Type));
+    type->tag = array_type;
+    type->op.array.elem_type = elem_type;
+    type->op.array.size = size;
     var->name = id;
     var->type = type;
     var->declared_at = line_num;
@@ -94,28 +110,6 @@ Type * handle_custom_type(char * type_name) {
     return type_sym->type;
 }
 
-Args * create_type_list(Type * type) {
-    Args * type_list = malloc(sizeof(Args));
-    type_list->type = type;
-    type_list->name = NULL;
-    return type_list;
-}
-
-/* This implementation is hilariously inefficient, but nobody should be writing
- * functions with hundreds of arguments
- * better would be to store a pointer to the first and last args. */
-Args * add_to_type_list(Args * type_list, Type * type) {
-    Args * where_to_add = type_list;
-    while (where_to_add->next != NULL) {
-        where_to_add = where_to_add->next;
-    }
-    where_to_add = (where_to_add->next = malloc(sizeof(Args)));
-    where_to_add->type = type;
-    where_to_add->name = NULL;
-    where_to_add->next = NULL;
-    return type_list;
-}
-
 Type * handle_fun_type(Args * type_list, Type * return_type) {
     Type * this_fun_type = malloc(sizeof(Type));
     this_fun_type->tag = fun_type;
@@ -124,28 +118,29 @@ Type * handle_fun_type(Args * type_list, Type * return_type) {
     return this_fun_type;
 }
 
-/* TODO finish and add name mangling, create and push symbol table, etc. */
+/* \todo finish and add name mangling, create and push symbol table, etc. */
 Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
     /** Adds function and type info to symbol table */
     FunSymbol * fun = malloc(sizeof(FunSymbol));
     fun->name = name;
     fun->type = return_type;
-    /* fun-symbol_table->??? */
+    /* fun->symbol_table->??? */
     fun->args = args;
     fun->declared_at = line_num;
     /* Add fun to symbol table with type info for params */
 
 }
 
-Node * handle_function_call(char * function_name, Node * args, int line_num) {
-    /* Check that provided arguments match function definition*/
-    /* Print "call " + <function_name> */
-}
 
 /* Needs implementation */
 
-Node * handle_if(Node * test, Node * block, Node * next) {
+Node * handle_function_call(char * fun_name, CallArgs * args, int line_num) {
+    return add_fun_call_node(fun_name, args, NULL, line_num);
+}
 
+
+Node * handle_if(Node * test, Node * block, Node * next) {
+    return add_if_node(test, block, next);
 }
 
 /* Might be able to incorporate into handle_while */
@@ -166,8 +161,16 @@ Node * handle_create_array() {
 
 }
 
-Node * handle_typedef(char * name, Type * type) {
-
+Node * handle_type_def(char * id, Type * type, int line_num) {
+    VarSymbol * typevar = malloc(sizeof(VarSymbol));
+    typevar->name = id;
+    typevar->type = type;
+    typevar->declared_at = line_num;
+    if (set_symbol(symbol_table, id, typevar)) {
+        yyerror("Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
+                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+    }
+    return add_type_def_node(typevar->name, typevar->type);
 }
 
 

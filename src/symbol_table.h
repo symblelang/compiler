@@ -33,7 +33,7 @@ struct VarSymbol {
 };
 
 struct TypeSymbol {
-    /** Might be able to use VarSymbol instead */
+    /** Deprecated in favor of VarSymbol */
     char * name;
     Type * type;
     int declared_at;
@@ -49,8 +49,10 @@ struct FunSymbol {
 };
 
 struct Args {
-    /* name should be a key for the symbol table of the fun/op
-     * If Args is used in the type specifier of a function, name should be NULL */
+    /** Stores the name and type of arguments to a function
+      * name should be a key for the symbol table of the fun/op
+      * If Args is used in the type specifier of a function, name should be NULL
+      * If Args is used in a function call, type could be NULL */
     Type * type;
     Args * next;
     char * name;

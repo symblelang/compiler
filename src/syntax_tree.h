@@ -14,6 +14,12 @@
 #include "symbol_table.h"
 
 typedef struct Node Node;
+typedef struct CallArgs CallArgs;
+
+struct CallArgs {
+    Node * expr;
+    CallArgs * next;
+};
 
 typedef enum {
         var_dec_node,
@@ -27,10 +33,11 @@ typedef enum {
         do_loop_node,
         for_loop_node,
         return_node,
-        if_node
+        if_node,
+        fun_call_node
 } NodeType;
 
-
+/** \todo Fix naming scheme */
 struct Node {
     NodeType tag;
     
@@ -101,6 +108,14 @@ struct Node {
             Node * block;
             Node * next;
         } if_statement;
+
+        struct {
+            char * name;
+            Type * type; /* return type */
+            CallArgs * args;
+            int line_num;
+        } fun_call;
+
     } op;
 };
 
@@ -115,5 +130,9 @@ Node * add_do_loop_node(Node * test, Node * block);
 Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block);
 Node * add_return_node(Node * expr);
 Node * add_if_node(Node * test, Node * block, Node * next);
+Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, int line_num);
+CallArgs * create_call_args(Node * expr);
+CallArgs * add_to_call_args(CallArgs * arg_list, Node * expr);
+
 
 #endif

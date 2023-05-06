@@ -23,11 +23,12 @@ typedef struct Args Args;
 typedef enum BaseType {
     int_type,
     str_type,
-    float_type
+    float_type,
+    void_type
 } BaseType;
 
 struct Type {
-    enum {base_type, fun_type, array_type} tag;
+    enum {base_type, fun_type, array_type, ptr_type} tag;
     union {
         BaseType base;
         struct {
@@ -35,9 +36,12 @@ struct Type {
             Args * args;
         } fun;
         struct {
-            Type * base_type;
+            Type * elem_type;
             size_t size;
         } array;
+        struct {
+            Type * val_type;
+        } ptr;
     } op;
 };
 
