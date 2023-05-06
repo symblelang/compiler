@@ -32,12 +32,12 @@ Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num)
     return add_var_dec_node(var->name, var->type, init);
 }
 
-Node * handle_array_declaration(Type * elem_type, char * id, size_t size, Node * init, int line_num) {
+Node * handle_array_declaration(Type * elem_type, char * id, char * size, Node * init, int line_num) {
     VarSymbol * var = malloc(sizeof(VarSymbol));
     Type * type = malloc(sizeof(Type));
     type->tag = array_type;
     type->op.array.elem_type = elem_type;
-    type->op.array.size = size;
+    type->op.array.size = (size_t)atoll(size);
     var->name = id;
     var->type = type;
     var->declared_at = line_num;

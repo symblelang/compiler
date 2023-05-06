@@ -19,7 +19,7 @@
 extern SymbolTable * symbol_table;
 
 Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num);
-Node * handle_array_declaration(Type * elem_type, char * id, size_t size, Node * init, int line_num);
+Node * handle_array_declaration(Type * elem_type, char * id, char * size, Node * init, int line_num);
 Node * handle_binary_expr(Node * left, char * operator, Node * right);
 Node * handle_unary_expr(char * operator, Node * child);
 Node * handle_member_expr(Node * base, Node * child, int is_dot);
