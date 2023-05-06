@@ -102,6 +102,13 @@ Type * handle_base_type(BaseType base) {
     return type;
 }
 
+Type * handle_ptr_type(Type * val_type) {
+    Type * type = malloc(sizeof(Type));
+    type->tag = ptr_type;
+    type->op.ptr.val_type = val_type;
+    return type;
+}
+
 Type * handle_custom_type(char * type_name) {
     TypeSymbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
     if (type_sym == NULL) {
@@ -129,6 +136,9 @@ Node * handle_function_def(char * name, Args * args, Type * return_type, Node * 
     fun->declared_at = line_num;
     /* Add fun to symbol table with type info for params */
 
+}
+
+Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num) {
 }
 
 

@@ -128,6 +128,7 @@ pow_op              "^"|("^^"{opchar}*)
 "or"/{non_id}       return OR;
 "xor"/{non_id}      return XOR;
 "fun"/{non_id}      return FUN;
+"cfun"/{non_id}     return CFUN;
 "if"/{non_id}       return IF;
 "elif"/{non_id}     return ELIF;
 "else"/{non_id}     return ELSE;

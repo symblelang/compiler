@@ -63,7 +63,7 @@ SymbolTable * symbol_table;
 /* Assignment and comparison operators */
 %token EQUALS_OP ASSIGN_OP COMPARE_OP
 /* Keywords */
-%token FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
+%token CFUN FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
 /* Types */
 %token INT_TYPE STR_TYPE FLOAT_TYPE PTR_TYPE
 /* Literals */
@@ -131,6 +131,7 @@ statement:
     expr_statement
     | if_statement
     | function_def
+    | cfun_dec
     | control_statement
     | variable_declaration
     | while_loop
@@ -233,6 +234,11 @@ function_def:
     /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
     ;
 
+cfun_dec:
+    CFUN ID LPAREN argument_list_specifier RPAREN ARROW type SEMICOLON { handle_cfun_dec($ID, $argument_list_specifier, $type, yylineno); }
+    ;
+
+
 argument_list_specifier:
     variable_specifier
     | argument_list_specifier COMMA variable_specifier
@@ -249,7 +255,7 @@ type:
     | FLOAT_TYPE { $$ = handle_base_type(float_type); }
     | STR_TYPE { $$ = handle_base_type(str_type); }
     | fun_type { $$ = $1; }
-    | PTR_TYPE type;
+    | PTR_TYPE type { $$ = handle_ptr_type($2); }
     ;
 
 typedef:
