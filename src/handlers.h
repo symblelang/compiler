@@ -34,6 +34,7 @@ Type * handle_fun_type(Args * type_list, Type * return_type);
 Node * handle_member_expr(Node * base, Node * child, int is_dot);
 Node * handle_function_call(char * fun_name, CallArgs * args, int line_num);
 Node * handle_if(Node * test, Node * block, Node * next);
+Node * handle_elif(Node * previous, Node * test, Node * block, Node * next);
 Node * handle_while(Node * test, Node * block);
 Node * handle_for(Node * init, Node * test, Node * inc, Node * block);
 Node * handle_do(Node * test, Node * block);

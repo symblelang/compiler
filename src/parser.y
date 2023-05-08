@@ -107,11 +107,11 @@ SymbolTable * symbol_table;
 /* Dot */
 %left DOT
 
-%type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_call literal
+%type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_call literal if_elif
 %type<node> expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do program typedef statement statement_block
 %type<block> statement_list
 %type<type> type fun_type
-%type<args> argument_list_specifier type_list
+%type<args> argument_list_specifier type_list variable_specifier
 %type<call_args> argument_list
 %type<string> ID STR_LIT INT_LIT PLUS_OP MULT_OP BIT_AND_OP BIT_OR_OP BIT_NOT_OP BIT_XOR_OP RPLUS_OP RMULT_OP RBIT_AND_OP RBIT_OR_OP RBIT_XOR_OP AND NOT OR XOR EQUALS_OP ASSIGN_OP COMPARE_OP POW_OP user_operator
 /* %type<integer> INT_LIT */
@@ -252,15 +252,15 @@ cfun_dec:
     CFUN ID LPAREN argument_list_specifier RPAREN ARROW type SEMICOLON { $$ = handle_cfun_dec($ID, $argument_list_specifier, $type, yylineno); }
     ;
 
-
 argument_list_specifier:
-    variable_specifier
-    | argument_list_specifier COMMA variable_specifier
+    variable_specifier 
+    | argument_list_specifier COMMA variable_specifier { $$ = add_to_arg_list($1, $3); }
     ;
 
+/** \todo edit type info for array argument */
 variable_specifier:
-    type ID
-    | type ID LSQB INT_LIT RSQB
+    type ID { $$ = create_arg($type, $ID); }
+    | type ID LSQB INT_LIT RSQB { yyerror("Array arguments not supported yet\n"); }
     ;
 
 type:
@@ -305,13 +305,13 @@ user_operator:
     ;
 
 if_elif:
-    IF LPAREN expr RPAREN statement_block %prec THEN
-    | if_elif ELIF LPAREN expr RPAREN statement_block
+    IF LPAREN expr RPAREN statement_block %prec THEN { $$ = handle_if($expr, $statement_block, NULL); }
+    | if_elif ELIF LPAREN expr RPAREN statement_block { $$ = handle_elif($1, $expr, $statement_block, NULL); }
     ;
 
 if_statement:
     if_elif
-    | if_elif ELSE statement_block
+    | if_elif ELSE statement_block { $$ = handle_elif($1, NULL, $statement_block, NULL); }
     ;
 
 control_statement:

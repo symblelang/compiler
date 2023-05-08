@@ -187,6 +187,12 @@ Node * handle_if(Node * test, Node * block, Node * next) {
     return add_if_node(test, block, next);
 }
 
+Node * handle_elif(Node * previous, Node * test, Node * block, Node * next) {
+    Node * new = add_if_node(test, block, next);
+    previous->op.if_statement.next = new;
+    return new;
+}
+
 /* Might be able to incorporate into handle_while */
 Node * handle_do(Node * test, Node * block) {
     return add_do_loop_node(test, block);

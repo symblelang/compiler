@@ -112,6 +112,7 @@ Args * create_type_list(Type * type) {
     Args * type_list = malloc(sizeof(Args));
     type_list->type = type;
     type_list->name = NULL;
+    type_list->next = NULL;
     return type_list;
 }
 
@@ -129,6 +130,7 @@ Args * add_to_type_list(Args * type_list, Type * type) {
     where_to_add->next = NULL;
     return type_list;
 }
+
 
 CallArgs * create_call_args(Node * expr) {
     CallArgs * arg_list = malloc(sizeof(CallArgs));
@@ -187,4 +189,24 @@ StatementBlock * add_to_block(StatementBlock * block, Node * statement) {
     where_to_add->statement = statement;
     where_to_add->next = NULL;
     return block;
+}
+
+Args * create_arg(Type * type, char * name) {
+    Args * arg_list = malloc(sizeof(Args));
+    arg_list->type = type;
+    arg_list->name = name;
+    arg_list->next = NULL;
+    return arg_list;
+}
+
+/* This implementation is hilariously inefficient, but nobody should be writing
+ * functions with hundreds of arguments
+ * better would be to store a pointer to the first and last args. */
+Args * add_to_arg_list(Args * type_list, Args * to_add) {
+    Args * where_to_add = type_list;
+    while (where_to_add->next != NULL) {
+        where_to_add = where_to_add->next;
+    }
+    where_to_add = (where_to_add->next = to_add);
+    return type_list;
 }

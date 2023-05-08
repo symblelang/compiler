@@ -160,5 +160,7 @@ CallArgs * add_to_call_args(CallArgs * arg_list, Node * expr);
 Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
 StatementBlock * create_block(Node * statement);
 StatementBlock * add_to_block(StatementBlock * block, Node * statement);
+Args * create_arg(Type * type, char * name);
+Args * add_to_arg_list(Args * type_list, Args * to_add);
 
 #endif
