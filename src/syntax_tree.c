@@ -90,10 +90,11 @@ Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block) {
     return new;
 }
 
-Node * add_ret_node(Node * expr) {
+Node * add_control_node(Node * expr, ControlType tag) {
     Node * new = malloc(sizeof(Node));
-    new->tag = ret_node;
-    new->op.ret.expr = expr;
+    new->tag = control_node;
+    new->op.control.expr = expr;
+    new->op.control.tag = tag;
     return new;
 }
 

@@ -202,7 +202,15 @@ Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
 }
 
 Node * handle_return(Node * expr) {
-    return add_ret_node(expr);
+    return add_control_node(expr, return_tag);
+}
+
+Node * handle_break() {
+    return add_control_node(NULL, break_tag);
+}
+
+Node * handle_continue() {
+    return add_control_node(NULL, continue_tag);
 }
 
 Node * create_block_node(StatementBlock * block) {

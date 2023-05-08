@@ -28,6 +28,8 @@ struct StatementBlock {
     StatementBlock * next;
 };
 
+typedef enum {return_tag, break_tag, continue_tag} ControlType;
+
 typedef enum {
         var_dec_node,
         type_def_node,
@@ -39,7 +41,7 @@ typedef enum {
         while_loop_node,
         do_loop_node,
         for_loop_node,
-        ret_node,
+        control_node,
         if_node,
         fun_call_node,
         block_node
@@ -108,8 +110,10 @@ struct Node {
         } for_loop;
 
         struct {
+            /** if type is not return, expr should be NULL */
             Node * expr;
-        } ret;
+            ControlType tag;
+        } control;
 
         struct {
             Node * test;
@@ -148,7 +152,7 @@ Node * add_var_node(char * key, Type * type);
 Node * add_while_loop_node(Node * test, Node * block);
 Node * add_do_loop_node(Node * test, Node * block);
 Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block);
-Node * add_ret_node(Node * expr);
+Node * add_control_node(Node * expr, ControlType tag);
 Node * add_if_node(Node * test, Node * block, Node * next);
 Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, int line_num);
 CallArgs * create_call_args(Node * expr);

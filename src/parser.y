@@ -107,8 +107,8 @@ SymbolTable * symbol_table;
 /* Dot */
 %left DOT
 
-%type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr
-%type<node> variable_declaration function_def function_call literal while_loop do program typedef statement statement_block
+%type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_call literal
+%type<node> expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do program typedef statement statement_block
 %type<block> statement_list
 %type<type> type fun_type
 %type<args> argument_list_specifier type_list
@@ -164,7 +164,7 @@ assign_expr:
 
 logical_expr:
     compare_expr
-    | NOT logical_expr { handle_unary_expr($1, $2); }
+    | NOT logical_expr { $$ = handle_unary_expr($1, $2); }
     | logical_expr AND logical_expr { $$ = handle_binary_expr($1, $2, $3); }
     | logical_expr OR logical_expr { $$ = handle_binary_expr($1, $2, $3); }
     | logical_expr XOR logical_expr { $$ = handle_binary_expr($1, $2, $3); }
@@ -221,7 +221,7 @@ primary_expr:
     ;
 
 function_call:
-    ID LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); }
+    ID LPAREN argument_list RPAREN { $$ = handle_function_call($1, $3, yylineno); }
     /* member_expr LPAREN argument_list RPAREN { handle_function_call($1, $3, yylineno); } */
     ;
 
@@ -249,7 +249,7 @@ function_def:
     ;
 
 cfun_dec:
-    CFUN ID LPAREN argument_list_specifier RPAREN ARROW type SEMICOLON { handle_cfun_dec($ID, $argument_list_specifier, $type, yylineno); }
+    CFUN ID LPAREN argument_list_specifier RPAREN ARROW type SEMICOLON { $$ = handle_cfun_dec($ID, $argument_list_specifier, $type, yylineno); }
     ;
 
 
@@ -315,18 +315,18 @@ if_statement:
     ;
 
 control_statement:
-    RETURN expr SEMICOLON { handle_return($expr); }
-    | BREAK SEMICOLON
-    | CONTINUE SEMICOLON
+    RETURN expr SEMICOLON { $$ = handle_return($expr); }
+    | BREAK SEMICOLON { $$ = handle_break(); }
+    | CONTINUE SEMICOLON { $$ = handle_break(); }
     ;
 
 for_loop:
-    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block { handle_for($3, $5, $7, $9); }
-    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block { handle_for($3, $4, $6, $8); }
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr RPAREN statement_block { $$ = handle_for($3, $5, $7, $9); }
+    | FOR LPAREN variable_declaration expr SEMICOLON expr RPAREN statement_block { $$ = handle_for($3, $4, $6, $8); }
     ;
 
 do:
-    statement_block WHILE LPAREN expr RPAREN SEMICOLON { handle_do($expr, $statement_block); }
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON { $$ = handle_do($expr, $statement_block); }
     ;
 
 while_loop:
