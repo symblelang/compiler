@@ -22,10 +22,10 @@ void free_symbol_table(SymbolTable * table) {
     }
 }
 
-void push_symbol_table() {
+SymbolTable * push_symbol_table() {
     SymbolTable * new_table = new_symbol_table(HASH_TABLE_DEFAULT_SIZE);
     new_table->next = symbol_table;
-    symbol_table = new_table;
+    return symbol_table = new_table;
 }
 
 void pop_symbol_table() {

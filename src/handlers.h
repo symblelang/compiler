@@ -25,8 +25,6 @@ Node * handle_unary_expr(char * operator, Node * child);
 Node * handle_member_expr(Node * base, Node * child, int is_dot);
 Node * handle_var(char * name);
 Node * handle_literal(char * value, BaseType lit_type);
-Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num);
-Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num);
 Type * handle_base_type(BaseType base);
 Type * handle_ptr_type(Type * base);
 Type * handle_custom_type(char * type_name);
@@ -41,5 +39,9 @@ Node * handle_for(Node * init, Node * test, Node * inc, Node * block);
 Node * handle_do(Node * test, Node * block);
 Node * handle_return(Node * expr);
 Node * handle_type_def(char * name, Type * type, int line_num);
+Node * handle_statement_block(Node * statement_list);
+Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
+Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num);
+Node * create_block_node(StatementBlock * block);
 
 #endif

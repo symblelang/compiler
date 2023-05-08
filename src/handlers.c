@@ -32,6 +32,18 @@ Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num)
     return add_var_dec_node(var->name, var->type, init);
 }
 
+Node * handle_type_def(char * id, Type * type, int line_num) {
+    VarSymbol * typevar = malloc(sizeof(VarSymbol));
+    typevar->name = id;
+    typevar->type = type;
+    typevar->declared_at = line_num;
+    if (set_symbol(symbol_table, id, typevar)) {
+        yyerror("Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
+                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+    }
+    return add_type_def_node(typevar->name, typevar->type);
+}
+
 Node * handle_array_declaration(Type * elem_type, char * id, char * size, Node * init, int line_num) {
     VarSymbol * var = malloc(sizeof(VarSymbol));
     Type * type = malloc(sizeof(Type));
@@ -125,20 +137,42 @@ Type * handle_fun_type(Args * type_list, Type * return_type) {
     return this_fun_type;
 }
 
-/* \todo finish and add name mangling, create and push symbol table, etc. */
-Node * handle_function_def(char * name, Args * args, Type * return_type, Node * block, int line_num) {
+/** \todo in second pass, we'll need to collect the arguments in higher scopes  */
+Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
     /** Adds function and type info to symbol table */
+    FunSymbol * fun = malloc(sizeof(FunSymbol));
+    char * mangled_name = mangle_fun_name(name, args);
+    fun->name = mangled_name;
+    /* We might be able to free the old name now, but not if we switch to
+     * using a string table for IDs since it's needed for future calls */
+    fun->type = return_type;
+    fun->symbol_table = table;
+    /** \todo add args to function symbol table */
+    Args * curr_arg = args;
+    while (curr_arg) {
+        VarSymbol * curr_var = malloc(sizeof(VarSymbol));
+        curr_var->name = curr_arg->name;
+        curr_var->type = curr_arg->type;
+        curr_var->declared_at = line_num;
+        set_symbol(table, curr_arg->name, curr_var);
+        curr_arg = curr_arg->next;
+    }
+    fun->args = args;
+    fun->declared_at = line_num;
+    /** \todo add fun with mangled name to symbol table */
+    return add_fun_def_node(mangled_name, args, return_type, table, block, line_num);
+}
+
+/** \todo might need to add additional information (or a different symbol/node struct),
+ *  for the purpose of parameter passing. This code is somewhat temporary */
+Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num) {
     FunSymbol * fun = malloc(sizeof(FunSymbol));
     fun->name = name;
     fun->type = return_type;
-    /* fun->symbol_table->??? */
     fun->args = args;
     fun->declared_at = line_num;
-    /* Add fun to symbol table with type info for params */
-
-}
-
-Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num) {
+    /** \todo add fun to symbol table */
+    return add_fun_def_node(name, args, return_type, NULL, NULL, line_num);
 }
 
 
@@ -158,36 +192,31 @@ Node * handle_do(Node * test, Node * block) {
     return add_do_loop_node(test, block);
 }
 
+Node * handle_while(Node * test, Node * block) {
+    return add_while_loop_node(test, block);
+}
+
 /* Needs a case for when init is a variable declaration to edit symbol table */
 Node * handle_for(Node * init, Node * test, Node * inc, Node * block) {
     return add_for_loop_node(init, test, inc, block);
 }
 
 Node * handle_return(Node * expr) {
-    
+    return add_ret_node(expr);
 }
 
-Node * handle_create_array() {
-
+Node * create_block_node(StatementBlock * block) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = block_node;
+    new->op.block = block;
+    return new;
 }
 
-Node * handle_type_def(char * id, Type * type, int line_num) {
-    VarSymbol * typevar = malloc(sizeof(VarSymbol));
-    typevar->name = id;
-    typevar->type = type;
-    typevar->declared_at = line_num;
-    if (set_symbol(symbol_table, id, typevar)) {
-        yyerror("Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
-                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
-    }
-    return add_type_def_node(typevar->name, typevar->type);
-}
-
-
-int check_param_types(char * function_name, char ** args) {
-    /* Query symbol table for correct types in original function definition */
-    /* Check if correct number of arguments was provided */
-    /* Check for type mismatch in provided arguments vs. defined arguments */
-    /* Return 0 if correct number of arguments and correct types provided */
-    /* Return 1 and or throw error if incorrect number of arguments or incorrect types provided */
-}
+/* Parameter checking and propogating type information is done in the 2nd pass */
+/* int check_param_types(char * function_name, char ** args) { */
+/*     /\* Query symbol table for correct types in original function definition *\/ */
+/*     /\* Check if correct number of arguments was provided *\/ */
+/*     /\* Check for type mismatch in provided arguments vs. defined arguments *\/ */
+/*     /\* Return 0 if correct number of arguments and correct types provided *\/ */
+/*     /\* Return 1 and or throw error if incorrect number of arguments or incorrect types provided *\/ */
+/* } */

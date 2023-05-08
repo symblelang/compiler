@@ -15,10 +15,17 @@
 
 typedef struct Node Node;
 typedef struct CallArgs CallArgs;
+typedef struct StatementBlock StatementBlock;
 
 struct CallArgs {
     Node * expr;
     CallArgs * next;
+};
+
+struct StatementBlock {
+    /** Used for both statement_list and statement_block */
+    Node * statement;
+    StatementBlock * next;
 };
 
 typedef enum {
@@ -32,9 +39,10 @@ typedef enum {
         while_loop_node,
         do_loop_node,
         for_loop_node,
-        return_node,
+        ret_node,
         if_node,
-        fun_call_node
+        fun_call_node,
+        block_node
 } NodeType;
 
 /** \todo Fix naming scheme */
@@ -116,6 +124,18 @@ struct Node {
             int line_num;
         } fun_call;
 
+        struct {
+            /** Some of these fields may be redundant since they're in the FunSymbol */
+            char * name; /* This should be mangled */
+            Type * type; /* return type */
+            Args * args;
+            SymbolTable * table;
+            Node * block;
+            int line_num;
+        } fun_def;
+        
+        StatementBlock * block;
+        
     } op;
 };
 
@@ -128,11 +148,13 @@ Node * add_var_node(char * key, Type * type);
 Node * add_while_loop_node(Node * test, Node * block);
 Node * add_do_loop_node(Node * test, Node * block);
 Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block);
-Node * add_return_node(Node * expr);
+Node * add_ret_node(Node * expr);
 Node * add_if_node(Node * test, Node * block, Node * next);
 Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, int line_num);
 CallArgs * create_call_args(Node * expr);
 CallArgs * add_to_call_args(CallArgs * arg_list, Node * expr);
-
+Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
+StatementBlock * create_block(Node * statement);
+StatementBlock * add_to_block(StatementBlock * block, Node * statement);
 
 #endif

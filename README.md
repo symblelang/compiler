@@ -12,7 +12,8 @@ Here are a few changes to the grammar or language specification that have been m
 Some (hopefully) helpful notes:
 
 - The array member operator (e.g. `array[2]`) is treated as "[]" in the symbol table. 
-- `ArgTypes` is used for function types (e.g. when functions are passed as arguments), while `Args` is used for function calls and defs
+- `ArgTypes` has been deprecated in favor of Args with a `NULL` value for `name`
+- Nested functions are supported, and can be returned by the enclosing function (functions are first-class objects). Variables defined in enclosing functions are resolved through closures. Clang's way of doing this for C can be found [here](https://mapping-high-level-constructs-to-llvm-ir.readthedocs.io/en/latest/advanced-constructs/lambda-functions.html), and Nim's method is found [here](https://nim-lang.org/docs/intern.html#code-generation-for-closures). These methods can be made easier by using [LLVM trampoline intrinsics](https://llvm.org/docs/LangRef.html#trampoline-intrinsics).
 
 ## To Do List
 

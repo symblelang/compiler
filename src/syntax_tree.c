@@ -29,15 +29,6 @@ Node * add_type_def_node(char * name, Type * type) {
     return new;
 }
 
-Node * add_fun_def_node(char * name, Type * type, Node * block) {
-    Node * new = malloc(sizeof(Node));
-    new->tag = fun_def_node;
-    new->op.funDef.name = name;
-    new->op.funDef.type = type;
-    new->op.funDef.block = block;
-    return new;
-}
-
 Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = binary_expr_node;
@@ -76,8 +67,8 @@ Node * add_var_node(char * key, Type * type) {
 Node * add_do_loop_node(Node * test, Node * block) {
     Node * new = malloc(sizeof(Node));
     new->tag = do_loop_node;
-    new->op.while_loop.test = test;
-    new->op.while_loop.block = block;
+    new->op.do_loop.test = test;
+    new->op.do_loop.block = block;
     return new;
 }
 
@@ -99,9 +90,9 @@ Node * add_for_loop_node(Node * init, Node * test, Node * inc, Node * block) {
     return new;
 }
 
-Node * add_return_node(Node * expr) {
+Node * add_ret_node(Node * expr) {
     Node * new = malloc(sizeof(Node));
-    new->tag = return_node;
+    new->tag = ret_node;
     new->op.ret.expr = expr;
     return new;
 }
@@ -165,4 +156,34 @@ Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, i
     new->op.fun_call.type = return_type;
     new->op.fun_call.line_num = line_num;
     return new;
+}
+
+Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = fun_def_node;
+    new->op.fun_def.name = fun_name;
+    new->op.fun_def.args = args;
+    new->op.fun_def.type = return_type;
+    new->op.fun_def.block = block;
+    new->op.fun_def.table = table;
+    new->op.fun_def.line_num = line_num;
+    return new;
+}
+
+StatementBlock * create_block(Node * statement) {
+    StatementBlock * block = malloc(sizeof(StatementBlock));
+    block->statement = statement;
+    block->next = NULL;
+    return block;
+}
+
+StatementBlock * add_to_block(StatementBlock * block, Node * statement) {
+    StatementBlock * where_to_add = block;
+    while (where_to_add->next != NULL) {
+        where_to_add = where_to_add->next;
+    }
+    where_to_add = (where_to_add->next = malloc(sizeof(StatementBlock)));
+    where_to_add->statement = statement;
+    where_to_add->next = NULL;
+    return block;
 }

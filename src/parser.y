@@ -47,6 +47,8 @@ SymbolTable * symbol_table;
     Type * type;
     Args * args;
     CallArgs * call_args;
+    StatementBlock * block;
+    SymbolTable * table;
     char * string;
     /* int integer; */
 }
@@ -106,7 +108,8 @@ SymbolTable * symbol_table;
 %left DOT
 
 %type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr
-%type<node> variable_declaration function_def function_call statement_block literal while_loop do statement_list program typedef
+%type<node> variable_declaration function_def function_call literal while_loop do program typedef statement statement_block
+%type<block> statement_list
 %type<type> type fun_type
 %type<args> argument_list_specifier type_list
 %type<call_args> argument_list
@@ -118,12 +121,12 @@ SymbolTable * symbol_table;
 
 
 program:
-    statement_list
+    statement_list { $$ = create_block_node($1); }
     ;
 
 statement_list:
-    statement
-    | statement_list statement
+    statement { $$ = create_block($1); }
+    | statement_list statement { $$ = add_to_block($1, $2); }
     ;
 
 /* TODO add more statement types */
@@ -141,7 +144,7 @@ statement:
     ;
 
 statement_block:
-    LBRACE statement_list RBRACE { $$ = $2; }
+    LBRACE statement_list RBRACE { $$ = create_block_node($2); }
     ;
 
 
@@ -228,10 +231,21 @@ argument_list:
     ;
 
 function_def:
-    FUN ID LPAREN argument_list_specifier RPAREN ARROW type statement_block { handle_function_def($ID, $argument_list_specifier, $type, $statement_block, yylineno); }
-    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type statement_block { handle_function_def($user_operator, $argument_list_specifier, $type, $statement_block, yylineno); }
-    /* Function definition with generic parameters, have to define more grammar rules first */
-    /* | FUN ID LSQB generic_parameters RSQB LPAREN argument_list_specifier_with_generic RPAREN ARROW type_specifier_with_generics LBRACE statement_list RBRACE */
+    FUN ID LPAREN argument_list_specifier RPAREN ARROW type <table>{
+        $$ = push_symbol_table();
+    }
+    statement_block {
+        handle_function_def($ID, $argument_list_specifier, $type, $8, $statement_block, yylineno);
+        pop_symbol_table();
+    }
+    
+    | FUN BACKTICK user_operator BACKTICK LPAREN argument_list_specifier RPAREN ARROW type <table>{
+        $$ = push_symbol_table();
+    }
+    statement_block {
+        handle_function_def($user_operator, $argument_list_specifier, $type, $10, $statement_block, yylineno);
+        pop_symbol_table();
+    }
     ;
 
 cfun_dec:

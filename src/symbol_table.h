@@ -60,8 +60,15 @@ struct Args {
 
 SymbolTable * new_symbol_table(size_t size);
 void free_table(SymbolTable * table);
+SymbolTable * push_symbol_table();
+void pop_symbol_table();
+
+/** Returns NULL if key is not found in current table */
 void * get_symbol_current_table(SymbolTable * table, const char * key);
+
+/** Returns NULL if key is not found in scope */
 void * get_symbol_lexical_scope(SymbolTable * table, const char * key);
+
 int set_symbol(SymbolTable * table, const char * key, void * value);
 int unset_symbol(SymbolTable * table, const char * key);
 
