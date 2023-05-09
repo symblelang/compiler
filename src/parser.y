@@ -288,7 +288,7 @@ type_list:
 variable_declaration:
     type ID SEMICOLON { $$ = handle_var_declaration($type, $ID, NULL, yylineno); }
     | type ID EQUALS_OP expr SEMICOLON { $$ = handle_var_declaration($type, $ID, $expr, yylineno); }
-| type ID LSQB INT_LIT RSQB SEMICOLON { $$ = handle_array_declaration($type, $ID, $INT_LIT, NULL, yylineno); }
+    | type ID LSQB INT_LIT RSQB SEMICOLON { $$ = handle_array_declaration($type, $ID, $INT_LIT, NULL, yylineno); }
     | type ID LSQB INT_LIT RSQB EQUALS_OP expr SEMICOLON { $$ = handle_array_declaration($type, $ID, $INT_LIT, $expr, yylineno); }
     ;
 
