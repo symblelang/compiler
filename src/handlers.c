@@ -26,7 +26,7 @@ Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num)
     var->type = type;
     var->declared_at = line_num;
     if (set_symbol(symbol_table, id, var)) {
-        yyerror("Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
+        yyerror(NULL, "Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
                 id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
     }
     return add_var_dec_node(var->name, var->type, init);
@@ -38,7 +38,7 @@ Node * handle_type_def(char * id, Type * type, int line_num) {
     typevar->type = type;
     typevar->declared_at = line_num;
     if (set_symbol(symbol_table, id, typevar)) {
-        yyerror("Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
+        yyerror(NULL, "Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
                 id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
     }
     return add_type_def_node(typevar->name, typevar->type);
@@ -54,7 +54,7 @@ Node * handle_array_declaration(Type * elem_type, char * id, char * size, Node *
     var->type = type;
     var->declared_at = line_num;
     if (set_symbol(symbol_table, id, var)) {
-        yyerror("Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
+        yyerror(NULL, "Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
                 id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
     }
     return add_var_dec_node(var->name, var->type, init);
@@ -77,15 +77,15 @@ Node * handle_member_expr(Node * base, Node * child, int is_dot) {
       * This will also need checking in the second pass to ensure indexes are of type int */
     if (is_dot) {
         if ((base->tag == literal_node) || (child->tag == literal_node)) {
-            yyerror("Invalid membership syntax: Dot expression contained a literal.");
+            yyerror(NULL, "Invalid membership syntax: Dot expression contained a literal.");
         }
-        return add_binary_expr_node(".", base, child, child->op.binaryExpr.type);
+        return add_binary_expr_node(".", base, child, child->op.binary_expr.type);
     }
     else {
         if (base->tag == literal_node) {
-            yyerror("Invalid membership syntax: Index expression contained a literal for the base.");
+            yyerror(NULL, "Invalid membership syntax: Index expression contained a literal for the base.");
         }
-        return add_binary_expr_node("[]", base, child, child->op.binaryExpr.type);
+        return add_binary_expr_node("[]", base, child, child->op.binary_expr.type);
     }
 }
 
@@ -93,7 +93,7 @@ Node * handle_var(char * name) {
     /** Adds var_node. Note that the variable must already be in the symbol table. */
     VarSymbol * var_sym = get_symbol_lexical_scope(symbol_table, name);
     if (var_sym == NULL) {
-        yyerror("Variable \"%s\" not declared!", name);
+        yyerror(NULL, "Variable \"%s\" not declared!", name);
         return NULL;
     }
     else {
@@ -122,9 +122,9 @@ Type * handle_ptr_type(Type * val_type) {
 }
 
 Type * handle_custom_type(char * type_name) {
-    TypeSymbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
+    VarSymbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
     if (type_sym == NULL) {
-        yyerror("Type \"%s\" has not been defined.", type_name);
+        yyerror(NULL, "Type \"%s\" has not been defined.", type_name);
     }
     return type_sym->type;
 }
@@ -226,11 +226,6 @@ Node * create_block_node(StatementBlock * block) {
     return new;
 }
 
-/* Parameter checking and propogating type information is done in the 2nd pass */
-/* int check_param_types(char * function_name, char ** args) { */
-/*     /\* Query symbol table for correct types in original function definition *\/ */
-/*     /\* Check if correct number of arguments was provided *\/ */
-/*     /\* Check for type mismatch in provided arguments vs. defined arguments *\/ */
-/*     /\* Return 0 if correct number of arguments and correct types provided *\/ */
-/*     /\* Return 1 and or throw error if incorrect number of arguments or incorrect types provided *\/ */
-/* } */
+Node * handle_import(char * module, char * namespace, int line_num) {
+    return add_import_node(module, namespace, line_num);
+}

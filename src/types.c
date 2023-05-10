@@ -12,11 +12,10 @@
 
 #include "types.h"
 
-/* Forward declarations for internal functions */
-size_t mangle_type_len(const Type * const type);
-size_t mangle_args_len(const Args * const arg_types);
-char * mangle_type(const Type * const type, char * pos);
-char * mangle_fun_name(char * fun_name, const Args * const arg_types);
+/* Forward declarations for static internal functions */
+static size_t mangle_type_len(const Type * const type);
+static size_t mangle_args_len(const Args * const arg_types);
+static char * mangle_type(const Type * const type, char * pos);
 
 int check_types_equal(Type * type_1, Type * type_2) {
     if (! (type_1->tag == type_2->tag)) {
@@ -62,7 +61,70 @@ int check_types_equal(Type * type_1, Type * type_2) {
     }
 }
 
-size_t mangle_type_len(const Type * const type) {
+/** \todo consider adding a leading underscore */
+/** Mangles the name of a function with given argument types. Note that the return
+ *  value is malloc'd, but after syntax tree gen, the original name is not needed.
+ *  Mangling example:
+ *      fun name(ptr string x, int a[266], int y, fun (int) -> void) -> string
+ *      turns into:
+ *          name_psi['10''3']fi->v
+ *          where 'a' is the character with ascii code a.
+ *          The characters are computed by converting the size to base 128,
+ *          adding 1 to each character (to prevent null-termination issues),
+ *          and ordering bytes in big-endian order
+ */
+char * mangle_fun_name(const char * const fun_name, const Args * const args) {
+    size_t name_len = strlen(fun_name);
+    size_t mangled_len = name_len + 1 + mangle_args_len(args);
+    char * mangled_name = malloc(mangled_len + 1);
+    char * pos = mangled_name + name_len;
+    Args * arg = (Args *)args;
+
+    memcpy(mangled_name, fun_name, name_len);
+    pos[0] = '_';
+    pos[1] = '\0';
+    
+    while (arg) {
+        pos = mangle_type(arg->type, pos);
+        arg = arg->next;
+    }
+    return mangled_name;
+}
+
+/** Mangles unary operator name the same way as mangle_fun_name */
+char * mangle_unary_op(const char * const op_name, const Type * const type) {
+    size_t name_len = strlen(op_name);
+    size_t mangled_len = name_len + 1 + mangle_type_len(type);
+    char * mangled_name = malloc(mangled_len + 1);
+    char * pos = mangled_name + name_len;
+
+    memcpy(mangled_name, op_name, name_len + 1);
+    pos[0] = '_';
+    pos[1] = '\0';
+    pos = mangle_type(type, pos);
+    return mangled_name;
+}
+
+/** Mangles binary operator name the same way as mangle_fun_name */
+char * mangle_binary_op(const char * const op_name, const Type * const type1, const Type * const type2) {
+    size_t name_len = strlen(op_name);
+    size_t mangled_len = name_len + 1 + mangle_type_len(type1) + mangle_type_len(type2);
+    char * mangled_name = malloc(mangled_len + 1);
+    char * pos = mangled_name + name_len;
+
+    memcpy(mangled_name, op_name, name_len + 1);
+    pos[0] = '_';
+    pos[1] = '\0';
+    pos = mangle_type(type1, pos);
+    pos = mangle_type(type2, pos);
+    return mangled_name;
+}
+
+
+
+/* Static internal functions */
+
+static size_t mangle_type_len(const Type * const type) {
     /** Get the length a type would be if mangled. helper function for mangle_fun_name */
     size_t len = 0;
     switch (type->tag) {
@@ -88,7 +150,7 @@ size_t mangle_type_len(const Type * const type) {
     return len;
 }
 
-size_t mangle_args_len(const Args * const arg_types) {
+static size_t mangle_args_len(const Args * const arg_types) {
     size_t len = 0;
     const Args * curr_arg = (const Args *)arg_types;
     while (curr_arg) {
@@ -98,7 +160,7 @@ size_t mangle_args_len(const Args * const arg_types) {
     return len;
 }
 
-char * mangle_type(const Type * const type, char * pos) {
+static char * mangle_type(const Type * const type, char * pos) {
     /** Adds type to mangled name in-place at pos, and returns pointer to null-terminator */
     switch (type->tag) {
         case base_type:
@@ -146,31 +208,4 @@ char * mangle_type(const Type * const type, char * pos) {
             *(++pos) = '\0';
             return pos;
     }
-}
-
-char * mangle_fun_name(char * fun_name, const Args * const args) {
-    /** Mangles the name of a function with given argument types. Note that the return
-      * value is malloc'd, but after syntax tree gen, the original name is not needed.
-      * Mangling example:
-      *     fun name(ptr string x, int a[266], int y, fun (int) -> void) -> string
-      *     turns into:
-      *         name_psi['10''3']fi->v
-      *         where 'a' is the character with ascii code a.
-      *         The characters are computed by converting the size to base 128,
-      *         adding 1 to each character (to prevent null-termination issues),
-      *         and ordering bytes in big-endian order
-      */
-    size_t name_len = strlen(fun_name);
-    size_t mangled_len = name_len + 1 + mangle_args_len(args);
-    char * mangled_name = malloc(mangled_len + 1);
-    char * pos = mangled_name + name_len;
-    Args * arg = (Args *)args;
-
-    memcpy(mangled_name, fun_name, name_len + 1);
-    
-    while (arg) {
-        pos = mangle_type(arg->type, pos);
-        arg = arg->next;
-    }
-    return mangled_name;
 }

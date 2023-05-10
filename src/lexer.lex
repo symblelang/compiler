@@ -32,9 +32,9 @@
 
  /* include the bison-generated parser header, and forward declarations */
 %{
+#include "parser.h"
 #include "symbol_table.h"
 #include "syntax_tree.h"
-#include "parser.h"
 
 void set_string_val(YYSTYPE * val, char * text, int length);
 %}
@@ -135,6 +135,7 @@ pow_op              "^"|("^^"{opchar}*)
 "for"/{non_id}      return FOR;
 "while"/{non_id}    return WHILE;
 "import"/{non_id}   return IMPORT;
+"as"/{non_id}       return AS;
 "switch"/{non_id}   return SWITCH;
 "case"/{non_id}     return CASE;
 "type"/{non_id}     return TYPE;

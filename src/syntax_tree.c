@@ -15,36 +15,36 @@
 Node * add_var_dec_node(char * name, Type * type, Node * init) {
     Node * new = malloc(sizeof(Node));
     new->tag = var_dec_node;
-    new->op.varDec.name = name;
-    new->op.varDec.type = type;
-    new->op.varDec.init = init;
+    new->op.var_dec.name = name;
+    new->op.var_dec.type = type;
+    new->op.var_dec.init = init;
     return new;
 }
 
 Node * add_type_def_node(char * name, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = type_def_node;
-    new->op.typeDef.name = name;
-    new->op.typeDef.type = type;
+    new->op.type_def.name = name;
+    new->op.type_def.type = type;
     return new;
 }
 
 Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = binary_expr_node;
-    new->op.binaryExpr.op = op;
-    new->op.binaryExpr.left = left;
-    new->op.binaryExpr.right = right;
-    new->op.binaryExpr.type = type;
+    new->op.binary_expr.op = op;
+    new->op.binary_expr.left = left;
+    new->op.binary_expr.right = right;
+    new->op.binary_expr.type = type;
     return new;
 }
 
 Node * add_unary_expr_node(char * op, Node * child, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = unary_expr_node;
-    new->op.unaryExpr.op = op;
-    new->op.unaryExpr.child = child;
-    new->op.unaryExpr.type = type;
+    new->op.unary_expr.op = op;
+    new->op.unary_expr.child = child;
+    new->op.unary_expr.type = type;
     return new;
 }
 
@@ -116,9 +116,10 @@ Args * create_type_list(Type * type) {
     return type_list;
 }
 
-/* This implementation is hilariously inefficient, but nobody should be writing
- * functions with hundreds of arguments
- * better would be to store a pointer to the first and last args. */
+/** This implementation is hilariously inefficient, but nobody should be writing
+ *  functions with hundreds of arguments.
+ *  better would be to store static pointers to the first and last args, and
+ *  check if type_list is the same as the static first and if so use the static last */
 Args * add_to_type_list(Args * type_list, Type * type) {
     Args * where_to_add = type_list;
     while (where_to_add->next != NULL) {
@@ -157,6 +158,7 @@ Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, i
     new->op.fun_call.name = fun_name;
     new->op.fun_call.args = args;
     new->op.fun_call.type = return_type;
+    new->op.fun_call.mangled_name = NULL; /* Computed in second pass */
     new->op.fun_call.line_num = line_num;
     return new;
 }
@@ -170,6 +172,15 @@ Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, Symbol
     new->op.fun_def.block = block;
     new->op.fun_def.table = table;
     new->op.fun_def.line_num = line_num;
+    return new;
+}
+
+Node * add_import_node(char * module, char * namespace, int line_num) {
+    Node * new = malloc(sizeof(Node));
+    new->tag = import_node;
+    new->op.import.module = module;
+    new->op.import.namespace = namespace;
+    new->op.import.line_num = line_num;
     return new;
 }
 
@@ -199,9 +210,7 @@ Args * create_arg(Type * type, char * name) {
     return arg_list;
 }
 
-/* This implementation is hilariously inefficient, but nobody should be writing
- * functions with hundreds of arguments
- * better would be to store a pointer to the first and last args. */
+/* This implementation is again very inefficient, like add_to_type_list */
 Args * add_to_arg_list(Args * type_list, Args * to_add) {
     Args * where_to_add = type_list;
     while (where_to_add->next != NULL) {

@@ -26,33 +26,34 @@ struct SymbolTable {
     SymbolTable * next;
 };
 
+/** \todo Put symbols in a tagged union. This is important for a few reasons:
+ *  1. We can tell var/type or fun/op apart if necessary
+ *  2. Certain nodes (especially var_node) could point to either a var or a fun
+ */
+
+/** Used to store variables and types */
 struct VarSymbol {
     char * name;
     Type * type;
     int declared_at;
 };
 
-struct TypeSymbol {
-    /** Deprecated in favor of VarSymbol */
-    char * name;
-    Type * type;
-    int declared_at;
-};
-
+/** Used to store functions and operators */
 struct FunSymbol {
-    /** Used to store functions and operators */
     char * name;
     Type * type;
     SymbolTable * symbol_table;
     Args * args;
+    int closure; /**< closure is -1 if not closure, 0 if not determined yet, 1 if is closure */
     int declared_at;
 };
 
+/** Stores the name and type of arguments to a function
+ * name should be a key for the symbol table of the fun/op
+ * If Args is used in the type specifier of a function, name should be NULL
+ * If Args is used in a function call, type could be NULL
+ */
 struct Args {
-    /** Stores the name and type of arguments to a function
-      * name should be a key for the symbol table of the fun/op
-      * If Args is used in the type specifier of a function, name should be NULL
-      * If Args is used in a function call, type could be NULL */
     Type * type;
     Args * next;
     char * name;

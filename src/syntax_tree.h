@@ -44,10 +44,11 @@ typedef enum {
         control_node,
         if_node,
         fun_call_node,
-        block_node
+        block_node,
+        import_node
 } NodeType;
 
-/** \todo Fix naming scheme */
+/** \todo lift line_num to the top-level struct and set it in every handler */
 struct Node {
     NodeType tag;
     
@@ -61,31 +62,25 @@ struct Node {
             Type * type;
             char * name;
             Node * init;
-        } varDec;
+        } var_dec;
 
         struct {
             Type * type;
             char * name;
-            Node * block;
-        } funDef;
-
-        struct {
-            Type * type;
-            char * name;
-        } typeDef;
+        } type_def;
 
         struct {
             Type * type;
             char * op;
             Node * left;
             Node * right;
-        } binaryExpr;
+        } binary_expr;
 
         struct {
             Type * type;
             char * op;
             Node * child;
-        } unaryExpr;
+        } unary_expr;
         
         struct {
             Type * type;
@@ -110,9 +105,10 @@ struct Node {
         } for_loop;
 
         struct {
-            /** if type is not return, expr should be NULL */
+            /** if type is not return, expr should be NULL. loop is the loop that the statement refers to */
             Node * expr;
             ControlType tag;
+            Node * loop;
         } control;
 
         struct {
@@ -125,6 +121,7 @@ struct Node {
             char * name;
             Type * type; /* return type */
             CallArgs * args;
+            char * mangled_name;
             int line_num;
         } fun_call;
 
@@ -137,6 +134,12 @@ struct Node {
             Node * block;
             int line_num;
         } fun_def;
+
+        struct {
+            char * module;
+            char * namespace;
+            int line_num;
+        } import;
         
         StatementBlock * block;
         
@@ -158,6 +161,7 @@ Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, i
 CallArgs * create_call_args(Node * expr);
 CallArgs * add_to_call_args(CallArgs * arg_list, Node * expr);
 Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
+Node * add_import_node(char * module, char * namespace, int line_num);
 StatementBlock * create_block(Node * statement);
 StatementBlock * add_to_block(StatementBlock * block, Node * statement);
 Args * create_arg(Type * type, char * name);

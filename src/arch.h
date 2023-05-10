@@ -1,3 +1,7 @@
+#ifndef ARCH_H
+#define ARCH_H
+
+
 typedef enum {
     cpu_x86_64, cpu_x86_32, cpu_8086,
     cpu_arm_v2, cpu_arm_v3, cpu_arm_v4t, cpu_arm_v5, cpu_arm_v6t2, cpu_arm_v6, cpu_arm_64,
@@ -16,7 +20,9 @@ typedef enum {
     os_windows
 } OSInfo;
 
-/* Based on github.com/cpredef/predef/blob/master/OperatingSystems.md */
+/* Check operating system
+ * Based on github.com/cpredef/predef/blob/master/OperatingSystems.md
+ */
 
 #if defined(__linux__)
 #define __build_os__ os_linux
@@ -27,7 +33,7 @@ typedef enum {
 #endif
 
 
-/*
+/* Check CPU architecture. Currently errors out if it isn't x86-64
  * Adapted from https://stackoverflow.com/a/66249936/6616869
  * with additions from https://sourceforge.net/p/predef/wiki/Architectures
  */
@@ -69,3 +75,10 @@ typedef enum {
 #else
 #define __build_cpu_arch__ cpu_unknown
 #endif
+
+/* Error out if CPU architecture is unsupported */
+#if __build_cpu_arch__!=cpu_x86_64
+#error "CPU architecture not supported. Currently only x86-64 is supported"
+#endif
+
+#endif /* ARCH_H */

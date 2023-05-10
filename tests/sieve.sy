@@ -1,6 +1,7 @@
 /* We'll need to implement a str_to_int function and malloc/calloc for different types
  * (or some sort of type coercion/catch-all pointer type) We could make this easier with
  * an "extern" or "cfun" function declaration */
+
 import stdlib;
 
 fun main(int argc, ptr string argv) -> int {
@@ -14,7 +15,8 @@ fun main(int argc, ptr string argv) -> int {
 }
 
 fun sieve(int upper) -> int {
-    /* Takes the somewhat unconventional approach of using 1 to mean composite and 0 to mean prime */
+    /* Takes the somewhat unconventional approach of using 1 to mean composite and 0 to mean prime,
+     * so that we don't have to memset the whole array */
     ptr int prime_sieve = calloc(upper + 1, stdlib.int_size); /* Implementation may change */
     prime_sieve[0] = 1;
     prime_sieve[1] = 1;
@@ -37,5 +39,6 @@ fun sieve(int upper) -> int {
         }
         curr_prime += 1;
     }
+    free(prime_sieve);
     return 0;
 }

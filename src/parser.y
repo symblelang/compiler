@@ -10,6 +10,7 @@
 %language "C"
 %define parse.error detailed
 %define api.pure full
+%parse-param {Node * ast}
 
 %code top {
 #include <ctype.h>
@@ -34,7 +35,7 @@ extern FILE *  yyin;
 }
 
 %code provides {
-int yyerror(const char * restrict fmt, ...);
+int yyerror(const Node * const ast, const char * restrict fmt, ...);
 }
 
 %code {
@@ -65,7 +66,7 @@ SymbolTable * symbol_table;
 /* Assignment and comparison operators */
 %token EQUALS_OP ASSIGN_OP COMPARE_OP
 /* Keywords */
-%token CFUN FUN IF ELIF ELSE FOR WHILE IMPORT CASE SWITCH TYPE RETURN BREAK CONTINUE
+%token CFUN FUN IF ELIF ELSE FOR WHILE CASE SWITCH TYPE RETURN BREAK CONTINUE IMPORT AS
 /* Types */
 %token INT_TYPE STR_TYPE FLOAT_TYPE PTR_TYPE
 /* Literals */
@@ -108,7 +109,7 @@ SymbolTable * symbol_table;
 %left DOT
 
 %type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_call literal if_elif
-%type<node> expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do program typedef statement statement_block
+%type<node> expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do program typedef import_statement statement statement_block
 %type<block> statement_list
 %type<type> type fun_type
 %type<args> argument_list_specifier type_list variable_specifier
@@ -121,7 +122,7 @@ SymbolTable * symbol_table;
 
 
 program:
-    statement_list { $$ = create_block_node($1); }
+    statement_list { ast = ($$ = create_block_node($1)); }
     ;
 
 statement_list:
@@ -141,6 +142,7 @@ statement:
     | for_loop
     | do
     | typedef
+    | import_statement
     ;
 
 statement_block:
@@ -260,7 +262,7 @@ argument_list_specifier:
 /** \todo edit type info for array argument */
 variable_specifier:
     type ID { $$ = create_arg($type, $ID); }
-    | type ID LSQB INT_LIT RSQB { yyerror("Array arguments not supported yet\n"); }
+    | type ID LSQB INT_LIT RSQB { yyerror(NULL, "Array arguments not supported yet\n"); }
     ;
 
 type:
@@ -334,15 +336,20 @@ while_loop:
     | WHILE LPAREN expr RPAREN SEMICOLON { $$ = handle_while($expr, NULL); }
     ;
 
+import_statement:
+    IMPORT ID SEMICOLON { $$ = handle_import($2, $2, yylineno); }
+    | IMPORT ID AS ID SEMICOLON { $$ = handle_import($2, $4, yylineno); }
+    ;
 
 %%
 
 
 /* based on musl libc printf implementation */
-int yyerror(const char * restrict fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	va_end(ap);
-	return EXIT_FAILURE;
+int yyerror(const Node * const ast, const char * restrict fmt, ...) {
+    (void)(ast);
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    return EXIT_FAILURE;
 }
