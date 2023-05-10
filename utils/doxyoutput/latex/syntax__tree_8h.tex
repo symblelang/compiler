@@ -1,0 +1,344 @@
+\hypertarget{syntax__tree_8h}{}\doxysection{syntax\+\_\+tree.\+h File Reference}
+\label{syntax__tree_8h}\index{syntax\_tree.h@{syntax\_tree.h}}
+{\ttfamily \#include \char`\"{}symbol\+\_\+table.\+h\char`\"{}}\newline
+Include dependency graph for syntax\+\_\+tree.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=238pt]{syntax__tree_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{syntax__tree_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_call_args}{Call\+Args}}
+\item 
+struct \mbox{\hyperlink{struct_statement_block}{Statement\+Block}}
+\item 
+struct \mbox{\hyperlink{struct_node}{Node}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_node}{Node}} \mbox{\hyperlink{syntax__tree_8h_a3b09f37e675bcd48a01bf22155996872}{Node}}
+\item 
+typedef struct \mbox{\hyperlink{struct_call_args}{Call\+Args}} \mbox{\hyperlink{syntax__tree_8h_a0019f229c8a86dea312d258070289bb6}{Call\+Args}}
+\item 
+typedef struct \mbox{\hyperlink{struct_statement_block}{Statement\+Block}} \mbox{\hyperlink{syntax__tree_8h_a52463a147005d959c9f659f19ddc4927}{Statement\+Block}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}{Control\+Type}} \{ \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4ae46c76fe67c3edaec77a3d0942729b4d}{return\+\_\+tag}}
+, \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4acc821102c1a24c6018a98239efcf6b99}{break\+\_\+tag}}
+, \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4a779bc4e6391dc40546573239ded1c3f9}{continue\+\_\+tag}}
+ \}
+\item 
+enum \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16}{Node\+Type}} \{ \newline
+\mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a0398803ceacad4c285a5a26106273e4b}{var\+\_\+dec\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16af9cb806594d7647837a2ddf786753487}{type\+\_\+def\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16aefaa1c735f60ae6b2766f798e586afae}{fun\+\_\+def\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5c99a18e17562f4ee0d11a03f8d5e32e}{binary\+\_\+expr\+\_\+node}}
+, \newline
+\mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a026b1ffcfb38ba2396967c4209514f5c}{unary\+\_\+expr\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a4e18eb885b4a9030cacb28611ba24302}{literal\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a1a91e50bffca366347c8c979fd8998d7}{var\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a30d1a6ffa98363b0b6fdbd7424f4ddf6}{while\+\_\+loop\+\_\+node}}
+, \newline
+\mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a05f91c9098eaccb63002ebc2b10ffd30}{do\+\_\+loop\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8b9aeea38f6c449d6de296f065c5b5b8}{for\+\_\+loop\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8e9a12308948e86706b57b3836f87a53}{control\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16ad7f7237b138fbc0005ef574f5e4ac41c}{if\+\_\+node}}
+, \newline
+\mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a2308184b6e7d096358eac98fead831d8}{fun\+\_\+call\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5658135df7fad1bf3af4af9b1c5b2eaf}{block\+\_\+node}}
+, \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a03d8dbc92f7b8d5d31d87f0545bc5592}{import\+\_\+node}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a94c4ee5c717be79f85d81375d055fbb1}{add\+\_\+var\+\_\+dec\+\_\+node}} (char $\ast$name, \mbox{\hyperlink{struct_type}{Type}} $\ast$type, \mbox{\hyperlink{struct_node}{Node}} $\ast$init)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_af17682baad38020afefbbaa9c5230b13}{add\+\_\+type\+\_\+def\+\_\+node}} (char $\ast$name, \mbox{\hyperlink{struct_type}{Type}} $\ast$type)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a1ad5c6324afda80dce3bf1ddfd072cd4}{add\+\_\+binary\+\_\+expr\+\_\+node}} (char $\ast$op, \mbox{\hyperlink{struct_node}{Node}} $\ast$left, \mbox{\hyperlink{struct_node}{Node}} $\ast$right, \mbox{\hyperlink{struct_type}{Type}} $\ast$type)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a0ecebe7d29ab7a596d40c4eb15e8c8d5}{add\+\_\+unary\+\_\+expr\+\_\+node}} (char $\ast$op, \mbox{\hyperlink{struct_node}{Node}} $\ast$child, \mbox{\hyperlink{struct_type}{Type}} $\ast$type)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a647af1f9e3c5eb314d8d8f994aa9346f}{add\+\_\+lit\+\_\+node}} (char $\ast$key, \mbox{\hyperlink{struct_type}{Type}} $\ast$type)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a8ab67e597a57f2bc985549d3784aeeaf}{add\+\_\+var\+\_\+node}} (char $\ast$key, \mbox{\hyperlink{struct_type}{Type}} $\ast$type)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a3155099c9666b85093462bd393240df5}{add\+\_\+while\+\_\+loop\+\_\+node}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$test, \mbox{\hyperlink{struct_node}{Node}} $\ast$block)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_afd582d05cda63cb766d0331c422723ac}{add\+\_\+do\+\_\+loop\+\_\+node}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$test, \mbox{\hyperlink{struct_node}{Node}} $\ast$block)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a69cb0838dc15b6deb5f7cc8798e53804}{add\+\_\+for\+\_\+loop\+\_\+node}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$init, \mbox{\hyperlink{struct_node}{Node}} $\ast$test, \mbox{\hyperlink{struct_node}{Node}} $\ast$inc, \mbox{\hyperlink{struct_node}{Node}} $\ast$block)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a9c2f3a47876ca0c950bed99965024652}{add\+\_\+control\+\_\+node}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$expr, \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}{Control\+Type}} tag)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_ae77f054d6617b6158562ad0f456ec426}{add\+\_\+if\+\_\+node}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$test, \mbox{\hyperlink{struct_node}{Node}} $\ast$block, \mbox{\hyperlink{struct_node}{Node}} $\ast$next)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_ae7a76fecdc777de968d4c3c059b530a6}{add\+\_\+fun\+\_\+call\+\_\+node}} (char $\ast$fun\+\_\+name, \mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$args, \mbox{\hyperlink{struct_type}{Type}} $\ast$return\+\_\+type, int line\+\_\+num)
+\item 
+\mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_aa327fec713126760ae06ee2588c784c8}{create\+\_\+call\+\_\+args}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$expr)
+\item 
+\mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a80a0c338768f369064fcaf8550becd16}{add\+\_\+to\+\_\+call\+\_\+args}} (\mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$arg\+\_\+list, \mbox{\hyperlink{struct_node}{Node}} $\ast$expr)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a7869708932438a53a5f9357017306327}{add\+\_\+fun\+\_\+def\+\_\+node}} (char $\ast$fun\+\_\+name, \mbox{\hyperlink{struct_args}{Args}} $\ast$args, \mbox{\hyperlink{struct_type}{Type}} $\ast$return\+\_\+type, \mbox{\hyperlink{struct_symbol_table}{Symbol\+Table}} $\ast$table, \mbox{\hyperlink{struct_node}{Node}} $\ast$block, int line\+\_\+num)
+\item 
+\mbox{\hyperlink{struct_node}{Node}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a1531ba756aec1ad70b832887bd5a5643}{add\+\_\+import\+\_\+node}} (char $\ast$module, char $\ast$namespace, int line\+\_\+num)
+\item 
+\mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a241a27c74d13e7ac3cd3f6efa4102810}{create\+\_\+block}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$statement)
+\item 
+\mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a0b2a42e41fc21bd7bbf554fd990db0cd}{add\+\_\+to\+\_\+block}} (\mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$block, \mbox{\hyperlink{struct_node}{Node}} $\ast$statement)
+\item 
+\mbox{\hyperlink{struct_args}{Args}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a66bbaabeefc4d09b2e2a2931613eec7b}{create\+\_\+arg}} (\mbox{\hyperlink{struct_type}{Type}} $\ast$type, char $\ast$name)
+\item 
+\mbox{\hyperlink{struct_args}{Args}} $\ast$ \mbox{\hyperlink{syntax__tree_8h_a6a182a424bccb2b0c28d2f64adb8cabc}{add\+\_\+to\+\_\+arg\+\_\+list}} (\mbox{\hyperlink{struct_args}{Args}} $\ast$type\+\_\+list, \mbox{\hyperlink{struct_args}{Args}} $\ast$to\+\_\+add)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{syntax__tree_8h_a0019f229c8a86dea312d258070289bb6}\label{syntax__tree_8h_a0019f229c8a86dea312d258070289bb6}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!CallArgs@{CallArgs}}
+\index{CallArgs@{CallArgs}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{CallArgs}{CallArgs}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_call_args}{Call\+Args}} \mbox{\hyperlink{struct_call_args}{Call\+Args}}}
+
+\mbox{\Hypertarget{syntax__tree_8h_a3b09f37e675bcd48a01bf22155996872}\label{syntax__tree_8h_a3b09f37e675bcd48a01bf22155996872}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!Node@{Node}}
+\index{Node@{Node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{Node}{Node}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_node}{Node}} \mbox{\hyperlink{struct_node}{Node}}}
+
+\mbox{\Hypertarget{syntax__tree_8h_a52463a147005d959c9f659f19ddc4927}\label{syntax__tree_8h_a52463a147005d959c9f659f19ddc4927}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!StatementBlock@{StatementBlock}}
+\index{StatementBlock@{StatementBlock}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{StatementBlock}{StatementBlock}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_statement_block}{Statement\+Block}} \mbox{\hyperlink{struct_statement_block}{Statement\+Block}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}\label{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!ControlType@{ControlType}}
+\index{ControlType@{ControlType}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{ControlType}{ControlType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}{Control\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{return\_tag@{return\_tag}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!return\_tag@{return\_tag}}}\mbox{\Hypertarget{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4ae46c76fe67c3edaec77a3d0942729b4d}\label{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4ae46c76fe67c3edaec77a3d0942729b4d}} 
+return\+\_\+tag&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{break\_tag@{break\_tag}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!break\_tag@{break\_tag}}}\mbox{\Hypertarget{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4acc821102c1a24c6018a98239efcf6b99}\label{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4acc821102c1a24c6018a98239efcf6b99}} 
+break\+\_\+tag&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{continue\_tag@{continue\_tag}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!continue\_tag@{continue\_tag}}}\mbox{\Hypertarget{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4a779bc4e6391dc40546573239ded1c3f9}\label{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4a779bc4e6391dc40546573239ded1c3f9}} 
+continue\+\_\+tag&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!NodeType@{NodeType}}
+\index{NodeType@{NodeType}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{NodeType}{NodeType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16}{Node\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{var\_dec\_node@{var\_dec\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!var\_dec\_node@{var\_dec\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a0398803ceacad4c285a5a26106273e4b}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a0398803ceacad4c285a5a26106273e4b}} 
+var\+\_\+dec\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{type\_def\_node@{type\_def\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!type\_def\_node@{type\_def\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16af9cb806594d7647837a2ddf786753487}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16af9cb806594d7647837a2ddf786753487}} 
+type\+\_\+def\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{fun\_def\_node@{fun\_def\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!fun\_def\_node@{fun\_def\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16aefaa1c735f60ae6b2766f798e586afae}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16aefaa1c735f60ae6b2766f798e586afae}} 
+fun\+\_\+def\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{binary\_expr\_node@{binary\_expr\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!binary\_expr\_node@{binary\_expr\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5c99a18e17562f4ee0d11a03f8d5e32e}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5c99a18e17562f4ee0d11a03f8d5e32e}} 
+binary\+\_\+expr\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{unary\_expr\_node@{unary\_expr\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!unary\_expr\_node@{unary\_expr\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a026b1ffcfb38ba2396967c4209514f5c}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a026b1ffcfb38ba2396967c4209514f5c}} 
+unary\+\_\+expr\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{literal\_node@{literal\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!literal\_node@{literal\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a4e18eb885b4a9030cacb28611ba24302}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a4e18eb885b4a9030cacb28611ba24302}} 
+literal\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{var\_node@{var\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!var\_node@{var\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a1a91e50bffca366347c8c979fd8998d7}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a1a91e50bffca366347c8c979fd8998d7}} 
+var\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{while\_loop\_node@{while\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!while\_loop\_node@{while\_loop\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a30d1a6ffa98363b0b6fdbd7424f4ddf6}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a30d1a6ffa98363b0b6fdbd7424f4ddf6}} 
+while\+\_\+loop\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{do\_loop\_node@{do\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!do\_loop\_node@{do\_loop\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a05f91c9098eaccb63002ebc2b10ffd30}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a05f91c9098eaccb63002ebc2b10ffd30}} 
+do\+\_\+loop\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{for\_loop\_node@{for\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!for\_loop\_node@{for\_loop\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8b9aeea38f6c449d6de296f065c5b5b8}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8b9aeea38f6c449d6de296f065c5b5b8}} 
+for\+\_\+loop\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{control\_node@{control\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!control\_node@{control\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8e9a12308948e86706b57b3836f87a53}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a8e9a12308948e86706b57b3836f87a53}} 
+control\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{if\_node@{if\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!if\_node@{if\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16ad7f7237b138fbc0005ef574f5e4ac41c}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16ad7f7237b138fbc0005ef574f5e4ac41c}} 
+if\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{fun\_call\_node@{fun\_call\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!fun\_call\_node@{fun\_call\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a2308184b6e7d096358eac98fead831d8}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a2308184b6e7d096358eac98fead831d8}} 
+fun\+\_\+call\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{block\_node@{block\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!block\_node@{block\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5658135df7fad1bf3af4af9b1c5b2eaf}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a5658135df7fad1bf3af4af9b1c5b2eaf}} 
+block\+\_\+node&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{import\_node@{import\_node}!syntax\_tree.h@{syntax\_tree.h}}\index{syntax\_tree.h@{syntax\_tree.h}!import\_node@{import\_node}}}\mbox{\Hypertarget{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a03d8dbc92f7b8d5d31d87f0545bc5592}\label{syntax__tree_8h_acac9cbaeea226ed297804c012dc12b16a03d8dbc92f7b8d5d31d87f0545bc5592}} 
+import\+\_\+node&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{syntax__tree_8h_a1ad5c6324afda80dce3bf1ddfd072cd4}\label{syntax__tree_8h_a1ad5c6324afda80dce3bf1ddfd072cd4}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_binary\_expr\_node@{add\_binary\_expr\_node}}
+\index{add\_binary\_expr\_node@{add\_binary\_expr\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_binary\_expr\_node()}{add\_binary\_expr\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+binary\+\_\+expr\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{op,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{left,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{right,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a9c2f3a47876ca0c950bed99965024652}\label{syntax__tree_8h_a9c2f3a47876ca0c950bed99965024652}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_control\_node@{add\_control\_node}}
+\index{add\_control\_node@{add\_control\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_control\_node()}{add\_control\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+control\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{expr,  }\item[{\mbox{\hyperlink{syntax__tree_8h_a8005f1f182fd0248a710ca64f72508d4}{Control\+Type}}}]{tag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_afd582d05cda63cb766d0331c422723ac}\label{syntax__tree_8h_afd582d05cda63cb766d0331c422723ac}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_do\_loop\_node@{add\_do\_loop\_node}}
+\index{add\_do\_loop\_node@{add\_do\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_do\_loop\_node()}{add\_do\_loop\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+do\+\_\+loop\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{test,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{block }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a69cb0838dc15b6deb5f7cc8798e53804}\label{syntax__tree_8h_a69cb0838dc15b6deb5f7cc8798e53804}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_for\_loop\_node@{add\_for\_loop\_node}}
+\index{add\_for\_loop\_node@{add\_for\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_for\_loop\_node()}{add\_for\_loop\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+for\+\_\+loop\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{init,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{test,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{inc,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{block }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_ae7a76fecdc777de968d4c3c059b530a6}\label{syntax__tree_8h_ae7a76fecdc777de968d4c3c059b530a6}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_fun\_call\_node@{add\_fun\_call\_node}}
+\index{add\_fun\_call\_node@{add\_fun\_call\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_fun\_call\_node()}{add\_fun\_call\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+fun\+\_\+call\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{fun\+\_\+name,  }\item[{\mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$}]{args,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{return\+\_\+type,  }\item[{int}]{line\+\_\+num }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a7869708932438a53a5f9357017306327}\label{syntax__tree_8h_a7869708932438a53a5f9357017306327}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_fun\_def\_node@{add\_fun\_def\_node}}
+\index{add\_fun\_def\_node@{add\_fun\_def\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_fun\_def\_node()}{add\_fun\_def\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+fun\+\_\+def\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{fun\+\_\+name,  }\item[{\mbox{\hyperlink{struct_args}{Args}} $\ast$}]{args,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{return\+\_\+type,  }\item[{\mbox{\hyperlink{struct_symbol_table}{Symbol\+Table}} $\ast$}]{table,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{block,  }\item[{int}]{line\+\_\+num }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_ae77f054d6617b6158562ad0f456ec426}\label{syntax__tree_8h_ae77f054d6617b6158562ad0f456ec426}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_if\_node@{add\_if\_node}}
+\index{add\_if\_node@{add\_if\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_if\_node()}{add\_if\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+if\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{test,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{block,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{next }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a1531ba756aec1ad70b832887bd5a5643}\label{syntax__tree_8h_a1531ba756aec1ad70b832887bd5a5643}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_import\_node@{add\_import\_node}}
+\index{add\_import\_node@{add\_import\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_import\_node()}{add\_import\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+import\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{module,  }\item[{char $\ast$}]{namespace,  }\item[{int}]{line\+\_\+num }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a647af1f9e3c5eb314d8d8f994aa9346f}\label{syntax__tree_8h_a647af1f9e3c5eb314d8d8f994aa9346f}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_lit\_node@{add\_lit\_node}}
+\index{add\_lit\_node@{add\_lit\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_lit\_node()}{add\_lit\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+lit\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{key,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a6a182a424bccb2b0c28d2f64adb8cabc}\label{syntax__tree_8h_a6a182a424bccb2b0c28d2f64adb8cabc}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_to\_arg\_list@{add\_to\_arg\_list}}
+\index{add\_to\_arg\_list@{add\_to\_arg\_list}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_to\_arg\_list()}{add\_to\_arg\_list()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_args}{Args}} $\ast$ add\+\_\+to\+\_\+arg\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_args}{Args}} $\ast$}]{type\+\_\+list,  }\item[{\mbox{\hyperlink{struct_args}{Args}} $\ast$}]{to\+\_\+add }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a0b2a42e41fc21bd7bbf554fd990db0cd}\label{syntax__tree_8h_a0b2a42e41fc21bd7bbf554fd990db0cd}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_to\_block@{add\_to\_block}}
+\index{add\_to\_block@{add\_to\_block}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_to\_block()}{add\_to\_block()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$ add\+\_\+to\+\_\+block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$}]{block,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{statement }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a80a0c338768f369064fcaf8550becd16}\label{syntax__tree_8h_a80a0c338768f369064fcaf8550becd16}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_to\_call\_args@{add\_to\_call\_args}}
+\index{add\_to\_call\_args@{add\_to\_call\_args}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_to\_call\_args()}{add\_to\_call\_args()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$ add\+\_\+to\+\_\+call\+\_\+args (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$}]{arg\+\_\+list,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{expr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_af17682baad38020afefbbaa9c5230b13}\label{syntax__tree_8h_af17682baad38020afefbbaa9c5230b13}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_type\_def\_node@{add\_type\_def\_node}}
+\index{add\_type\_def\_node@{add\_type\_def\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_type\_def\_node()}{add\_type\_def\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+type\+\_\+def\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a0ecebe7d29ab7a596d40c4eb15e8c8d5}\label{syntax__tree_8h_a0ecebe7d29ab7a596d40c4eb15e8c8d5}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_unary\_expr\_node@{add\_unary\_expr\_node}}
+\index{add\_unary\_expr\_node@{add\_unary\_expr\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_unary\_expr\_node()}{add\_unary\_expr\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+unary\+\_\+expr\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{op,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{child,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a94c4ee5c717be79f85d81375d055fbb1}\label{syntax__tree_8h_a94c4ee5c717be79f85d81375d055fbb1}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_var\_dec\_node@{add\_var\_dec\_node}}
+\index{add\_var\_dec\_node@{add\_var\_dec\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_var\_dec\_node()}{add\_var\_dec\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+var\+\_\+dec\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{init }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a8ab67e597a57f2bc985549d3784aeeaf}\label{syntax__tree_8h_a8ab67e597a57f2bc985549d3784aeeaf}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_var\_node@{add\_var\_node}}
+\index{add\_var\_node@{add\_var\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_var\_node()}{add\_var\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+var\+\_\+node (\begin{DoxyParamCaption}\item[{char $\ast$}]{key,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a3155099c9666b85093462bd393240df5}\label{syntax__tree_8h_a3155099c9666b85093462bd393240df5}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!add\_while\_loop\_node@{add\_while\_loop\_node}}
+\index{add\_while\_loop\_node@{add\_while\_loop\_node}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{add\_while\_loop\_node()}{add\_while\_loop\_node()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_node}{Node}} $\ast$ add\+\_\+while\+\_\+loop\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{test,  }\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{block }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a66bbaabeefc4d09b2e2a2931613eec7b}\label{syntax__tree_8h_a66bbaabeefc4d09b2e2a2931613eec7b}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!create\_arg@{create\_arg}}
+\index{create\_arg@{create\_arg}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{create\_arg()}{create\_arg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_args}{Args}} $\ast$ create\+\_\+arg (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type,  }\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_a241a27c74d13e7ac3cd3f6efa4102810}\label{syntax__tree_8h_a241a27c74d13e7ac3cd3f6efa4102810}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!create\_block@{create\_block}}
+\index{create\_block@{create\_block}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{create\_block()}{create\_block()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_statement_block}{Statement\+Block}} $\ast$ create\+\_\+block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{statement }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{syntax__tree_8h_aa327fec713126760ae06ee2588c784c8}\label{syntax__tree_8h_aa327fec713126760ae06ee2588c784c8}} 
+\index{syntax\_tree.h@{syntax\_tree.h}!create\_call\_args@{create\_call\_args}}
+\index{create\_call\_args@{create\_call\_args}!syntax\_tree.h@{syntax\_tree.h}}
+\doxysubsubsection{\texorpdfstring{create\_call\_args()}{create\_call\_args()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_call_args}{Call\+Args}} $\ast$ create\+\_\+call\+\_\+args (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_node}{Node}} $\ast$}]{expr }\end{DoxyParamCaption})}
+

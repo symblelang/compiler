@@ -1,0 +1,134 @@
+\hypertarget{types_8h}{}\doxysection{types.\+h File Reference}
+\label{types_8h}\index{types.h@{types.h}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}symbol\+\_\+table.\+h\char`\"{}}\newline
+Include dependency graph for types.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{types_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{types_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_type}{Type}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_type}{Type}} \mbox{\hyperlink{types_8h_a1ac75f8fee198af783521627f1fecfbc}{Type}}
+\item 
+typedef struct \mbox{\hyperlink{struct_args}{Args}} \mbox{\hyperlink{types_8h_ad89ad34dfa34cc3007ec365f9eaa02ec}{Args}}
+\item 
+typedef enum \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{Base\+Type}} \mbox{\hyperlink{types_8h_ac811b85a3cb4de1be26a86f25eb90ae4}{Base\+Type}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{Base\+Type}} \{ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a1762bddf438155a00ecf0318446e8a83}{int\+\_\+type}}
+, \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1af36a50969a0a592e2c486469bddd17e7}{str\+\_\+type}}
+, \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a67a95930928f80abf404f492d8ab0e22}{float\+\_\+type}}
+, \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a91faeec4841fa5c5f50a1f4dfacd37fc}{void\+\_\+type}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{types_8h_addcfe7b54180f3a83e63822d7833ab61}{check\+\_\+types\+\_\+equal}} (\mbox{\hyperlink{struct_type}{Type}} $\ast$type\+\_\+1, \mbox{\hyperlink{struct_type}{Type}} $\ast$type\+\_\+2)
+\item 
+char $\ast$ \mbox{\hyperlink{types_8h_a7802b110f7fc71ca5cec0989d835d765}{mangle\+\_\+fun\+\_\+name}} (const char $\ast$const fun\+\_\+name, const \mbox{\hyperlink{struct_args}{Args}} $\ast$const arg\+\_\+types)
+\item 
+char $\ast$ \mbox{\hyperlink{types_8h_a54111aa54791390fe223183d744f1c8c}{mangle\+\_\+unary\+\_\+op}} (const char $\ast$const op\+\_\+name, const \mbox{\hyperlink{struct_type}{Type}} $\ast$const type)
+\item 
+char $\ast$ \mbox{\hyperlink{types_8h_a799e48a7e1d5d323b2980108be27a0cc}{mangle\+\_\+binary\+\_\+op}} (const char $\ast$const op\+\_\+name, const \mbox{\hyperlink{struct_type}{Type}} $\ast$const type1, const \mbox{\hyperlink{struct_type}{Type}} $\ast$const type2)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{types_8h_ad89ad34dfa34cc3007ec365f9eaa02ec}\label{types_8h_ad89ad34dfa34cc3007ec365f9eaa02ec}} 
+\index{types.h@{types.h}!Args@{Args}}
+\index{Args@{Args}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{Args}{Args}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_args}{Args}} \mbox{\hyperlink{struct_args}{Args}}}
+
+\mbox{\Hypertarget{types_8h_ac811b85a3cb4de1be26a86f25eb90ae4}\label{types_8h_ac811b85a3cb4de1be26a86f25eb90ae4}} 
+\index{types.h@{types.h}!BaseType@{BaseType}}
+\index{BaseType@{BaseType}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{BaseType}{BaseType}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{Base\+Type}} \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{Base\+Type}}}
+
+\mbox{\Hypertarget{types_8h_a1ac75f8fee198af783521627f1fecfbc}\label{types_8h_a1ac75f8fee198af783521627f1fecfbc}} 
+\index{types.h@{types.h}!Type@{Type}}
+\index{Type@{Type}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{Type}{Type}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_type}{Type}} \mbox{\hyperlink{struct_type}{Type}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{types_8h_ae96315ee246bd4a509133af84c88c5e1}\label{types_8h_ae96315ee246bd4a509133af84c88c5e1}} 
+\index{types.h@{types.h}!BaseType@{BaseType}}
+\index{BaseType@{BaseType}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{BaseType}{BaseType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{Base\+Type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{int\_type@{int\_type}!types.h@{types.h}}\index{types.h@{types.h}!int\_type@{int\_type}}}\mbox{\Hypertarget{types_8h_ae96315ee246bd4a509133af84c88c5e1a1762bddf438155a00ecf0318446e8a83}\label{types_8h_ae96315ee246bd4a509133af84c88c5e1a1762bddf438155a00ecf0318446e8a83}} 
+int\+\_\+type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{str\_type@{str\_type}!types.h@{types.h}}\index{types.h@{types.h}!str\_type@{str\_type}}}\mbox{\Hypertarget{types_8h_ae96315ee246bd4a509133af84c88c5e1af36a50969a0a592e2c486469bddd17e7}\label{types_8h_ae96315ee246bd4a509133af84c88c5e1af36a50969a0a592e2c486469bddd17e7}} 
+str\+\_\+type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{float\_type@{float\_type}!types.h@{types.h}}\index{types.h@{types.h}!float\_type@{float\_type}}}\mbox{\Hypertarget{types_8h_ae96315ee246bd4a509133af84c88c5e1a67a95930928f80abf404f492d8ab0e22}\label{types_8h_ae96315ee246bd4a509133af84c88c5e1a67a95930928f80abf404f492d8ab0e22}} 
+float\+\_\+type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{void\_type@{void\_type}!types.h@{types.h}}\index{types.h@{types.h}!void\_type@{void\_type}}}\mbox{\Hypertarget{types_8h_ae96315ee246bd4a509133af84c88c5e1a91faeec4841fa5c5f50a1f4dfacd37fc}\label{types_8h_ae96315ee246bd4a509133af84c88c5e1a91faeec4841fa5c5f50a1f4dfacd37fc}} 
+void\+\_\+type&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{types_8h_addcfe7b54180f3a83e63822d7833ab61}\label{types_8h_addcfe7b54180f3a83e63822d7833ab61}} 
+\index{types.h@{types.h}!check\_types\_equal@{check\_types\_equal}}
+\index{check\_types\_equal@{check\_types\_equal}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{check\_types\_equal()}{check\_types\_equal()}}
+{\footnotesize\ttfamily int check\+\_\+types\+\_\+equal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type\+\_\+1,  }\item[{\mbox{\hyperlink{struct_type}{Type}} $\ast$}]{type\+\_\+2 }\end{DoxyParamCaption})}
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000014}{Todo}}]Add tests for all of these functions \end{DoxyRefDesc}
+Returns 1 if one of the pointers is a void type\mbox{\Hypertarget{types_8h_a799e48a7e1d5d323b2980108be27a0cc}\label{types_8h_a799e48a7e1d5d323b2980108be27a0cc}} 
+\index{types.h@{types.h}!mangle\_binary\_op@{mangle\_binary\_op}}
+\index{mangle\_binary\_op@{mangle\_binary\_op}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{mangle\_binary\_op()}{mangle\_binary\_op()}}
+{\footnotesize\ttfamily char $\ast$ mangle\+\_\+binary\+\_\+op (\begin{DoxyParamCaption}\item[{const char $\ast$const}]{op\+\_\+name,  }\item[{const \mbox{\hyperlink{struct_type}{Type}} $\ast$const}]{type1,  }\item[{const \mbox{\hyperlink{struct_type}{Type}} $\ast$const}]{type2 }\end{DoxyParamCaption})}
+
+Mangles binary operator name the same way as mangle\+\_\+fun\+\_\+name \mbox{\Hypertarget{types_8h_a7802b110f7fc71ca5cec0989d835d765}\label{types_8h_a7802b110f7fc71ca5cec0989d835d765}} 
+\index{types.h@{types.h}!mangle\_fun\_name@{mangle\_fun\_name}}
+\index{mangle\_fun\_name@{mangle\_fun\_name}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{mangle\_fun\_name()}{mangle\_fun\_name()}}
+{\footnotesize\ttfamily char $\ast$ mangle\+\_\+fun\+\_\+name (\begin{DoxyParamCaption}\item[{const char $\ast$const}]{fun\+\_\+name,  }\item[{const \mbox{\hyperlink{struct_args}{Args}} $\ast$const}]{args }\end{DoxyParamCaption})}
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000013}{Todo}}]consider adding a leading underscore \end{DoxyRefDesc}
+Mangles the name of a function with given argument types. Note that the return value is malloc\textquotesingle{}d, but after syntax tree gen, the original name is not needed. Mangling example\+: fun name(ptr string x, int a\mbox{[}266\mbox{]}, int y, fun (int) -\/\texorpdfstring{$>$}{>} void) -\/\texorpdfstring{$>$}{>} string turns into\+: name\+\_\+psi\mbox{[}\textquotesingle{}10\textquotesingle{}\textquotesingle{}3\textquotesingle{}\mbox{]}fi-\/\texorpdfstring{$>$}{>}v where \textquotesingle{}a\textquotesingle{} is the character with ascii code a. The characters are computed by converting the size to base 128, adding 1 to each character (to prevent null-\/termination issues), and ordering bytes in big-\/endian order \mbox{\Hypertarget{types_8h_a54111aa54791390fe223183d744f1c8c}\label{types_8h_a54111aa54791390fe223183d744f1c8c}} 
+\index{types.h@{types.h}!mangle\_unary\_op@{mangle\_unary\_op}}
+\index{mangle\_unary\_op@{mangle\_unary\_op}!types.h@{types.h}}
+\doxysubsubsection{\texorpdfstring{mangle\_unary\_op()}{mangle\_unary\_op()}}
+{\footnotesize\ttfamily char $\ast$ mangle\+\_\+unary\+\_\+op (\begin{DoxyParamCaption}\item[{const char $\ast$const}]{op\+\_\+name,  }\item[{const \mbox{\hyperlink{struct_type}{Type}} $\ast$const}]{type }\end{DoxyParamCaption})}
+
+Mangles unary operator name the same way as mangle\+\_\+fun\+\_\+name 

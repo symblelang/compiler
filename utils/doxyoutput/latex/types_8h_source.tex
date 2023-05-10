@@ -1,0 +1,56 @@
+\hypertarget{types_8h_source}{}\doxysection{types.\+h}
+\mbox{\hyperlink{types_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Authors:}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \ \ Andrew\ Clark\ \ \ \ \ -\/\ andrew.clark.6@bc.edu}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ \ Alex\ Liu\ \ \ \ \ \ \ \ \ -\/\ alex.liu@bc.edu}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ Caden\ Parajuli\ \ \ -\/\ caden.parajuli@bc.edu}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ Micheal\ Lebreck\ \ -\/\ michael.lebreck@bc.edu}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ William\ Morrison\ -\/\ william.morrison.2@bc.edu}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ Header\ guards\ */}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ TYPES\_H}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ TYPES\_H}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{symbol__table_8h}{symbol\_table.h}}"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_type}{Type}}\ \mbox{\hyperlink{struct_type}{Type}};}
+\DoxyCodeLine{00019\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_args}{Args}}\ \mbox{\hyperlink{struct_args}{Args}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{BaseType}}\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a1762bddf438155a00ecf0318446e8a83}{int\_type}},}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1af36a50969a0a592e2c486469bddd17e7}{str\_type}},}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a67a95930928f80abf404f492d8ab0e22}{float\_type}},}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1a91faeec4841fa5c5f50a1f4dfacd37fc}{void\_type}}}
+\DoxyCodeLine{00026\ \}\ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{BaseType}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_type}{Type}}\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{enum}\ \{\mbox{\hyperlink{struct_type_aff82a0a91c82ae5342fb6a36843bd22ca1f15f496b6c3fdfa0a930766b233750b}{base\_type}},\ \mbox{\hyperlink{struct_type_aff82a0a91c82ae5342fb6a36843bd22ca5eece3e6fd088880e606c2b47a181c1b}{fun\_type}},\ \mbox{\hyperlink{struct_type_aff82a0a91c82ae5342fb6a36843bd22cad6f451514e08959e9b26b6af2b42a0de}{array\_type}},\ \mbox{\hyperlink{struct_type_aff82a0a91c82ae5342fb6a36843bd22caad4e21b560f34b7eddec654e00764418}{ptr\_type}}\}\ \mbox{\hyperlink{struct_type_af7de59fc7b0a51c1559cf2f65fdaa8a2}{tag}};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{types_8h_ae96315ee246bd4a509133af84c88c5e1}{BaseType}}\ \mbox{\hyperlink{struct_type_a2970b4dda280e4310af61bca902bc824}{base}};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_type}{Type}}\ *\ \mbox{\hyperlink{struct_type_ad294c6a276de2042ae4f59a9880eae0b}{return\_type}};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_args}{Args}}\ *\ \mbox{\hyperlink{struct_type_af7f3dd190a848ef5483ad69d66afd6f9}{args}};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}\ \mbox{\hyperlink{struct_type_a6bd67944752e2c1a043869a440dcb7ae}{fun}};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_type}{Type}}\ *\ \mbox{\hyperlink{struct_type_a021892f3d34dff9b5045088b49e00033}{elem\_type}};}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_type_ab0fce70e3c1d3dad3cd8e7fe3d6c751c}{size}};}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}\ \mbox{\hyperlink{struct_type_adebc99223fe0bc8ab9c63db59e9c5793}{array}};}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_type}{Type}}\ *\ \mbox{\hyperlink{struct_type_aafa333560f242dc39e083d5919770589}{val\_type}};}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \}\ \mbox{\hyperlink{struct_type_a46e39bb3d78bdd0c88b2480cb93895b9}{ptr}};}
+\DoxyCodeLine{00043\ \ \ \ \ \}\ \mbox{\hyperlink{struct_type_aa9bc996d217c187fef16652b7f9f1b36}{op}};}
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{types_8h_addcfe7b54180f3a83e63822d7833ab61}{check\_types\_equal}}(\mbox{\hyperlink{struct_type}{Type}}\ *\ type\_1,\ \mbox{\hyperlink{struct_type}{Type}}\ *\ type\_2);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{char}\ *\ \mbox{\hyperlink{types_8h_a7802b110f7fc71ca5cec0989d835d765}{mangle\_fun\_name}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \textcolor{keyword}{const}\ fun\_name,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_args}{Args}}\ *\ \textcolor{keyword}{const}\ arg\_types);}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{char}\ *\ \mbox{\hyperlink{types_8h_a54111aa54791390fe223183d744f1c8c}{mangle\_unary\_op}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \textcolor{keyword}{const}\ op\_name,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_type}{Type}}\ *\ \textcolor{keyword}{const}\ type);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{char}\ *\ \mbox{\hyperlink{types_8h_a799e48a7e1d5d323b2980108be27a0cc}{mangle\_binary\_op}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \textcolor{keyword}{const}\ op\_name,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_type}{Type}}\ *\ \textcolor{keyword}{const}\ type1,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_type}{Type}}\ *\ \textcolor{keyword}{const}\ type2);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,28 @@
+\hypertarget{typecheck_8h_source}{}\doxysection{typecheck.\+h}
+\mbox{\hyperlink{typecheck_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Authors:}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ \ \ Andrew\ Clark\ \ \ \ \ -\/\ andrew.clark.6@bc.edu}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ \ \ Alex\ Liu\ \ \ \ \ \ \ \ \ -\/\ alex.liu@bc.edu}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ Caden\ Parajuli\ \ \ -\/\ caden.parajuli@bc.edu}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ Micheal\ Lebreck\ \ -\/\ michael.lebreck@bc.edu}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ William\ Morrison\ -\/\ william.morrison.2@bc.edu}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ TYPECHECK\_H}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TYPECHECK\_H}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{syntax__tree_8h}{syntax\_tree.h}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{typecheck_8h_af5d51776a18dd7869d6b5535f8fd6436}{type\_pass}}(\mbox{\hyperlink{struct_node}{Node}}\ *\ ast);}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00019\ \mbox{\hyperlink{struct_type}{Type}}\ *\ \mbox{\hyperlink{typecheck_8h_af3bb6eaa8a3d09566c9bb0b721e56cee}{set\_expr\_type}}(\mbox{\hyperlink{struct_node}{Node}}\ *\ expr);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00022\ \mbox{\hyperlink{struct_type}{Type}}\ *\ \mbox{\hyperlink{typecheck_8h_a72edf603fd5c2d60ee57d3d38525a976}{set\_fun\_call\_type}}(\mbox{\hyperlink{struct_node}{Node}}\ *\ call);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{typecheck_8h_a8ab5cd7284093faa797750e4d8d6655e}{block\_type\_pass}}(\mbox{\hyperlink{struct_statement_block}{StatementBlock}}\ *\ block,\ \mbox{\hyperlink{struct_node}{Node}}\ *\ curr\_loop);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ TYPECHECK\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,55 @@
+
+\begin{DoxyRefList}
+\item[Member \mbox{\hyperlink{types_8h_addcfe7b54180f3a83e63822d7833ab61}{check\+\_\+types\+\_\+equal}} (\mbox{\hyperlink{struct_type}{Type}} $\ast$type\+\_\+1, \mbox{\hyperlink{struct_type}{Type}} $\ast$type\+\_\+2)]\label{todo__todo000014}%
+\Hypertarget{todo__todo000014}%
+Add tests for all of these functions  
+\item[Member \mbox{\hyperlink{handlers_8h_a2a861ab8d0069fd6dd131928c88f5fc2}{handle\+\_\+cfun\+\_\+dec}} (char $\ast$name, \mbox{\hyperlink{struct_args}{Args}} $\ast$args, \mbox{\hyperlink{struct_type}{Type}} $\ast$return\+\_\+type, int line\+\_\+num)]\label{todo__todo000005}%
+\Hypertarget{todo__todo000005}%
+add fun to symbol table 
+
+\label{todo__todo000004}%
+\Hypertarget{todo__todo000004}%
+might need to add additional information (or a different symbol/node struct), for the purpose of parameter passing. This code is somewhat temporary  
+\item[Member \mbox{\hyperlink{handlers_8h_a482e0767ba1a913bfeab7df21f858aa4}{handle\+\_\+function\+\_\+def}} (char $\ast$name, \mbox{\hyperlink{struct_args}{Args}} $\ast$args, \mbox{\hyperlink{struct_type}{Type}} $\ast$return\+\_\+type, \mbox{\hyperlink{struct_symbol_table}{Symbol\+Table}} $\ast$table, \mbox{\hyperlink{struct_node}{Node}} $\ast$block, int line\+\_\+num)]\label{todo__todo000003}%
+\Hypertarget{todo__todo000003}%
+add fun with mangled name to symbol table 
+
+\label{todo__todo000002}%
+\Hypertarget{todo__todo000002}%
+add args to function symbol table 
+
+\label{todo__todo000001}%
+\Hypertarget{todo__todo000001}%
+in second pass, we\textquotesingle{}ll need to collect the arguments in higher scopes ~\newline
+  
+\item[Member \mbox{\hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}\mbox{]})]\label{todo__todo000007}%
+\Hypertarget{todo__todo000007}%
+Implement Graphviz dot generation for the syntax tree 
+
+\label{todo__todo000006}%
+\Hypertarget{todo__todo000006}%
+Currently only supports 1 file argument, but doesn\textquotesingle{}t error out if more are given 
+
+\label{todo__todo000008}%
+\Hypertarget{todo__todo000008}%
+File output isn\textquotesingle{}t supported yet  
+\item[Member \mbox{\hyperlink{types_8h_a7802b110f7fc71ca5cec0989d835d765}{mangle\+\_\+fun\+\_\+name}} (const char $\ast$const fun\+\_\+name, const \mbox{\hyperlink{struct_args}{Args}} $\ast$const arg\+\_\+types)]\label{todo__todo000013}%
+\Hypertarget{todo__todo000013}%
+consider adding a leading underscore  
+\item[Class \mbox{\hyperlink{struct_node}{Node}} ]\label{todo__todo000010}%
+\Hypertarget{todo__todo000010}%
+lift line\+\_\+num to the top-\/level struct and set it in every handler  
+\item[Member \mbox{\hyperlink{typecheck_8h_af3bb6eaa8a3d09566c9bb0b721e56cee}{set\+\_\+expr\+\_\+type}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$expr)]\label{todo__todo000011}%
+\Hypertarget{todo__todo000011}%
+Add cases for function\+\_\+call etc.  
+\item[Member \mbox{\hyperlink{typecheck_8h_a72edf603fd5c2d60ee57d3d38525a976}{set\+\_\+fun\+\_\+call\+\_\+type}} (\mbox{\hyperlink{struct_node}{Node}} $\ast$call)]\label{todo__todo000012}%
+\Hypertarget{todo__todo000012}%
+For efficiency purposes this should reimpliment mangle\+\_\+fun\+\_\+name with \mbox{\hyperlink{struct_call_args}{Call\+Args}}, but that\textquotesingle{}s a significant amount of work for something this small and late  
+\item[Class \mbox{\hyperlink{struct_var_symbol}{Var\+Symbol}} ]\label{todo__todo000009}%
+\Hypertarget{todo__todo000009}%
+Put symbols in a tagged union. This is important for a few reasons\+:
+\begin{DoxyEnumerate}
+\item We can tell var/type or fun/op apart if necessary
+\item Certain nodes (especially var\+\_\+node) could point to either a var or a fun 
+\end{DoxyEnumerate}
+\end{DoxyRefList}

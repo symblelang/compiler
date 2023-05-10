@@ -1,0 +1,89 @@
+\hypertarget{arch_8h_source}{}\doxysection{arch.\+h}
+\mbox{\hyperlink{arch_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ARCH\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ARCH\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba23eb2653ff67dfeab86a6fe3f21a692d}{cpu\_x86\_64}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba4e314d8b6a2a1ea511b308cea246bbb1}{cpu\_x86\_32}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba51386fcf280c0f2b5663f0c624898484}{cpu\_8086}},}
+\DoxyCodeLine{00007\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba5e6e35a7fd0304586187dfe235ee7444}{cpu\_arm\_v2}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba375a8a9549183cc5b894f7072b4fa528}{cpu\_arm\_v3}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0badca52c6430c7197968fa15d3f2610dfe}{cpu\_arm\_v4t}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0bab9024361212ec1c23001a7e2fa5451de}{cpu\_arm\_v5}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba94b0363c44dbc57650292be4b96881e8}{cpu\_arm\_v6t2}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba12122fdff65d74bc2634a84d26e0fa68}{cpu\_arm\_v6}},\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba32a89a95828750badfbbcd08b8df41db}{cpu\_arm\_64}},}
+\DoxyCodeLine{00008\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba0117ffb78f6e041c8175ac5b63a30176}{cpu\_mips}},}
+\DoxyCodeLine{00009\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0babf40e67d8a380b0eb75605de60992754}{cpu\_superh}},}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0baa42dcdc885e91c83523d3824d7876c5f}{cpu\_powerpc}},}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba6046ecd547d183db35a0d2df886db2e2}{cpu\_powerpc\_64}},}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0baa53a471b1cac7b40fa75fa75dbc75a5c}{cpu\_sparc}},}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba91827d9a98c396de29b915532ace08c7}{cpu\_m68k}},}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0ba81dcc92c223bc3958f28b2b98192b935}{cpu\_unknown}}}
+\DoxyCodeLine{00015\ \}\ \mbox{\hyperlink{arch_8h_a54030838f17d4cd8ebdb90f1f7f47d0b}{CpuArch}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{arch_8h_a59d75d53d9af76172b136e9a199b0db1a99b6d701053bee0de93bc32e64dbd411}{os\_linux}},}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{arch_8h_a59d75d53d9af76172b136e9a199b0db1a813f3c96978e20fc817f7da4c586772f}{os\_mac}},}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{arch_8h_a59d75d53d9af76172b136e9a199b0db1a2c507b87e25ca63167de91c9fd300958}{os\_windows}}}
+\DoxyCodeLine{00021\ \}\ \mbox{\hyperlink{arch_8h_a59d75d53d9af76172b136e9a199b0db1}{OSInfo}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ Check\ operating\ system}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ Based\ on\ github.com/cpredef/predef/blob/master/OperatingSystems.md}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#if\ defined(\_\_linux\_\_)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ \_\_build\_os\_\_\ os\_linux}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#elif\ defined(macintosh)\ ||\ defined(Macintosh)\ ||\ (defined(\_\_APPLE\_\_)\ \&\&\ defined(\_\_MACH\_\_))}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ \_\_build\_os\_\_\ os\_mac}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#elif\ defined(\_WIN16)\ ||\ defined(\_WIN32)\ ||\ defined(\_WIN64)\ ||\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_TOS\_WIN\_\_)\ ||\ defined(\_\_WINDOWS\_\_)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ \_\_build\_os\_\_\ os\_windows}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ Check\ CPU\ architecture.\ Currently\ errors\ out\ if\ it\ isn't\ x86-\/64}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ *\ Adapted\ from\ https://stackoverflow.com/a/66249936/6616869}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ *\ with\ additions\ from\ https://sourceforge.net/p/predef/wiki/Architectures}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#if\ defined(\_\_x86\_64\_\_)\ ||\ defined(\_M\_X64)\ ||\ defined(\_M\_AMD64)\ ||\ defined(\_\_amd64\_\_)\ ||\ defined(\_\_amd64)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_x86\_64}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#elif\ defined(\_M\_I86)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_8086}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#elif\ defined(i386)\ ||\ defined(\_\_i386\_\_)\ ||\ defined(\_\_i386)\ ||\ defined(\_M\_IX86)\ ||\ defined(\_X86\_)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_x86\_32}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_2\_\_)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v2}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_3\_\_)\ ||\ defined(\_\_ARM\_ARCH\_3M\_\_)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v3}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_4T\_\_)\ ||\ defined(\_\_TARGET\_ARM\_4T)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v4t}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_5\_)\ ||\ defined(\_\_ARM\_ARCH\_5E\_)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v5}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_6T2\_)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v6t2}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_6\_\_)\ ||\ defined(\_\_ARM\_ARCH\_6J\_\_)\ ||\ defined(\_\_ARM\_ARCH\_6K\_\_)\ ||\ defined(\_\_ARM\_ARCH\_6Z\_\_)\ ||\ defined(\_\_ARM\_ARCH\_6ZK\_\_)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v6}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#elif\ defined(\_\_ARM\_ARCH\_7\_\_)\ ||\ defined(\_\_ARM\_ARCH\_7A\_\_)\ ||\ defined(\_\_ARM\_ARCH\_7R\_\_)\ ||\ defined(\_\_ARM\_ARCH\_7M\_\_)\ ||\ defined(\_\_ARM\_ARCH\_7S\_\_)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_v7}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#elif\ defined(\_\_aarch64\_\_)\ ||\ defined(\_M\_ARM64)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_arm\_64}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#elif\ defined(mips)\ ||\ defined(\_\_mips\_\_)\ ||\ defined(\_\_mips)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_mips}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#elif\ defined(\_\_sh\_\_)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_superh}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#elif\ defined(\_\_powerpc)\ ||\ defined(\_\_powerpc\_\_)\ \ ||\ defined(\_\_POWERPC\_\_)\ ||\ defined(\_\_ppc\_\_)\ ||\ defined(\_\_PPC\_\_)\ ||\ defined(\_ARCH\_PPC)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_powerpc}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#elif\ defined(\_\_PPC64\_\_)\ ||\ defined(\_\_ppc64\_\_)\ ||\ defined(\_ARCH\_PPC64)\ ||\ defined(\_\_powerpc64\_\_)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_powerpc\_64}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#elif\ defined(\_\_sparc\_\_)\ ||\ defined(\_\_sparc)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_sparc}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#elif\ defined(\_\_m68k\_\_)\ ||\ defined(M68000)\ ||\ defined(\_\_MC68K\_\_)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_m68k}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ \_\_build\_cpu\_arch\_\_\ cpu\_unknown}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*\ Error\ out\ if\ CPU\ architecture\ is\ unsupported\ */}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#if\ \_\_build\_cpu\_arch\_\_!=cpu\_x86\_64}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#error\ "{}CPU\ architecture\ not\ supported.\ Currently\ only\ x86-\/64\ is\ supported"{}}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ ARCH\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,87 @@
+\hypertarget{main_8c}{}\doxysection{main.\+c File Reference}
+\label{main_8c}\index{main.c@{main.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}arch.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lexer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}syntax\+\_\+tree.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}typecheck.\+h\char`\"{}}\newline
+Include dependency graph for main.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{main_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+FILE $\ast$ \mbox{\hyperlink{main_8c_a9db04af5b66fe83caae4573a8748a7f1}{fopen\+\_\+checked}} (const char $\ast$const to\+\_\+open, const char $\ast$mode)
+\item 
+int \mbox{\hyperlink{main_8c_a40b2ea7a876e0f0f5fec9086900f9a21}{compile\+\_\+file}} (char $\ast$filename)
+\item 
+void \mbox{\hyperlink{main_8c_a000c431fe83fd43ae9ed0896e8461865}{check\+\_\+parameter}} (int argc, int param\+\_\+loc, char $\ast$option)
+\item 
+int \mbox{\hyperlink{main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+FILE $\ast$ \mbox{\hyperlink{main_8c_a46af646807e0797e72b6e8945e7ea88b}{yyin}}
+\item 
+int \mbox{\hyperlink{main_8c_ab138aa8e11f58bcdcc7134adf240ea8c}{yydebug}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_a000c431fe83fd43ae9ed0896e8461865}\label{main_8c_a000c431fe83fd43ae9ed0896e8461865}} 
+\index{main.c@{main.c}!check\_parameter@{check\_parameter}}
+\index{check\_parameter@{check\_parameter}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{check\_parameter()}{check\_parameter()}}
+{\footnotesize\ttfamily void check\+\_\+parameter (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{int}]{param\+\_\+loc,  }\item[{char $\ast$}]{option }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8c_a40b2ea7a876e0f0f5fec9086900f9a21}\label{main_8c_a40b2ea7a876e0f0f5fec9086900f9a21}} 
+\index{main.c@{main.c}!compile\_file@{compile\_file}}
+\index{compile\_file@{compile\_file}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{compile\_file()}{compile\_file()}}
+{\footnotesize\ttfamily int compile\+\_\+file (\begin{DoxyParamCaption}\item[{char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8c_a9db04af5b66fe83caae4573a8748a7f1}\label{main_8c_a9db04af5b66fe83caae4573a8748a7f1}} 
+\index{main.c@{main.c}!fopen\_checked@{fopen\_checked}}
+\index{fopen\_checked@{fopen\_checked}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{fopen\_checked()}{fopen\_checked()}}
+{\footnotesize\ttfamily FILE $\ast$ fopen\+\_\+checked (\begin{DoxyParamCaption}\item[{const char $\ast$const}]{to\+\_\+open,  }\item[{const char $\ast$}]{mode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{main_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+Command line interface \begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000006}{Todo}}]Currently only supports 1 file argument, but doesn\textquotesingle{}t error out if more are given \end{DoxyRefDesc}
+
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000007}{Todo}}]Implement Graphviz dot generation for the syntax tree \end{DoxyRefDesc}
+
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000008}{Todo}}]File output isn\textquotesingle{}t supported yet \end{DoxyRefDesc}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{main_8c_ab138aa8e11f58bcdcc7134adf240ea8c}\label{main_8c_ab138aa8e11f58bcdcc7134adf240ea8c}} 
+\index{main.c@{main.c}!yydebug@{yydebug}}
+\index{yydebug@{yydebug}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{yydebug}{yydebug}}
+{\footnotesize\ttfamily int yydebug\hspace{0.3cm}{\ttfamily [extern]}}
+
+\mbox{\Hypertarget{main_8c_a46af646807e0797e72b6e8945e7ea88b}\label{main_8c_a46af646807e0797e72b6e8945e7ea88b}} 
+\index{main.c@{main.c}!yyin@{yyin}}
+\index{yyin@{yyin}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{yyin}{yyin}}
+{\footnotesize\ttfamily FILE$\ast$ yyin\hspace{0.3cm}{\ttfamily [extern]}}
+

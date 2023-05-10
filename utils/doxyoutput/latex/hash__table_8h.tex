@@ -1,0 +1,142 @@
+\hypertarget{hash__table_8h}{}\doxysection{hash\+\_\+table.\+h File Reference}
+\label{hash__table_8h}\index{hash\_table.h@{hash\_table.h}}
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+Include dependency graph for hash\+\_\+table.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{hash__table_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hash__table_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_hash_table}{Hash\+Table}}
+\item 
+struct \mbox{\hyperlink{struct_table_entry}{Table\+Entry}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hash__table_8h_aa0cccc37e3c100856093ce2f1bce2b8c}{FNV\+\_\+\+PRIME\+\_\+64}}~0x100000001\+B3
+\item 
+\#define \mbox{\hyperlink{hash__table_8h_ad034acce75a2d02d3a5f7ce986b5eb4f}{FNV\+\_\+\+BASIS\+\_\+64}}~0x\+CBF29\+CE484222325
+\item 
+\#define \mbox{\hyperlink{hash__table_8h_a2bd6251882ad41827d8dedfc93c20016}{HASH\+\_\+\+TABLE\+\_\+\+DEFAULT\+\_\+\+SIZE}}~16
+\item 
+\#define \mbox{\hyperlink{hash__table_8h_aad45012125aa7a647940622dd8ced60e}{HASH\+\_\+\+TABLE\+\_\+\+MAX\+\_\+\+FILL}}~0.\+7
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_hash_table}{Hash\+Table}} \mbox{\hyperlink{hash__table_8h_a8dea4341d1b1662a30ec89ea38da0c0c}{Hash\+Table}}
+\item 
+typedef struct \mbox{\hyperlink{struct_table_entry}{Table\+Entry}} \mbox{\hyperlink{hash__table_8h_a3ab3898789facdf796b5077beae35b81}{Table\+Entry}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$ \mbox{\hyperlink{hash__table_8h_a288760b1e8282809c955cf04732fafbf}{new\+\_\+hash\+\_\+table}} (size\+\_\+t capacity)
+\item 
+void \mbox{\hyperlink{hash__table_8h_a2537edb646045b3189b9e01f2f532cb7}{free\+\_\+hash\+\_\+table}} (\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$table)
+\item 
+void $\ast$ \mbox{\hyperlink{hash__table_8h_a795138d12e9c9ff8c601c3219e604406}{get\+\_\+entry}} (\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$table, const char $\ast$key)
+\item 
+int \mbox{\hyperlink{hash__table_8h_a799a3654fd845b90e77f715ab7d81bb9}{set\+\_\+entry}} (\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$table, const char $\ast$key, void $\ast$value)
+\item 
+int \mbox{\hyperlink{hash__table_8h_ac3c9b4ba4c8f789e5a00928b7c4f3d94}{expand\+\_\+hash\+\_\+table}} (\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$table)
+\item 
+int \mbox{\hyperlink{hash__table_8h_a2ab605b686cb4f45846c4cd009de14d0}{unset\+\_\+entry}} (\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$table, const char $\ast$key)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hash__table_8h_ad034acce75a2d02d3a5f7ce986b5eb4f}\label{hash__table_8h_ad034acce75a2d02d3a5f7ce986b5eb4f}} 
+\index{hash\_table.h@{hash\_table.h}!FNV\_BASIS\_64@{FNV\_BASIS\_64}}
+\index{FNV\_BASIS\_64@{FNV\_BASIS\_64}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{FNV\_BASIS\_64}{FNV\_BASIS\_64}}
+{\footnotesize\ttfamily \#define FNV\+\_\+\+BASIS\+\_\+64~0x\+CBF29\+CE484222325}
+
+\mbox{\Hypertarget{hash__table_8h_aa0cccc37e3c100856093ce2f1bce2b8c}\label{hash__table_8h_aa0cccc37e3c100856093ce2f1bce2b8c}} 
+\index{hash\_table.h@{hash\_table.h}!FNV\_PRIME\_64@{FNV\_PRIME\_64}}
+\index{FNV\_PRIME\_64@{FNV\_PRIME\_64}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{FNV\_PRIME\_64}{FNV\_PRIME\_64}}
+{\footnotesize\ttfamily \#define FNV\+\_\+\+PRIME\+\_\+64~0x100000001\+B3}
+
+\mbox{\Hypertarget{hash__table_8h_a2bd6251882ad41827d8dedfc93c20016}\label{hash__table_8h_a2bd6251882ad41827d8dedfc93c20016}} 
+\index{hash\_table.h@{hash\_table.h}!HASH\_TABLE\_DEFAULT\_SIZE@{HASH\_TABLE\_DEFAULT\_SIZE}}
+\index{HASH\_TABLE\_DEFAULT\_SIZE@{HASH\_TABLE\_DEFAULT\_SIZE}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{HASH\_TABLE\_DEFAULT\_SIZE}{HASH\_TABLE\_DEFAULT\_SIZE}}
+{\footnotesize\ttfamily \#define HASH\+\_\+\+TABLE\+\_\+\+DEFAULT\+\_\+\+SIZE~16}
+
+\mbox{\Hypertarget{hash__table_8h_aad45012125aa7a647940622dd8ced60e}\label{hash__table_8h_aad45012125aa7a647940622dd8ced60e}} 
+\index{hash\_table.h@{hash\_table.h}!HASH\_TABLE\_MAX\_FILL@{HASH\_TABLE\_MAX\_FILL}}
+\index{HASH\_TABLE\_MAX\_FILL@{HASH\_TABLE\_MAX\_FILL}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{HASH\_TABLE\_MAX\_FILL}{HASH\_TABLE\_MAX\_FILL}}
+{\footnotesize\ttfamily \#define HASH\+\_\+\+TABLE\+\_\+\+MAX\+\_\+\+FILL~0.\+7}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{hash__table_8h_a8dea4341d1b1662a30ec89ea38da0c0c}\label{hash__table_8h_a8dea4341d1b1662a30ec89ea38da0c0c}} 
+\index{hash\_table.h@{hash\_table.h}!HashTable@{HashTable}}
+\index{HashTable@{HashTable}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{HashTable}{HashTable}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_hash_table}{Hash\+Table}} \mbox{\hyperlink{struct_hash_table}{Hash\+Table}}}
+
+\mbox{\Hypertarget{hash__table_8h_a3ab3898789facdf796b5077beae35b81}\label{hash__table_8h_a3ab3898789facdf796b5077beae35b81}} 
+\index{hash\_table.h@{hash\_table.h}!TableEntry@{TableEntry}}
+\index{TableEntry@{TableEntry}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{TableEntry}{TableEntry}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_table_entry}{Table\+Entry}} \mbox{\hyperlink{struct_table_entry}{Table\+Entry}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hash__table_8h_ac3c9b4ba4c8f789e5a00928b7c4f3d94}\label{hash__table_8h_ac3c9b4ba4c8f789e5a00928b7c4f3d94}} 
+\index{hash\_table.h@{hash\_table.h}!expand\_hash\_table@{expand\_hash\_table}}
+\index{expand\_hash\_table@{expand\_hash\_table}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{expand\_hash\_table()}{expand\_hash\_table()}}
+{\footnotesize\ttfamily int expand\+\_\+hash\+\_\+table (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$}]{table }\end{DoxyParamCaption})}
+
+Expands a table. Returns non-\/zero on failure\mbox{\Hypertarget{hash__table_8h_a2537edb646045b3189b9e01f2f532cb7}\label{hash__table_8h_a2537edb646045b3189b9e01f2f532cb7}} 
+\index{hash\_table.h@{hash\_table.h}!free\_hash\_table@{free\_hash\_table}}
+\index{free\_hash\_table@{free\_hash\_table}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{free\_hash\_table()}{free\_hash\_table()}}
+{\footnotesize\ttfamily void free\+\_\+hash\+\_\+table (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$}]{table }\end{DoxyParamCaption})}
+
+Frees a symbol table\mbox{\Hypertarget{hash__table_8h_a795138d12e9c9ff8c601c3219e604406}\label{hash__table_8h_a795138d12e9c9ff8c601c3219e604406}} 
+\index{hash\_table.h@{hash\_table.h}!get\_entry@{get\_entry}}
+\index{get\_entry@{get\_entry}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{get\_entry()}{get\_entry()}}
+{\footnotesize\ttfamily void $\ast$ get\+\_\+entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$}]{table,  }\item[{const char $\ast$}]{key }\end{DoxyParamCaption})}
+
+Gets symbol from symbol table. Returns NULL if key is not in table\mbox{\Hypertarget{hash__table_8h_a288760b1e8282809c955cf04732fafbf}\label{hash__table_8h_a288760b1e8282809c955cf04732fafbf}} 
+\index{hash\_table.h@{hash\_table.h}!new\_hash\_table@{new\_hash\_table}}
+\index{new\_hash\_table@{new\_hash\_table}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{new\_hash\_table()}{new\_hash\_table()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$ new\+\_\+hash\+\_\+table (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{capacity }\end{DoxyParamCaption})}
+
+Creates a new symbol table\mbox{\Hypertarget{hash__table_8h_a799a3654fd845b90e77f715ab7d81bb9}\label{hash__table_8h_a799a3654fd845b90e77f715ab7d81bb9}} 
+\index{hash\_table.h@{hash\_table.h}!set\_entry@{set\_entry}}
+\index{set\_entry@{set\_entry}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{set\_entry()}{set\_entry()}}
+{\footnotesize\ttfamily int set\+\_\+entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$}]{table,  }\item[{const char $\ast$}]{key,  }\item[{void $\ast$}]{value }\end{DoxyParamCaption})}
+
+Sets symbol value. Returns 1 if value was already present, 0 if value was added\mbox{\Hypertarget{hash__table_8h_a2ab605b686cb4f45846c4cd009de14d0}\label{hash__table_8h_a2ab605b686cb4f45846c4cd009de14d0}} 
+\index{hash\_table.h@{hash\_table.h}!unset\_entry@{unset\_entry}}
+\index{unset\_entry@{unset\_entry}!hash\_table.h@{hash\_table.h}}
+\doxysubsubsection{\texorpdfstring{unset\_entry()}{unset\_entry()}}
+{\footnotesize\ttfamily int unset\+\_\+entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_hash_table}{Hash\+Table}} $\ast$}]{table,  }\item[{const char $\ast$}]{key }\end{DoxyParamCaption})}
+
+Remove a symbol from the symbol table. Returns 1 if entry is not present in table
