@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "arch.h" /* Error out if unsupported architecture */
+#include "code_gen.h"
 #include "parser.h"
 #include "lexer.h" /* Must be included after parser.h */
 #include "syntax_tree.h"
@@ -58,6 +59,7 @@ int compile_file(char * filename) {
     /* Possible third pass for desugaring: function lifting, closure conversion, for to while, etc. */
     
     /* Final pass: code generation */
+    code_gen_pass(ast);
     
     putchar('\n');
     return yy_ret;
