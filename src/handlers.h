@@ -44,8 +44,8 @@ Node * handle_statement_block(Node * statement_list);
 Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
 Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num);
 Node * handle_return(Node * expr);
-Node * handle_break();
-Node * handle_continue();
+Node * handle_break(void);
+Node * handle_continue(void);
 Node * create_block_node(StatementBlock * block);
 Node * handle_import(char * module, char * namespace, int line_num);
 

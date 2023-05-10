@@ -211,11 +211,11 @@ Node * handle_return(Node * expr) {
     return add_control_node(expr, return_tag);
 }
 
-Node * handle_break() {
+Node * handle_break(void) {
     return add_control_node(NULL, break_tag);
 }
 
-Node * handle_continue() {
+Node * handle_continue(void) {
     return add_control_node(NULL, continue_tag);
 }
 
