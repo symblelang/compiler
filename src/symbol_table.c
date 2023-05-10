@@ -7,9 +7,9 @@
 
 extern SymbolTable * symbol_table;
 
-SymbolTable * new_symbol_table() {
+SymbolTable * new_symbol_table(size_t size) {
     SymbolTable * new_table = malloc(sizeof(SymbolTable));
-    new_table->hash_table = new_hash_table(HASH_TABLE_DEFAULT_SIZE);
+    new_table->hash_table = new_hash_table(size);
     new_table->next = NULL;
     return new_table;
 }

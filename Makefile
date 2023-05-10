@@ -6,7 +6,7 @@ FLEX_OUT=flex_out
 BISON_OUT=bison_out
 
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT) `llvm-config --cflags`
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y

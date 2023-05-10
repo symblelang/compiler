@@ -1,6 +1,7 @@
 bin/*
 bison_out/*
 flex_out/*
+utils/doxyoutput/*
 
 #Emacs
 \#*\#

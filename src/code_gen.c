@@ -3,7 +3,7 @@
 #include "syntax_tree.h"
 
 int code_gen_pass(Node * ast, FILE * out_file) {
-        for(StatementBlock * block_pos = ast->op.block; block_pos != NULL; block_pos = block_pos->next) {
+    for(StatementBlock * block_pos = ast->op.block; block_pos != NULL; block_pos = block_pos->next) {
         Node * statement = block_pos->statement;
         /* This should cover every possible node type that a statement could be */
         switch(statement->tag) {
@@ -42,5 +42,4 @@ int code_gen_pass(Node * ast, FILE * out_file) {
         }
     }
     return 0;
-
 }

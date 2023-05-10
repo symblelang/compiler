@@ -39,20 +39,26 @@ int block_type_pass(StatementBlock * block, Node * curr_loop) {
             case binary_expr_node: /* Completed! */
                 set_expr_type(statement);
                 break;
-            case unary_expr_node: /* Completed! */
+            case unary_expr_node:  /* Completed! */
                 set_expr_type(statement);
                 break;
-            case literal_node:  /* Completed! */
+            case literal_node:     /* Completed! */
                 yyerror(statement, "Statement consists of just a literal\n");
                 break;
-            case var_node:      /* Completed! */
+            case var_node:         /* Completed! */
                 yyerror(statement, "Statement consists of just a variable\n");
                 break;
-            case while_loop_node:
+            case while_loop_node:  /* Completed */
+                /* Propogate types in the test expression */
+                set_expr_type(statement->op.while_loop.test);
                 /* Call block_type_pass with curr_loop */
                 block_type_pass(statement->op.while_loop.block->op.block, statement);
                 break;
-            case do_loop_node:
+            case do_loop_node:     /* Completed */
+                /* Propogate types in the test expression */
+                set_expr_type(statement->op.while_loop.test);
+                /* Call block_type_pass with curr_loop */
+                block_type_pass(statement->op.while_loop.block->op.block, statement);
                 break;
             case for_loop_node:
                 break;
@@ -80,9 +86,9 @@ int block_type_pass(StatementBlock * block, Node * curr_loop) {
     return 0;
 }
 
-/** \brief Recursively computes expression type, setting intermediate types as it goes.
+/** \brief Recursively computes and sets expression type, setting intermediate types as it goes.
  *  Recursively calls itself to propogate type information through an expression.
- *  Also computes the type of intermediate nodes such as literal_node and var_node */
+ *  Also sets the type of intermediate nodes such as literal_node and var_node */
 Type * set_expr_type(Node * expr) {
     Type * arg1_type;
     char * mangled_op_name;

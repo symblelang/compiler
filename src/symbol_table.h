@@ -61,8 +61,8 @@ struct Args {
 
 SymbolTable * new_symbol_table(size_t size);
 void free_table(SymbolTable * table);
-SymbolTable * push_symbol_table();
-void pop_symbol_table();
+SymbolTable * push_symbol_table(void);
+void pop_symbol_table(void);
 
 /** Returns NULL if key is not found in current table */
 void * get_symbol_current_table(SymbolTable * table, const char * key);

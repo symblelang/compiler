@@ -61,7 +61,7 @@ int compile_file(char * filename, char * output_filename) {
     
     /* Final pass: code generation */
     code_gen_pass(ast, out_file);
-    
+
     putchar('\n');
     return yy_ret;
 }
@@ -74,9 +74,7 @@ void check_parameter(int argc, int param_loc, char * option) {
 }
 
 int main(int argc, char * argv[]) {
-    /** Command line interface
-     *  \todo Currently only supports 1 file argument, but doesn't error out if more are given
-     */
+    /** Command line interface */
     /* Parse command line arguments */
     int filename_index = 0;
     int output_filename_index = 0;
