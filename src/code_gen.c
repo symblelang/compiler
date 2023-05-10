@@ -1,6 +1,8 @@
+#include <stdio.h>
+
 #include "syntax_tree.h"
 
-int code_gen_pass(Node * ast) {
+int code_gen_pass(Node * ast, FILE * out_file) {
         for(StatementBlock * block_pos = ast->op.block; block_pos != NULL; block_pos = block_pos->next) {
         Node * statement = block_pos->statement;
         /* This should cover every possible node type that a statement could be */

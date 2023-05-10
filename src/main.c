@@ -31,10 +31,11 @@ FILE * fopen_checked(const char * const to_open, const char * mode) {
     }
 }
 
-int compile_file(char * filename) {
+int compile_file(char * filename, char * output_filename) {
     int yy_ret;
     int type_pass_ret;
     Node * ast = NULL;
+    FILE * out_file = fopen_checked(output_filename, "w");
     
     /* First pass: Parse file, store syntax tree in ast out-param */
     yyin = fopen_checked(filename, "r");
@@ -59,7 +60,7 @@ int compile_file(char * filename) {
     /* Possible third pass for desugaring: function lifting, closure conversion, for to while, etc. */
     
     /* Final pass: code generation */
-    code_gen_pass(ast);
+    code_gen_pass(ast, out_file);
     
     putchar('\n');
     return yy_ret;
@@ -81,6 +82,7 @@ int main(int argc, char * argv[]) {
     int output_filename_index = 0;
     int dot_filename_index = 0;
     char * opt_char;
+    char * output_filename = NULL;
     for (int arg_index = 1; arg_index < argc; ++arg_index) {
         opt_char = argv[arg_index];
         if (opt_char[0] == '-') {
@@ -125,11 +127,14 @@ int main(int argc, char * argv[]) {
             fprintf(stderr, "error: command-line option -o requires file name parameter\n");
             return EXIT_FAILURE;
         }
-        /** \todo File output isn't supported yet */
+        output_filename = argv[output_filename_index];
+    }
+    else {
+        output_filename = "a.out";
     }
     
     if (filename_index) {
-        return compile_file(argv[filename_index]);
+        return compile_file(argv[filename_index], output_filename);
     }
     else {
         fprintf(stderr, "error: no input file given\n");
