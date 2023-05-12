@@ -17,6 +17,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "handlers.h"
+#include "symbol_table.h"
+#include "syntax_tree.h"
+#include "types.h"
 }
 
 %code requires {

@@ -12,20 +12,22 @@
 #include "syntax_tree.h"
 #include "symbol_table.h"
 
-Node * add_var_dec_node(char * name, Type * type, Node * init) {
+Node * add_var_dec_node(char * name, Type * type, Symbol * symbol, Node * init) {
     Node * new = malloc(sizeof(Node));
     new->tag = var_dec_node;
     new->op.var_dec.name = name;
     new->op.var_dec.type = type;
+    new->op.var_dec.symbol = symbol;
     new->op.var_dec.init = init;
     return new;
 }
 
-Node * add_type_def_node(char * name, Type * type) {
+Node * add_type_def_node(char * name, Type * type, Symbol * symbol) {
     Node * new = malloc(sizeof(Node));
     new->tag = type_def_node;
     new->op.type_def.name = name;
     new->op.type_def.type = type;
+    new->op.type_def.symbol = symbol;
     return new;
 }
 
@@ -33,6 +35,7 @@ Node * add_binary_expr_node(char * op, Node * left, Node * right, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = binary_expr_node;
     new->op.binary_expr.op = op;
+    new->op.binary_expr.op_symbol = NULL;
     new->op.binary_expr.left = left;
     new->op.binary_expr.right = right;
     new->op.binary_expr.type = type;
@@ -43,6 +46,7 @@ Node * add_unary_expr_node(char * op, Node * child, Type * type) {
     Node * new = malloc(sizeof(Node));
     new->tag = unary_expr_node;
     new->op.unary_expr.op = op;
+    new->op.unary_expr.op_symbol = NULL;
     new->op.unary_expr.child = child;
     new->op.unary_expr.type = type;
     return new;
@@ -56,11 +60,12 @@ Node * add_lit_node(char * key, Type * type) {
     return new;
 }
 
-Node * add_var_node(char * key, Type * type) {
+Node * add_var_node(char * key, Type * type, Symbol * symbol) {
     Node * new = malloc(sizeof(Node));
     new->tag = var_node;
     new->op.var.type = type;
     new->op.var.name = key;
+    new->op.var.symbol = symbol;
     return new;
 }
 
@@ -158,12 +163,14 @@ Node * add_fun_call_node(char * fun_name, CallArgs * args, Type * return_type, i
     new->op.fun_call.name = fun_name;
     new->op.fun_call.args = args;
     new->op.fun_call.type = return_type;
-    new->op.fun_call.mangled_name = NULL; /* Computed in second pass */
+    /** \todo Compute mangled_name for fun calls in second pass */
+    new->op.fun_call.mangled_name = NULL;
+    new->op.fun_call.symbol = NULL;
     new->op.fun_call.line_num = line_num;
     return new;
 }
 
-Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
+Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, SymbolTable * table, Node * block, Symbol * symbol, int line_num) {
     Node * new = malloc(sizeof(Node));
     new->tag = fun_def_node;
     new->op.fun_def.name = fun_name;
@@ -171,6 +178,7 @@ Node * add_fun_def_node(char * fun_name, Args * args, Type * return_type, Symbol
     new->op.fun_def.type = return_type;
     new->op.fun_def.block = block;
     new->op.fun_def.table = table;
+    new->op.fun_def.symbol = symbol;
     new->op.fun_def.line_num = line_num;
     return new;
 }

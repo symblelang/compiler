@@ -20,6 +20,36 @@ typedef struct TableEntry TableEntry;
 typedef struct VarSymbol VarSymbol;
 typedef struct TypeSymbol TypeSymbol;
 typedef struct FunSymbol FunSymbol;
+typedef struct Symbol Symbol;
+
+typedef enum {
+    var_symbol_type,
+    type_symbol_type,
+    fun_symbol_type,
+    op_symbol_type
+} SymbolType;
+
+typedef enum {
+    non_builtin = 0,  /**< Used for user-defined operations */
+    builtin_add_ints,
+    builtin_sub_ints,
+    builtin_mult_ints,
+    builtin_div_ints,
+    builtin_mod_ints,
+    builtin_pow_ints,
+    builtin_neg_int,
+    builtin_bin_not,
+    builtin_bin_and,
+    builtin_bin_or,
+    builtin_bin_xor,
+    builtin_equal_ints,
+    builtin_less_ints,
+    builtin_greater_ints,
+    builtin_leq_ints,
+    builtin_geq_ints,
+    builtin_neq_ints
+} BuiltinOp;
+
 
 struct SymbolTable {
     HashTable * hash_table;
@@ -44,8 +74,17 @@ struct FunSymbol {
     Type * type;
     SymbolTable * symbol_table;
     Args * args;
-    int closure; /**< closure is -1 if not closure, 0 if not determined yet, 1 if is closure */
+    int closure; /**< closure is -1 if not closure, 0 if not determined yet, 1 if is closure. Not sure if necessary */
     int declared_at;
+    BuiltinOp builtin; /**< \todo compute in second pass */
+};
+
+struct Symbol {
+    SymbolType tag;
+    union {
+        VarSymbol var;
+        FunSymbol fun;
+    } op;
 };
 
 /** Stores the name and type of arguments to a function

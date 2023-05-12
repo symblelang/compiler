@@ -1,12 +1,17 @@
 SRC=src
 BIN=bin
+BUILD=build
 TEST=tests
 TEST_BIN=bin/tests
 FLEX_OUT=flex_out
 BISON_OUT=bison_out
 
 CC=clang
-CFLAGS=-Wall -Wextra -Werror -pedantic-errors -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT) `llvm-config --cflags`
+CXX=clang++
+LLVM_CC_FLAGS=`llvm-config --cflags`
+LLVM_LINK_FLAGS=`llvm-config --libs --cflags --ldflags core analysis executionengine native`
+CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
@@ -26,6 +31,7 @@ FLEX=flex
 FLEX_FLAGS=--never-interactive
 
 C_SRCS=$(wildcard $(SRC)/*.c)
+C_OBJECTS=$(C_SRCS:$(SRC)/%.c=$(BUILD)/%.o)
 
 PROGRAM=$(BIN)/symble
 
@@ -33,11 +39,12 @@ PROGRAM=$(BIN)/symble
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_SRCS)
+$(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_OBJECTS)
 	@mkdir -p $(@D)
-	$(CC) $(C_SRCS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CFLAGS) -ly -ll 
+	$(CXX) $(C_OBJECTS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CXXFLAGS) -ly -ll 
 
-%.o : %.c
+$(C_OBJECTS): $(C_SRCS)
+	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)

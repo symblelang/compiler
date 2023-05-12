@@ -21,43 +21,46 @@ typedef struct TypeInfo {
 } TypeInfo;
 
 Node * handle_var_declaration(Type * type, char * id, Node * init, int line_num) {
-    VarSymbol * var = malloc(sizeof(VarSymbol));
-    var->name = id;
-    var->type = type;
-    var->declared_at = line_num;
+    Symbol * var = malloc(sizeof(Symbol));
+    var->tag = var_symbol_type;
+    var->op.var.name = id;
+    var->op.var.type = type;
+    var->op.var.declared_at = line_num;
     if (set_symbol(symbol_table, id, var)) {
         yyerror(NULL, "Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
-                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+                id, line_num, id, ((Symbol *)get_symbol_lexical_scope(symbol_table, id))->op.var.declared_at);
     }
-    return add_var_dec_node(var->name, var->type, init);
+    return add_var_dec_node(id, type, var, init);
 }
 
 Node * handle_type_def(char * id, Type * type, int line_num) {
-    VarSymbol * typevar = malloc(sizeof(VarSymbol));
-    typevar->name = id;
-    typevar->type = type;
-    typevar->declared_at = line_num;
+    Symbol * typevar = malloc(sizeof(Symbol));
+    typevar->tag = type_symbol_type;
+    typevar->op.var.name = id;
+    typevar->op.var.type = type;
+    typevar->op.var.declared_at = line_num;
     if (set_symbol(symbol_table, id, typevar)) {
         yyerror(NULL, "Redefinition of type \"%s\" on line %d. \"%s\" already defined on line %d.",
-                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+                id, line_num, id, ((Symbol *)get_symbol_lexical_scope(symbol_table, id))->op.var.declared_at);
     }
-    return add_type_def_node(typevar->name, typevar->type);
+    return add_type_def_node(id, type, typevar);
 }
 
 Node * handle_array_declaration(Type * elem_type, char * id, char * size, Node * init, int line_num) {
-    VarSymbol * var = malloc(sizeof(VarSymbol));
+    Symbol * var = malloc(sizeof(Symbol));
     Type * type = malloc(sizeof(Type));
     type->tag = array_type;
     type->op.array.elem_type = elem_type;
     type->op.array.size = (size_t)atoll(size);
-    var->name = id;
-    var->type = type;
-    var->declared_at = line_num;
+    var->tag = var_symbol_type;
+    var->op.var.name = id;
+    var->op.var.type = type;
+    var->op.var.declared_at = line_num;
     if (set_symbol(symbol_table, id, var)) {
         yyerror(NULL, "Redeclaration of variable \"%s\" on line %d. \"%s\" already defined on line %d.",
-                id, line_num, id, ((VarSymbol *)get_symbol_lexical_scope(symbol_table, id))->declared_at);
+                id, line_num, id, ((Symbol *)get_symbol_lexical_scope(symbol_table, id))->op.var.declared_at);
     }
-    return add_var_dec_node(var->name, var->type, init);
+    return add_var_dec_node(id, type, var, init);
 }
 
 /* Type checking should be done in a second pass over the syntax tree, since
@@ -91,13 +94,13 @@ Node * handle_member_expr(Node * base, Node * child, int is_dot) {
 
 Node * handle_var(char * name) {
     /** Adds var_node. Note that the variable must already be in the symbol table. */
-    VarSymbol * var_sym = get_symbol_lexical_scope(symbol_table, name);
+    Symbol * var_sym = get_symbol_lexical_scope(symbol_table, name);
     if (var_sym == NULL) {
         yyerror(NULL, "Variable \"%s\" not declared!", name);
         return NULL;
     }
     else {
-        return add_var_node(name, var_sym->type);
+        return add_var_node(name, var_sym->op.var.type, var_sym);
     }
 }
 
@@ -122,11 +125,11 @@ Type * handle_ptr_type(Type * val_type) {
 }
 
 Type * handle_custom_type(char * type_name) {
-    VarSymbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
+    Symbol * type_sym = get_symbol_lexical_scope(symbol_table, type_name);
     if (type_sym == NULL) {
         yyerror(NULL, "Type \"%s\" has not been defined.", type_name);
     }
-    return type_sym->type;
+    return type_sym->op.var.type;
 }
 
 Type * handle_fun_type(Args * type_list, Type * return_type) {
@@ -140,39 +143,45 @@ Type * handle_fun_type(Args * type_list, Type * return_type) {
 /** \todo in second pass, we'll need to collect the arguments in higher scopes  */
 Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
     /** Adds function and type info to symbol table */
-    FunSymbol * fun = malloc(sizeof(FunSymbol));
-    char * mangled_name = mangle_fun_name(name, args);
-    fun->name = mangled_name;
-    /* We might be able to free the old name now, but not if we switch to
-     * using a string table for IDs since it's needed for future calls */
-    fun->type = return_type;
-    fun->symbol_table = table;
-    /** \todo add args to function symbol table */
+    Symbol * fun = malloc(sizeof(Symbol));
+    char * mangled_name;
+    if (strcmp(name, "main")) {
+        mangled_name = mangle_fun_name(name, args);
+    }
+    else {
+        mangled_name = name;
+    }
+    fun->op.fun.name = mangled_name;
+    fun->op.fun.type = return_type;
+    fun->op.fun.symbol_table = table;
+    
     Args * curr_arg = args;
     while (curr_arg) {
-        VarSymbol * curr_var = malloc(sizeof(VarSymbol));
-        curr_var->name = curr_arg->name;
-        curr_var->type = curr_arg->type;
-        curr_var->declared_at = line_num;
+        Symbol * curr_var = malloc(sizeof(Symbol));
+        curr_var->tag = var_symbol_type;
+        curr_var->op.var.name = curr_arg->name;
+        curr_var->op.var.type = curr_arg->type;
+        curr_var->op.var.declared_at = line_num;
         set_symbol(table, curr_arg->name, curr_var);
         curr_arg = curr_arg->next;
     }
-    fun->args = args;
-    fun->declared_at = line_num;
+    fun->op.fun.args = args;
+    fun->op.fun.declared_at = line_num;
     /** \todo add fun with mangled name to symbol table */
-    return add_fun_def_node(mangled_name, args, return_type, table, block, line_num);
+    return add_fun_def_node(mangled_name, args, return_type, table, block, fun, line_num);
 }
 
 /** \todo might need to add additional information (or a different symbol/node struct),
- *  for the purpose of parameter passing. This code is somewhat temporary */
+ *  for the purpose of parameter passing. This code is somewhat temporary
+ */
 Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num) {
-    FunSymbol * fun = malloc(sizeof(FunSymbol));
-    fun->name = name;
-    fun->type = return_type;
-    fun->args = args;
-    fun->declared_at = line_num;
+    Symbol * fun = malloc(sizeof(Symbol));
+    fun->op.fun.name = name;
+    fun->op.fun.type = return_type;
+    fun->op.fun.args = args;
+    fun->op.fun.declared_at = line_num;
     /** \todo add fun to symbol table */
-    return add_fun_def_node(name, args, return_type, NULL, NULL, line_num);
+    return add_fun_def_node(name, args, return_type, NULL, NULL, fun, line_num);
 }
 
 
