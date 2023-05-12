@@ -22,12 +22,14 @@ int code_gen_pass(Node * ast, FILE * out_file) {
     char *error = NULL;
     LLVMVerifyModule(module, LLVMAbortProcessAction, &error);
     LLVMDisposeMessage(error);
+    LLVMDisposeBuilder(builder);
     return 0;
 }
 
 LLVMValueRef code_gen_node(Node * node, LLVMModuleRef module, LLVMBuilderRef builder) {
     switch(node->tag) {
         case var_dec_node:
+            return code_gen_var_dec(node, module, builder);
             break;
         case type_def_node:
             break;
@@ -104,5 +106,28 @@ LLVMValueRef code_gen_binary_expr(Node * node, LLVMModuleRef module, LLVMBuilder
         default:
             yyerror(node, "Unsupported operator type. Ensure code_gen.c covers all builtin binary operators\n");
             return left;
+    }
+}
+
+named_value *named_values = NULL;
+
+LLVMValueRef code_gen_var_dec(Node * node, LLVMModuleRef module, LLVMBuilderRef builder) {
+    named_value *val = NULL;
+    // TODO Add to symbol table
+    /* Naive Implementation
+     * If new scope, create new symbol table
+     *     SymbolTable *table = new_symbol_table(size?); this calls malloc via hashtable.c
+     *     push_symbol_table();
+     *     set_symbol(table, key?, Node->name);
+     *     push_symbol_table();
+     * If existing scope, get current symbol table (How do we want to pass this in?) 
+     *     get current symbol table (How do we want to pass this in?)
+     *     set_symbol(table, key?, Node);
+     *    
+     */
+    if(val != NULL) {
+        return val -> value;
+    } else {
+        return NULL;
     }
 }
