@@ -45,7 +45,7 @@ $(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_OBJECTS)
 
 $(C_OBJECTS): $(C_SRCS)
 	@mkdir -p $(@D)
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CC) -c $(patsubst $(BUILD)/%.o,$(SRC)/%.c,$@) -o $@ $(CFLAGS)
 
 $(PARSER_C) $(PARSER_HEADER): $(PARSER_SRC)
 	@mkdir -p $(@D)
@@ -68,4 +68,4 @@ $(TEST_BIN)/symbol_table_test: $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c
 
 
 clean:
-	@rm -Rf $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(PROGRAM)
+	@rm -Rf $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(BUILD)/* $(PROGRAM)
