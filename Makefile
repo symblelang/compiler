@@ -1,3 +1,5 @@
+DEBUG=1
+
 SRC=src
 BIN=bin
 BUILD=build
@@ -10,8 +12,13 @@ CC=clang
 CXX=clang++
 LLVM_CC_FLAGS=`llvm-config --cflags`
 LLVM_LINK_FLAGS=`llvm-config --libs --cflags --ldflags core analysis executionengine native`
-CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
-CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+ifeq ($(DEBUG),1)
+	CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+	CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+else
+	CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+	CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+endif
 
 PARSER_NAME=parser
 PARSER_SRC=$(SRC)/$(PARSER_NAME).y
@@ -35,9 +42,12 @@ C_OBJECTS=$(C_SRCS:$(SRC)/%.c=$(BUILD)/%.o)
 
 PROGRAM=$(BIN)/symble
 
-.PHONY: all test clean
+.PHONY: all test clean llvm_install_check
 
-all: $(PROGRAM)
+all: llvm_install_check $(PROGRAM)
+
+llvm_install_check:
+	@command -v llvm-config >/dev/null 2>&1 || { echo >&2 "llvm-config not found. Ensure LLVM is installed. Mac users try running \"brew link llvm --force\""; exit 1; }
 
 $(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_OBJECTS)
 	@mkdir -p $(@D)
