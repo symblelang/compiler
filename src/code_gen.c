@@ -9,9 +9,6 @@
 #include "parser.h"
 #include "syntax_tree.h"
 
-LLVMValueRef code_gen_binary_expr(Node * node, LLVMModuleRef module, LLVMBuilderRef builder);
-LLVMValueRef code_gen_node(Node * node, LLVMModuleRef module, LLVMBuilderRef builder);
-
 int code_gen_pass(Node * ast, FILE * out_file) {
     (void)(out_file);
     LLVMModuleRef module = LLVMModuleCreateWithName("symble_module");
@@ -26,6 +23,44 @@ int code_gen_pass(Node * ast, FILE * out_file) {
     LLVMVerifyModule(module, LLVMAbortProcessAction, &error);
     LLVMDisposeMessage(error);
     return 0;
+}
+
+LLVMValueRef code_gen_node(Node * node, LLVMModuleRef module, LLVMBuilderRef builder) {
+    switch(node->tag) {
+        case var_dec_node:
+            break;
+        case type_def_node:
+            break;
+        case fun_def_node:
+            break;
+        case binary_expr_node:;
+            return code_gen_binary_expr(node, module, builder);
+        case unary_expr_node:
+            break;
+        case literal_node:
+            break;
+        case var_node:
+            break;
+        case while_loop_node:
+            break;
+        case do_loop_node:
+            break;
+        case for_loop_node:
+            break;
+        case control_node:
+            break;
+        case if_node:
+            break;
+        case fun_call_node:
+            break;
+        case block_node:
+            break;
+        case import_node:
+            break;
+        default:
+            yyerror(node, "Unsupported node type. Ensure code_gen.c covers every node tag\n");
+    }
+    return NULL;
 }
 
 LLVMValueRef code_gen_binary_expr(Node * node, LLVMModuleRef module, LLVMBuilderRef builder) {
@@ -70,42 +105,4 @@ LLVMValueRef code_gen_binary_expr(Node * node, LLVMModuleRef module, LLVMBuilder
             yyerror(node, "Unsupported operator type. Ensure code_gen.c covers all builtin binary operators\n");
             return left;
     }
-}
-
-LLVMValueRef code_gen_node(Node * node, LLVMModuleRef module, LLVMBuilderRef builder) {
-    switch(node->tag) {
-        case var_dec_node:
-            break;
-        case type_def_node:
-            break;
-        case fun_def_node:
-            break;
-        case binary_expr_node:;
-            return code_gen_binary_expr(node, module, builder);
-        case unary_expr_node:
-            break;
-        case literal_node:
-            break;
-        case var_node:
-            break;
-        case while_loop_node:
-            break;
-        case do_loop_node:
-            break;
-        case for_loop_node:
-            break;
-        case control_node:
-            break;
-        case if_node:
-            break;
-        case fun_call_node:
-            break;
-        case block_node:
-            break;
-        case import_node:
-            break;
-        default:
-            yyerror(node, "Unsupported node type. Ensure code_gen.c covers every node tag\n");
-    }
-    return NULL;
 }
