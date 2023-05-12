@@ -1,0 +1,16 @@
+import stdlib;
+
+fun main(int argc, ptr string argv) -> int {
+    int start = 1;
+    int end = 10;
+    print_numbers(start, end);
+    return 0;
+}
+
+fun print_numbers(int start, int end) -> void {
+    int current = start;
+    while (current <= end) {
+        stdlib.puts(stdlib.int_to_str(current));
+        current += 1;
+    }
+}

@@ -55,6 +55,25 @@ int code_gen_pass(Node *ast, FILE *out_file)
     return 0;
 }
 
+LLVMValueRef code_gen_while_loop(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
+{
+    LLVMBasicBlockRef loop_header = LLVMAppendBasicBlockInContext(LLVMGetModuleContext(module), LLVMGetBasicBlockParent(LLVMGetInsertBlock(builder)), "loop_header");
+    LLVMBasicBlockRef loop_body = LLVMAppendBasicBlockInContext(LLVMGetModuleContext(module), LLVMGetBasicBlockParent(LLVMGetInsertBlock(builder)), "loop_body");
+    LLVMBasicBlockRef loop_end = LLVMAppendBasicBlockInContext(LLVMGetModuleContext(module), LLVMGetBasicBlockParent(LLVMGetInsertBlock(builder)), "loop_end");
+
+    LLVMPositionBuilderAtEnd(builder, loop_header);
+    LLVMValueRef loop_condition = code_gen_node(node->op.while_loop.test, module, builder);
+    LLVMBuildCondBr(builder, loop_condition, loop_body, loop_end);
+
+    LLVMPositionBuilderAtEnd(builder, loop_body);
+    code_gen_node(node->op.while_loop.block, module, builder);
+    LLVMBuildBr(builder, loop_header);
+
+    LLVMPositionBuilderAtEnd(builder, loop_end);
+
+    return NULL;
+}
+
 LLVMValueRef code_gen_node(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
 {
     switch (node->tag)
@@ -75,7 +94,7 @@ LLVMValueRef code_gen_node(Node *node, LLVMModuleRef module, LLVMBuilderRef buil
     case var_node:
         break;
     case while_loop_node:
-        break;
+        return code_gen_while_loop(node, module, builder);
     case do_loop_node:
         break;
     case for_loop_node:
