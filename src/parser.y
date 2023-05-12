@@ -22,6 +22,7 @@
 #include "symbol_table.h"
 #include "syntax_tree.h"
 #include "types.h"
+#include "parser.h"
 }
 
 %code requires {
@@ -35,7 +36,7 @@
 extern char * yytext;
 extern int yylval;
 extern int yylineno;
-extern int yylex();
+extern int yylex(YYSTYPE *lvalp);
 extern FILE *  yyin;
 }
 

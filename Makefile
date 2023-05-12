@@ -10,7 +10,7 @@ CC=clang
 CXX=clang++
 LLVM_CC_FLAGS=`llvm-config --cflags`
 LLVM_LINK_FLAGS=`llvm-config --libs --cflags --ldflags core analysis executionengine native`
-CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 
 PARSER_NAME=parser
@@ -41,7 +41,7 @@ all: $(PROGRAM)
 
 $(PROGRAM): $(LEXER_O) $(PARSER_O) $(LEXER_HEADER) $(PARSER_HEADER) $(C_OBJECTS)
 	@mkdir -p $(@D)
-	$(CXX) $(C_OBJECTS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CXXFLAGS) -ly -ll 
+	$(CXX) $(C_OBJECTS) $(PARSER_O) $(LEXER_O) -o $(PROGRAM) $(CXXFLAGS)
 
 $(C_OBJECTS): $(C_SRCS)
 	@mkdir -p $(@D)
