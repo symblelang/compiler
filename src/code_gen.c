@@ -74,6 +74,11 @@ LLVMValueRef code_gen_while_loop(Node *node, LLVMModuleRef module, LLVMBuilderRe
     return NULL;
 }
 
+LLVMValueRef code_gen_conditional(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
+{
+
+}
+
 LLVMValueRef code_gen_node(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
 {
     switch (node->tag)
