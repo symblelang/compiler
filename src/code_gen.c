@@ -73,7 +73,7 @@ LLVMValueRef code_gen_while_loop(Node *node, LLVMModuleRef module, LLVMBuilderRe
 
     return NULL;
 }
-
+// doesn't work with elifs 
 LLVMValueRef code_gen_if(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
 {    
     // Generate the condition.
@@ -107,9 +107,15 @@ LLVMValueRef code_gen_if(Node *node, LLVMModuleRef module, LLVMBuilderRef builde
     LLVMBuildBr(builder, merge_block);
     then_block = LLVMGetInsertBlock(builder);
 
+    // Check for else
+    Node *else_node = node->op.if_statement.next; 
+    if (else_node == NULL) {
+        return NULL; // not sure what to do if there's no else 
+    }
+
     // Generate 'else' block.
     LLVMPositionBuilderAtEnd(builder, else_block);
-    LLVMValueRef else_value = code_gen_node(node->op.if_statement.next, module, builder);
+    LLVMValueRef else_value = code_gen_node(else_node->op.if_statement.block, module, builder);
     if(else_value == NULL) {
         return NULL;
     }
