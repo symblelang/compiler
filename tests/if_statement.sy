@@ -1,10 +1,5 @@
-import stdlib;
-
-fun main(int argc, ptr string argv) -> int {
-    int i = 3;
-    int j = 2;
-    
-    if (i > j) {
+fun main(int x, int y) -> int {
+    if (x > y) {
         return 0; 
     } else {
         return 1; 

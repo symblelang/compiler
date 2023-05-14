@@ -69,6 +69,10 @@ test: all $(TEST)/expr_test.sy $(TEST)/function_test.sy
 	$(PROGRAM) -v $(TEST)/expr_test.sy
 	$(PROGRAM) -v $(TEST)/function_test.sy
 
+
+test_if: $(TEST)/if_statement.sy
+	$(PROGRAM) -v $(TEST)/if_statement.sy
+
 test_table: $(TEST_BIN)/symbol_table_test
 	$(TEST_BIN)/symbol_table_test # valgrind -s --tool=memcheck --leak-check=full --track-origins=yes $(TEST_BIN)/symbol_table_test
 
