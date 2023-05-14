@@ -74,9 +74,54 @@ LLVMValueRef code_gen_while_loop(Node *node, LLVMModuleRef module, LLVMBuilderRe
     return NULL;
 }
 
-LLVMValueRef code_gen_conditional(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
-{
+LLVMValueRef code_gen_if(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
+{    
+    // Generate the condition.
+    LLVMValueRef condition = code_gen_node(node->op.if_statement.test, module, builder);
 
+    if (condition == NULL) {
+        return NULL; 
+    }
+
+    // Convert condition to bool.
+    LLVMValueRef zero = LLVMConstReal(LLVMDoubleType(), 0);
+    condition = LLVMBuildFCmp(builder, LLVMRealONE, condition, zero, "ifcond");
+
+    // Retrieve function.
+    LLVMValueRef func = LLVMGetBasicBlockParent(LLVMGetInsertBlock(builder));
+    
+    // Generate expr and merge
+    LLVMBasicBlockRef then_block = LLVMAppendBasicBlock(func, "then");
+    LLVMBasicBlockRef else_block = LLVMAppendBasicBlock(func, "else");
+    LLVMBasicBlockRef merge_block = LLVMAppendBasicBlock(func, "ifcont");
+    
+    LLVMBuildCondBr(builder, condition, then_block, else_block);
+
+    // Generate 'then' block.
+    LLVMPositionBuilderAtEnd(builder, then_block);
+    LLVMValueRef then_value = code_gen_node(node->op.if_statement.block, module, builder);
+    if(then_value == NULL) {
+        return NULL;
+    }
+    
+    LLVMBuildBr(builder, merge_block);
+    then_block = LLVMGetInsertBlock(builder);
+
+    // Generate 'else' block.
+    LLVMPositionBuilderAtEnd(builder, else_block);
+    LLVMValueRef else_value = code_gen_node(node->op.if_statement.next, module, builder);
+    if(else_value == NULL) {
+        return NULL;
+    }
+    LLVMBuildBr(builder, merge_block);
+    else_block = LLVMGetInsertBlock(builder);
+
+    LLVMPositionBuilderAtEnd(builder, merge_block);
+    LLVMValueRef phi = LLVMBuildPhi(builder, LLVMDoubleType (), "");
+    LLVMAddIncoming(phi, &then_value, &then_block, 1);
+    LLVMAddIncoming(phi, &else_value, &else_block, 1);
+    
+    return phi;
 }
 
 LLVMValueRef code_gen_node(Node *node, LLVMModuleRef module, LLVMBuilderRef builder)
@@ -107,7 +152,7 @@ LLVMValueRef code_gen_node(Node *node, LLVMModuleRef module, LLVMBuilderRef buil
     case control_node:
         break;
     case if_node:
-        break;
+        return code_gen_if(node, module, builder);
     case fun_call_node:
         break;
     case block_node:
