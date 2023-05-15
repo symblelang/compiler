@@ -83,3 +83,4 @@ $(TEST_BIN)/symbol_table_test: $(TEST)/symbol_table_test.c $(SRC)/symbol_table.c
 
 clean:
 	@rm -Rf $(FLEX_OUT)/* $(BISON_OUT)/* $(BIN)/* $(BUILD)/* $(PROGRAM)
+	@rmdir $(FLEX_OUT) $(BISON_OUT) $(BIN) $(BUILD)
