@@ -112,4 +112,7 @@ void * get_symbol_lexical_scope(SymbolTable * table, const char * key);
 int set_symbol(SymbolTable * table, const char * key, void * value);
 int unset_symbol(SymbolTable * table, const char * key);
 
+SymbolTable * new_global_symbol_table(size_t size);
+int add_builtin_symbols(SymbolTable * table);
+
 #endif

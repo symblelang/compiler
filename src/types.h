@@ -12,6 +12,7 @@
 #define TYPES_H
 
 #include <stdint.h>
+#include <llvm-c/Core.h>
 
 #include "symbol_table.h"
 
@@ -48,5 +49,6 @@ int check_types_equal(Type * type_1, Type * type_2);
 char * mangle_fun_name(const char * const fun_name, const Args * const arg_types);
 char * mangle_unary_op(const char * const op_name, const Type * const type);
 char * mangle_binary_op(const char * const op_name, const Type * const type1, const Type * const type2);
+LLVMTypeRef get_llvm_type(Type * type);
 
 #endif

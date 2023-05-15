@@ -41,6 +41,7 @@ Node * handle_do(Node * test, Node * block);
 Node * handle_return(Node * expr);
 Node * handle_type_def(char * name, Type * type, int line_num);
 Node * handle_statement_block(Node * statement_list);
+void handle_fun_def_args(char * fun_name, SymbolTable * table, Args * args, int line_num);
 Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num);
 Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_num);
 Node * handle_return(Node * expr);

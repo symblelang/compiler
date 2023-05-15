@@ -177,5 +177,6 @@ StatementBlock * create_block(Node * statement);
 StatementBlock * add_to_block(StatementBlock * block, Node * statement);
 Args * create_arg(Type * type, char * name);
 Args * add_to_arg_list(Args * type_list, Args * to_add);
+char * get_tag_str(NodeType tag);
 
 #endif

@@ -10,7 +10,7 @@
 %language "C"
 %define parse.error detailed
 %define api.pure full
-%parse-param {Node * ast}
+%parse-param {Node ** ast}
 
 %code top {
 #include <ctype.h>
@@ -32,21 +32,20 @@
 #include "types.h"
 }
 
+%code provides {
+int yyerror(Node ** const ast, const char * restrict fmt, ...);
+}
+
 %code {
 extern char * yytext;
 extern int yylval;
 extern int yylineno;
 extern int yylex(YYSTYPE *lvalp);
 extern FILE *  yyin;
-}
 
-%code provides {
-int yyerror(const Node * const ast, const char * restrict fmt, ...);
-}
-
-%code {
 SymbolTable * symbol_table;
 }
+
 
 /* yyunion */
 %union{
@@ -74,7 +73,7 @@ SymbolTable * symbol_table;
 /* Keywords */
 %token CFUN FUN IF ELIF ELSE FOR WHILE CASE SWITCH TYPE RETURN BREAK CONTINUE IMPORT AS
 /* Types */
-%token INT_TYPE STR_TYPE FLOAT_TYPE PTR_TYPE
+%token INT_TYPE STR_TYPE FLOAT_TYPE PTR_TYPE VOID_TYPE
 /* Literals */
 %token INT_LIT STR_LIT ID
 
@@ -115,7 +114,7 @@ SymbolTable * symbol_table;
 %left DOT
 
 %type<node> expr assign_expr logical_expr compare_expr bitwise_expr arithmetic_expr member_expr primary_expr function_call literal if_elif
-%type<node> expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do program typedef import_statement statement statement_block
+%type<node> program expr_statement if_statement function_def cfun_dec control_statement variable_declaration while_loop for_loop do typedef import_statement statement statement_block
 %type<block> statement_list
 %type<type> type fun_type
 %type<args> argument_list_specifier type_list variable_specifier
@@ -128,7 +127,8 @@ SymbolTable * symbol_table;
 
 
 program:
-    statement_list { ast = ($$ = create_block_node($1)); }
+    { symbol_table = new_global_symbol_table(HASH_TABLE_DEFAULT_SIZE); }
+    statement_list { $$ = create_block_node($statement_list); *ast = $$; }
     ;
 
 statement_list:
@@ -138,17 +138,17 @@ statement_list:
 
 /* TODO add more statement types */
 statement:
-    expr_statement
-    | if_statement
-    | function_def
-    | cfun_dec
-    | control_statement
-    | variable_declaration
-    | while_loop
-    | for_loop
-    | do
-    | typedef
-    | import_statement
+    expr_statement { $$ = $1; }
+    | if_statement { $$ = $1; }
+    | function_def { $$ = $1; }
+    | cfun_dec { $$ = $1; }
+    | control_statement { $$ = $1; }
+    | variable_declaration { $$ = $1; }
+    | while_loop { $$ = $1; }
+    | for_loop { $$ = $1; }
+    | do { $$ = $1; }
+    | typedef { $$ = $1; }
+    | import_statement { $$ = $1; }
     ;
 
 statement_block:
@@ -157,21 +157,21 @@ statement_block:
 
 
 expr_statement:
-    expr SEMICOLON
+    expr SEMICOLON { $$ = $1; }
     ;
 
 expr:
-    assign_expr
+    assign_expr { $$ = $1; }
     ;
 
 assign_expr:
-    logical_expr
+    logical_expr { $$ = $1; }
     | member_expr ASSIGN_OP assign_expr { $$ = handle_binary_expr($1, $2, $3); }
     | member_expr EQUALS_OP assign_expr { $$ = handle_binary_expr($1, $2, $3); }
     ;
 
 logical_expr:
-    compare_expr
+    compare_expr { $$ = $1; }
     | NOT logical_expr { $$ = handle_unary_expr($1, $2); }
     | logical_expr AND logical_expr { $$ = handle_binary_expr($1, $2, $3); }
     | logical_expr OR logical_expr { $$ = handle_binary_expr($1, $2, $3); }
@@ -179,12 +179,12 @@ logical_expr:
     ;
 
 compare_expr:
-    bitwise_expr %prec BIT_AND_OP
+    bitwise_expr %prec BIT_AND_OP { $$ = $1; }
     | compare_expr COMPARE_OP compare_expr { $$ = handle_binary_expr($1, $2, $3); }
     ;
 
 bitwise_expr:
-    arithmetic_expr
+    arithmetic_expr { $$ = $1; }
     | bitwise_expr BIT_AND_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
     | bitwise_expr RBIT_AND_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
     | bitwise_expr BIT_OR_OP bitwise_expr { $$ = handle_binary_expr($1, $2, $3); }
@@ -201,7 +201,7 @@ bitwise_expr:
     ;
 
 arithmetic_expr:
-    member_expr
+    member_expr { $$ = $1; }
     | arithmetic_expr POW_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
     | arithmetic_expr MULT_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
     | arithmetic_expr RMULT_OP arithmetic_expr { $$ = handle_binary_expr($1, $2, $3); }
@@ -216,7 +216,7 @@ arithmetic_expr:
 /* This one should actually have some checking in it to make sure you
  * don't write something dumb like 4[1] or 15."foo" */
 member_expr:
-    primary_expr
+    primary_expr { $$ = $1; }
     | member_expr DOT member_expr { $$ = handle_member_expr($1, $3, 1); }
     | member_expr LSQB expr RSQB { $$ = handle_member_expr($1, $3, 0); }
     ;
@@ -225,7 +225,7 @@ primary_expr:
     ID { $$ = handle_var($1); }
     | literal { $$ = $1; }
     | LPAREN expr RPAREN { $$ = $2; }
-    | function_call
+    | function_call { $$ = $1; }
     ;
 
 function_call:
@@ -241,9 +241,10 @@ argument_list:
 function_def:
     FUN ID LPAREN argument_list_specifier RPAREN ARROW type <table>{
         $$ = push_symbol_table();
+        handle_fun_def_args($ID, $$, $argument_list_specifier, yylineno);
     }
     statement_block {
-        handle_function_def($ID, $argument_list_specifier, $type, $8, $statement_block, yylineno);
+        $$ = handle_function_def($ID, $argument_list_specifier, $type, $8, $statement_block, yylineno);
         pop_symbol_table();
     }
     
@@ -251,7 +252,7 @@ function_def:
         $$ = push_symbol_table();
     }
     statement_block {
-        handle_function_def($user_operator, $argument_list_specifier, $type, $10, $statement_block, yylineno);
+        $$ = handle_function_def($user_operator, $argument_list_specifier, $type, $10, $statement_block, yylineno);
         pop_symbol_table();
     }
     ;
@@ -261,7 +262,7 @@ cfun_dec:
     ;
 
 argument_list_specifier:
-    variable_specifier 
+    variable_specifier { $$ = $1; }
     | argument_list_specifier COMMA variable_specifier { $$ = add_to_arg_list($1, $3); }
     ;
 
@@ -276,6 +277,7 @@ type:
     | INT_TYPE { $$ = handle_base_type(int_type); }
     | FLOAT_TYPE { $$ = handle_base_type(float_type); }
     | STR_TYPE { $$ = handle_base_type(str_type); }
+    | VOID_TYPE { $$ = handle_base_type(void_type); }
     | fun_type { $$ = $1; }
     | PTR_TYPE type { $$ = handle_ptr_type($2); }
     ;
@@ -318,7 +320,7 @@ if_elif:
     ;
 
 if_statement:
-    if_elif
+    if_elif { $$ = $1; }
     | if_elif ELSE statement_block { $$ = handle_elif($1, NULL, $statement_block, NULL); }
     ;
 
@@ -351,7 +353,7 @@ import_statement:
 
 
 /* based on musl libc printf implementation */
-int yyerror(const Node * const ast, const char * restrict fmt, ...) {
+int yyerror(Node ** const ast, const char * restrict fmt, ...) {
     (void)(ast);
     va_list ap;
     va_start(ap, fmt);

@@ -2,42 +2,43 @@
  * (or some sort of type coercion/catch-all pointer type) We could make this easier with
  * an "extern" or "cfun" function declaration */
 
-import stdlib;
+cfun calloc(int nitems, int size) -> ptr void;
+cfun atoi(str string) -> int;
+cfun itoa(int value, str string, int base) -> str;
+cfun free(ptr void to_free) -> void;
+cfun puts(str string) -> int;
 
-fun main(int argc, ptr string argv) -> int {
+fun main(int argc, ptr str argv) -> int {
+    int upper;
     if (argc == 2) {
-        return sieve(stdlib.str_to_int(argv[1]));
+        upper = atoi(argv[1]);
     }
     else {
-        stdlib.puts("Wrong number of arguments, expected 1");
+        puts("Wrong number of arguments, expected 1");
         return 1;
     }
-}
 
-fun sieve(int upper) -> int {
-    /* Takes the somewhat unconventional approach of using 1 to mean composite and 0 to mean prime,
-     * so that we don't have to memset the whole array */
-    ptr int prime_sieve = calloc(upper + 1, stdlib.int_size); /* Implementation may change */
+    ptr int prime_sieve = calloc(upper + 1, 8); /* Implementation may change */
     prime_sieve[0] = 1;
     prime_sieve[1] = 1;
     int curr_prime = 2;
     int curr_pos;
     while (curr_prime * curr_prime < upper) {
         if (prime_sieve[curr_prime] == 0) {
-            stdlib.puts(stdlib.int_to_str(curr_prime));
+            puts(itoa(curr_prime));
             curr_pos = curr_prime + curr_prime;
             while (curr_pos <= upper) {
                 prime_sieve[curr_pos] = 1;
                 curr_pos += curr_prime;
             }
         }
-        curr_prime += 1;
+        curr_prime = curr_prime + 1;
     }
     while (curr_prime <= upper) {
         if (prime_sieve[curr_prime] == 0) {
-            stdlib.puts(stdlib.int_to_str(curr_prime));
+            puts(itoa(curr_prime));
         }
-        curr_prime += 1;
+        curr_prime = curr_prime + 1;
     }
     free(prime_sieve);
     return 0;

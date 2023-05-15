@@ -113,7 +113,8 @@ Node * handle_literal(char * value, BaseType lit_type) {
 
 Type * handle_base_type(BaseType base) {
     Type * type = malloc(sizeof(Type));
-    type->tag = base;
+    type->tag = base_type;
+    type->op.base = base;
     return type;
 }
 
@@ -140,21 +141,8 @@ Type * handle_fun_type(Args * type_list, Type * return_type) {
     return this_fun_type;
 }
 
-/** \todo in second pass, we'll need to collect the arguments in higher scopes  */
-Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
-    /** Adds function and type info to symbol table */
-    Symbol * fun = malloc(sizeof(Symbol));
-    char * mangled_name;
-    if (strcmp(name, "main")) {
-        mangled_name = mangle_fun_name(name, args);
-    }
-    else {
-        mangled_name = name;
-    }
-    fun->op.fun.name = mangled_name;
-    fun->op.fun.type = return_type;
-    fun->op.fun.symbol_table = table;
-    
+/** Adds function definition arguments to symbol table for the function */
+void handle_fun_def_args(char * fun_name, SymbolTable * table, Args * args, int line_num) {
     Args * curr_arg = args;
     while (curr_arg) {
         Symbol * curr_var = malloc(sizeof(Symbol));
@@ -165,9 +153,25 @@ Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolT
         set_symbol(table, curr_arg->name, curr_var);
         curr_arg = curr_arg->next;
     }
+}
+
+/** \todo in second pass, we'll need to collect the arguments in higher scopes  */
+Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolTable * table, Node * block, int line_num) {
+    /** Adds function and type info to symbol table */
+    Symbol * fun = malloc(sizeof(Symbol));
+    char * mangled_name;
+    if (strcmp(name, "main")) {
+        mangled_name = mangle_fun_name(name, args);
+    }
+    else {
+        mangled_name = strdup(name);
+    }
+    fun->op.fun.name = mangled_name;
+    fun->op.fun.type = return_type;
+    fun->op.fun.symbol_table = table;
     fun->op.fun.args = args;
     fun->op.fun.declared_at = line_num;
-    /** \todo add fun with mangled name to symbol table */
+    set_symbol(symbol_table, mangled_name, fun);
     return add_fun_def_node(mangled_name, args, return_type, table, block, fun, line_num);
 }
 
@@ -178,9 +182,10 @@ Node * handle_cfun_dec(char * name, Args * args, Type * return_type, int line_nu
     Symbol * fun = malloc(sizeof(Symbol));
     fun->op.fun.name = name;
     fun->op.fun.type = return_type;
+    fun->op.fun.symbol_table = NULL;
     fun->op.fun.args = args;
     fun->op.fun.declared_at = line_num;
-    /** \todo add fun to symbol table */
+    set_symbol(symbol_table, name, fun);
     return add_fun_def_node(name, args, return_type, NULL, NULL, fun, line_num);
 }
 

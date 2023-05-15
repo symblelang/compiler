@@ -10,6 +10,9 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <llvm-c/Core.h>
+
+#include "parser.h"
 #include "types.h"
 
 /* Forward declarations for static internal functions */
@@ -81,8 +84,8 @@ char * mangle_fun_name(const char * const fun_name, const Args * const args) {
     Args * arg = (Args *)args;
 
     memcpy(mangled_name, fun_name, name_len);
-    pos[0] = '_';
-    pos[1] = '\0';
+    *(pos++) = '_';
+    *pos = '\0';
     
     while (arg) {
         pos = mangle_type(arg->type, pos);
@@ -99,8 +102,8 @@ char * mangle_unary_op(const char * const op_name, const Type * const type) {
     char * pos = mangled_name + name_len;
 
     memcpy(mangled_name, op_name, name_len + 1);
-    pos[0] = '_';
-    pos[1] = '\0';
+    *(pos++) = '_';
+    *pos = '\0';
     pos = mangle_type(type, pos);
     return mangled_name;
 }
@@ -113,8 +116,8 @@ char * mangle_binary_op(const char * const op_name, const Type * const type1, co
     char * pos = mangled_name + name_len;
 
     memcpy(mangled_name, op_name, name_len + 1);
-    pos[0] = '_';
-    pos[1] = '\0';
+    *(pos++) = '_';
+    *pos = '\0';
     pos = mangle_type(type1, pos);
     pos = mangle_type(type2, pos);
     return mangled_name;
@@ -207,5 +210,27 @@ static char * mangle_type(const Type * const type, char * pos) {
             *(++pos) = '>';
             *(++pos) = '\0';
             return pos;
+    }
+}
+
+LLVMTypeRef get_llvm_type(Type * type) {
+    switch (type->tag) {
+        case base_type:
+            switch(type->op.base) {
+                case int_type:
+                    return LLVMInt64Type();
+                case str_type:
+                    return LLVMPointerType(LLVMInt8Type(), 1);
+                case void_type:
+                    return LLVMVoidType();
+                case float_type:
+                    return LLVMDoubleType();
+            }
+        case fun_type:
+            yyerror(NULL, "Function passing is not supported yet\n");
+        case array_type:
+            return LLVMArrayType(get_llvm_type(type->op.array.elem_type), type->op.array.size);
+        case ptr_type:
+            return LLVMPointerType(get_llvm_type(type->op.ptr.val_type), 1);
     }
 }

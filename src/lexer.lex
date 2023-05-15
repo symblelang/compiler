@@ -146,6 +146,7 @@ pow_op              "^"|("^^"{opchar}*)
 "float"/{non_id}    return FLOAT_TYPE;
 "str"/{non_id}      return STR_TYPE;
 "ptr"/{non_id}      return PTR_TYPE;
+"void"/{non_id}     return VOID_TYPE;
 
 
  /* We want id to be returned only if a keyword isn't matched */

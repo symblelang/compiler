@@ -227,3 +227,57 @@ Args * add_to_arg_list(Args * type_list, Args * to_add) {
     where_to_add = (where_to_add->next = to_add);
     return type_list;
 }
+
+char * get_tag_str(NodeType tag) {
+    char * str;
+    switch (tag) {
+        case var_dec_node:
+            str = "var_dec";
+            break;
+        case type_def_node:
+            str = "type_def";
+            break;
+        case fun_def_node:
+            str = "fun_def";
+            break;
+        case binary_expr_node:;
+            str = "binary_expr";
+            break;
+        case unary_expr_node:
+            str = "unary_exp";
+            break;
+        case literal_node:
+            str = "literal";
+            break;
+        case var_node:
+            str = "var";
+            break;
+        case while_loop_node:
+            str = "while_loop";
+            break;
+        case do_loop_node:
+            str = "do_loop";
+            break;
+        case for_loop_node:
+            str = "for_loop";
+            break;
+        case control_node:
+            str = "control";
+            break;
+        case if_node:
+            str = "if";
+            break;
+        case fun_call_node:
+            str = "fun_call";
+            break;
+        case block_node:
+            str = "block";
+            break;
+        case import_node:
+            str = "import";
+            break;
+        default:
+            str = "undefined";
+    }
+    return strdup(str);
+}

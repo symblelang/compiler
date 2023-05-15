@@ -1,3 +1,13 @@
+/*
+ * Authors:
+ *   Andrew Clark     - andrew.clark.6@bc.edu
+ *   Alex Liu         - alex.liu@bc.edu
+ *   Caden Parajuli   - caden.parajuli@bc.edu
+ *   Micheal Lebreck  - michael.lebreck@bc.edu
+ *   William Morrison - william.morrison.2@bc.edu
+ */
+
+
 #ifndef ARCH_H
 #define ARCH_H
 

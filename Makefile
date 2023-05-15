@@ -13,8 +13,8 @@ CXX=clang++
 LLVM_CC_FLAGS=`llvm-config --cflags`
 LLVM_LINK_FLAGS=`llvm-config --libs --cflags --ldflags core analysis executionengine native`
 ifeq ($(DEBUG),1)
-	CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -DYYERROR_VERBOSE -DYYDEBUG=1  -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
-	CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+	CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Werror -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -DYYERROR_VERBOSE -DYYDEBUG=1 -g3 -gdwarf-4 -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
+	CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -Werror -g3 -gdwarf-4 -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 else
 	CFLAGS=$(LLVM_CC_FLAGS) -Wall -Wextra -Wno-unused-but-set-variable -Wno-unused-function -Wno-sign-compare -Wno-unused-parameter -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)
 	CXXFLAGS=$(LLVM_LINK_FLAGS) -Wall -Wextra -iquote $(SRC) -iquote $(FLEX_OUT) -iquote $(BISON_OUT)

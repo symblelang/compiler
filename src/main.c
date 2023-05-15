@@ -35,32 +35,38 @@ int compile_file(char * filename, char * output_filename) {
     int yy_ret;
     int type_pass_ret;
     Node * ast = NULL;
-    FILE * out_file = fopen_checked(output_filename, "w");
     
     /* First pass: Parse file, store syntax tree in ast out-param */
     yyin = fopen_checked(filename, "r");
-    yy_ret = yyparse(ast);
+    /* yydebug = 1; */
+    yy_ret = yyparse(&ast);
     if (yy_ret == 1) {
-        yyerror(ast, "yyparse failed because input is invalid and error recovery is impossible.\n");
+        yyerror(&ast, "yyparse failed because input is invalid and error recovery is impossible.\n");
         return EXIT_FAILURE;
     }
     else if (yy_ret == 2) {
-        yyerror(ast, "yyparse failed because the compiler ran out of memory.\n");
+        yyerror(&ast, "yyparse failed because the compiler ran out of memory.\n");
     }
     fclose(yyin);
+
+    printf("first pass complete!\n");
 
     /* Maybe convert for to while before type checking */
 
     /* Second pass: Type propogation and checking */
     type_pass_ret = type_pass(ast);
     if (type_pass_ret) {
-        
+        yyerror(&ast, "Typechecking failed.\n");
     }
+
+    printf("second pass complete!\n");
 
     /* Possible third pass for desugaring: function lifting, closure conversion, for to while, etc. */
     
     /* Final pass: code generation */
-    code_gen_pass(ast, out_file);
+    code_gen_pass(ast, filename, output_filename);
+
+    printf("final pass complete!\n");
 
     putchar('\n');
     return yy_ret;
@@ -128,7 +134,7 @@ int main(int argc, char * argv[]) {
         output_filename = argv[output_filename_index];
     }
     else {
-        output_filename = "a.out";
+        output_filename = "a.s";
     }
     
     if (filename_index) {
