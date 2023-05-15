@@ -44,6 +44,7 @@ extern int yylex(YYSTYPE *lvalp);
 extern FILE *  yyin;
 
 SymbolTable * symbol_table;
+SymbolTable * global_table;
 }
 
 
@@ -127,7 +128,7 @@ SymbolTable * symbol_table;
 
 
 program:
-    { symbol_table = new_global_symbol_table(HASH_TABLE_DEFAULT_SIZE); }
+    { global_table = (symbol_table = new_global_symbol_table(HASH_TABLE_DEFAULT_SIZE)); }
     statement_list { $$ = create_block_node($statement_list); *ast = $$; }
     ;
 

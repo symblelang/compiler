@@ -1,7 +1,3 @@
-/* We'll need to implement a str_to_int function and malloc/calloc for different types
- * (or some sort of type coercion/catch-all pointer type) We could make this easier with
- * an "extern" or "cfun" function declaration */
-
 cfun calloc(int nitems, int size) -> ptr void;
 cfun atoi(str string) -> int;
 cfun itoa(int value, str string, int base) -> str;

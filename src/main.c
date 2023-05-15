@@ -14,6 +14,7 @@
 #include "code_gen.h"
 #include "parser.h"
 #include "lexer.h" /* Must be included after parser.h */
+#include "symbol_table.h"
 #include "syntax_tree.h"
 #include "typecheck.h"
 

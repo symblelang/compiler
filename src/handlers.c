@@ -172,6 +172,7 @@ Node * handle_function_def(char * name, Args * args, Type * return_type, SymbolT
     fun->op.fun.args = args;
     fun->op.fun.declared_at = line_num;
     set_symbol(symbol_table, mangled_name, fun);
+    printf("Adding function %s\n", mangled_name);
     return add_fun_def_node(mangled_name, args, return_type, table, block, fun, line_num);
 }
 

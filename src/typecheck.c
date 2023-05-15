@@ -15,12 +15,15 @@
 #include "typecheck.h"
 #include "types.h"
 
+extern SymbolTable * global_table;
+
 /** \brief Performs type checking on the AST and propogation of types through expressions
  *  Performs the second pass over the syntax tree (the first pass after tree generation).
  *  This pass consists of propogating types up through expressions, and checking types for operators,
  *  function calls, etc.
  */
 int type_pass(Node * ast) {
+    symbol_table = global_table;
     if (ast->tag == block_node) {
         return block_type_pass(ast->op.block, NULL);
     }
@@ -208,7 +211,7 @@ Type * set_fun_call_type(Node * call) {
         call->op.fun_call.mangled_name = fun_symbol->op.fun.name;
     }
     else {
-        yyerror(&call, "Function %s with correct argument types not found\n", call->op.fun_call.name);
+        yyerror(&call, "Function %s with correct argument types (%s) not found\n", call->op.fun_call.name, mangled_fun_name);
     }
 
     /* Free allocated memory */
