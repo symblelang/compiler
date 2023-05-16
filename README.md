@@ -183,8 +183,11 @@ cfun calloc(int nitems, int size) -> ptr void;
 
 ### **6. Statements**
 
-If statements: 
+Here are the following statements accepted under Symble's grammar. 
 
+**6.1 If statements**
+
+The code within an `if` statement is executed if the condition evaluates to true, otherwise the code within the `else` statement runs, or the next `elif` statement is evaluated (just like an `if` statement). 
 ```
 if_elif:
     IF LPAREN expr RPAREN statement_block %prec THEN 
@@ -196,7 +199,7 @@ if_statement:
     | if_elif ELSE statement_block
     ;
 ```
-Functions: 
+**6.2 Function definitions**
 ```
 function_def:
     FUN ID LPAREN argument_list_specifier RPAREN ARROW 
@@ -207,7 +210,77 @@ function_def:
     statement_block 
     ;
 ```
+
+**6.3 Control statement:**
+
+Control statement allow change in the control flow. The keywords `return, break, continue ` are all used similarly to how they would be in any other language
+
+```
+control_statement:
+    RETURN expr SEMICOLON { $$ = handle_return($expr); }
+    | BREAK SEMICOLON { $$ = handle_break(); }
+    | CONTINUE SEMICOLON { $$ = handle_break(); }
+    ;
+```
+
+**6.4 Variable declarations**
+
+```
+variable_declaration:
+    type ID SEMICOLON
+    | type ID EQUALS_OP expr SEMICOLON
+    | type ID LSQB INT_LIT RSQB SEMICOLON 
+    | type ID LSQB INT_LIT RSQB EQUALS_OP expr SEMICOLON
+    ;
+```
+
+**6.5 While loop:**
+
+```
+while_loop:
+    WHILE LPAREN expr RPAREN statement_block 
+    | WHILE LPAREN expr RPAREN SEMICOLON 
+    ;
+```
+
+**6.6 For loop**
+
+```
+for_loop:
+    FOR LPAREN expr SEMICOLON expr SEMICOLON expr 
+    RPAREN statement_block
+    | FOR LPAREN variable_declaration expr SEMICOLON expr 
+    RPAREN statement_block
+    ;
+```
+
+**6.7 Do while loops**
+```
+do:
+    statement_block WHILE LPAREN expr RPAREN SEMICOLON
+    ;
+```
+
+**6.8 Typedef**
+
+```
+typedef:
+    TYPE ID EQUALS_OP type SEMICOLON
+    ;
+```
+**6.8 Import statements**
+
+```
+import_statement:
+    IMPORT ID SEMICOLON
+    | IMPORT ID AS ID SEMICOLON 
+    ;
+```
 ### **7. Expressions**
+
+There are many different types of expressions in Symble, they can all be found in `parser.y`. 
+
+Assignment expressions, comparison expression, bitwise expression, and arithmetic expressions are some of the most common expressions found in Symble. 
 
 ### **8. Context Free Grammar**
 
