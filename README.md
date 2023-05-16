@@ -252,6 +252,8 @@ while_loop:
 
 **6.6 For loops**
 
+For loops in Symble use a counter to keep track of the number of iterations. The code within the while loop is continuously executed until the counter reaches a certain state. However, its possible for for loops to be used alternatively. 
+
 ```
 for_loop:
     FOR LPAREN expr SEMICOLON expr SEMICOLON expr 
@@ -262,6 +264,8 @@ for_loop:
 ```
 
 **6.7 Do while loops**
+
+Do while loops are similar to regular while loops except that the condition is checked at the bottom at the loop. 
 ```
 do:
     statement_block WHILE LPAREN expr RPAREN SEMICOLON
